@@ -15,9 +15,9 @@
                     </div>
                 <?php else: ?>
                     <div class="text-center mb-4">
-                        <img class="auth-logo" src="<?= base_url('assets/images/epic-logo.png') ?>" alt="Epic Storage Solutions">
+                        <img class="auth-logo" src="<?= base_url('assets/images/epic-logo.png') ?>" alt="EPIC Storage Solutions">
                         <h1 class="h3 mt-3 mb-2">Choose a new password</h1>
-                        <p class="text-muted-brand mb-0">Set a new password for your Epic customer account.</p>
+                        <p class="text-muted-brand mb-0">Set a new password for your EPIC customer account.</p>
                     </div>
 
                     <?php $errors = session()->getFlashdata('errors') ?? []; ?>

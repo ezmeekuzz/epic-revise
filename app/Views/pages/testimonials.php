@@ -21,7 +21,7 @@
             <div class="col-md-6">
               <div class="testimonial-card">
                 <img src="<?= base_url('assets/images/quote.png') ?>" class="quote-mark" alt="" aria-hidden="true">
-                <p class="mb-0">When I called Epic Storage, Anissa was friendly, professional, and above all helpful! They took care of everything for a very reasonable cost. They supply the boxes and tape on campus, and all we needed to do was pack up. They picked everything up and took it to storage. On the day we came back, they delivered right to the dorm room. We are excited to use them again this year!</p>
+                <p class="mb-0">When I called EPIC Storage, Anissa was friendly, professional, and above all helpful! They took care of everything for a very reasonable cost. They supply the boxes and tape on campus, and all we needed to do was pack up. They picked everything up and took it to storage. On the day we came back, they delivered right to the dorm room. We are excited to use them again this year!</p>
                 <div class="testimonial-foot"><strong class="d-block">Steve</strong><span class="text-muted-brand">Parent from Florida</span></div>
               </div>
             </div>
@@ -54,7 +54,7 @@
         <div class="col-lg-8">
           <div class="testimonial-card">
             <img src="<?= base_url('assets/images/quote.png') ?>" class="quote-mark" alt="" aria-hidden="true">
-            <p class="mb-0">We used Epic Storage Solutions to store my daughter's college items. The company is easy to contract, and they provide good guidance concerning your storage needs. We found it very helpful to have them drop off our boxes prior to packing and to have them pick up the packed items for storage. This provided a stress relief to the process, as my daughter was under a time crunch to move out of her dorm.<br><br>Anissa was patient and kind, and she sincerely cared about providing timely and professional service to meet our needs. I would recommend Epic Storage Solutions for any type of storage needs, and I guarantee you that you will receive excellent customer service in the process.</p>
+            <p class="mb-0">We used EPIC Storage Solutions to store my daughter's college items. The company is easy to contract, and they provide good guidance concerning your storage needs. We found it very helpful to have them drop off our boxes prior to packing and to have them pick up the packed items for storage. This provided a stress relief to the process, as my daughter was under a time crunch to move out of her dorm.<br><br>Anissa was patient and kind, and she sincerely cared about providing timely and professional service to meet our needs. I would recommend EPIC Storage Solutions for any type of storage needs, and I guarantee you that you will receive excellent customer service in the process.</p>
             <div class="testimonial-foot"><strong class="d-block">Carla</strong><span class="text-muted-brand">New Jersey</span></div>
           </div>
         </div>

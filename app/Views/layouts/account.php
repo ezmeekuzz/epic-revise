@@ -35,7 +35,7 @@ $activeProfile      = $currentPath === 'account/profile';
     <div class="admin-shell">
         <aside class="admin-sidebar" id="adminSidebar" aria-label="Account navigation">
             <div class="admin-brand">
-                <a href="<?= site_url('account') ?>"><img src="<?= base_url('assets/images/epic-logo.png') ?>" alt="Epic Storage Solutions"><span>My Account</span></a>
+                <a href="<?= site_url('account') ?>"><img src="<?= base_url('assets/images/epic-logo.png') ?>" alt="EPIC Storage Solutions"><span>My Account</span></a>
                 <button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">&times;</button>
             </div>
             <nav class="admin-nav">
@@ -64,7 +64,7 @@ $activeProfile      = $currentPath === 'account/profile';
             <header class="admin-topbar">
                 <button class="sidebar-open" type="button" data-sidebar-open aria-label="Open navigation">&#9776;</button>
                 <div class="topbar-title">
-                    <span class="topbar-kicker">Epic customer portal</span>
+                    <span class="topbar-kicker">EPIC customer portal</span>
                     <strong><?= esc(trim(explode('|', (string) $title)[0])) ?></strong>
                 </div>
                 <div class="topbar-actions">
@@ -74,7 +74,7 @@ $activeProfile      = $currentPath === 'account/profile';
                         <span class="admin-avatar"><?= esc(mb_strtoupper(mb_substr($customerName !== '' ? $customerName : 'E', 0, 1))) ?></span>
                         <span><strong><?= esc($customerName !== '' ? $customerName : 'My account') ?></strong><small>Customer</small></span>
                     </a>
-                    <form action="<?= site_url('logout') ?>" method="post" data-confirm="Are you sure you want to end your current session?" data-confirm-title="Log out of Epic?" data-confirm-button="Yes, log out" data-loading-title="Signing you out">
+                    <form action="<?= site_url('logout') ?>" method="post" data-confirm="Are you sure you want to end your current session?" data-confirm-title="Log out of EPIC?" data-confirm-button="Yes, log out" data-loading-title="Signing you out">
                         <?= csrf_field() ?>
                         <button class="topbar-logout" type="submit" aria-label="Log out" title="Log out">&#8618;</button>
                     </form>

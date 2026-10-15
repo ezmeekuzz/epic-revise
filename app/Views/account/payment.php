@@ -17,7 +17,7 @@
 
             <div class="payment-checkout-grid">
                 <section class="portal-card payment-card" aria-labelledby="paymentHeading">
-                    <div class="d-flex align-items-start justify-content-between gap-3 mb-4"><div><p class="eyebrow mb-1">Square payment</p><h2 class="h4 mb-1" id="paymentHeading">Card details</h2><p class="text-muted-brand small mb-0">Card information is securely collected by Square and is not stored by Epic.</p></div><span class="payment-environment"><?= esc($square['mode'] === 'live' ? 'Production' : 'Sandbox') ?></span></div>
+                    <div class="d-flex align-items-start justify-content-between gap-3 mb-4"><div><p class="eyebrow mb-1">Square payment</p><h2 class="h4 mb-1" id="paymentHeading">Card details</h2><p class="text-muted-brand small mb-0">Card information is securely collected by Square and is not stored by EPIC.</p></div><span class="payment-environment"><?= esc($square['mode'] === 'live' ? 'Production' : 'Sandbox') ?></span></div>
 
                     <?php if (! $square['ready']): ?>
                         <div class="booking-empty-state text-start"><strong class="d-block mb-2">Online payment is not available yet</strong><span>Your booking remains safely saved. An administrator must enable Square and configure its Application ID, Access Token, and Location ID before card payment can continue.</span></div>
@@ -25,7 +25,7 @@
                     <?php else: ?>
                         <form data-square-payment-form novalidate>
                             <div id="square-card-container" class="square-card-container" aria-label="Secure Square card fields"></div>
-                            <div class="form-check mt-3"><input class="form-check-input" id="payment_terms" type="checkbox" required><label class="form-check-label" for="payment_terms">I authorize Epic Storage Solutions to charge <strong><?= esc($square['currency']) ?> $<?= number_format($balance, 2) ?></strong> for this booking and agree to the <a href="<?= site_url('terms') ?>" target="_blank" rel="noopener">terms</a>.</label></div>
+                            <div class="form-check mt-3"><input class="form-check-input" id="payment_terms" type="checkbox" required><label class="form-check-label" for="payment_terms">I authorize EPIC Storage Solutions to charge <strong><?= esc($square['currency']) ?> $<?= number_format($balance, 2) ?></strong> for this booking and agree to the <a href="<?= site_url('terms') ?>" target="_blank" rel="noopener">terms</a>.</label></div>
                             <div class="payment-inline-status mt-3" data-payment-status role="status" aria-live="polite"></div>
                             <button class="btn btn-brand-primary w-100 mt-4" type="submit" data-payment-submit disabled>Pay <?= esc($square['currency']) ?> $<?= number_format($balance, 2) ?></button>
                             <p class="field-hint text-center mt-3 mb-0">Do not close or refresh this page while Square is processing your payment.</p>

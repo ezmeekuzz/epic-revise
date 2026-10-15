@@ -26,7 +26,7 @@
           <span class="eyebrow">Our Story</span>
           <h1 class="mt-3">About <span class="accent">Us</span></h1>
           <p class="hero-lede mt-3">The mission of EPIC Storage Solutions is to provide High Point University students and parents with a convenient, accountable, and safe moving and storage experience.</p>
-          <p class="hero-lede mt-3">Founded by High Point University alum Anisha Roy in 2009, EPIC is locally owned and operated in High Point, NC. After a successful corporate career, Anisha set out to build her own business. Through the years, we've had the opportunity to service thousands of HPU students, helping us evolve into the company we are today.</p>
+          <p class="hero-lede mt-3">Founded by High Point University alum Anissa Roy in 2009, EPIC is locally owned and operated in High Point, NC. After a successful corporate career, Anissa set out to build her own business. Through the years, we've had the opportunity to service thousands of HPU students, helping us evolve into the company we are today.</p>
           <p class="hero-lede mt-3">We pride ourselves in providing a high‑touch and always‑available experience. This approach allows us to directly engage in each customer relationship, placing a personal touch on every parent and student experience.</p>
           <a class="btn btn-brand-primary mt-4" href="<?= site_url('services') ?>">Lets Get Started</a>
         </div>
@@ -42,7 +42,7 @@
       </div>
       <div class="fact-band">
         <div class="fact-tile"><span class="fact-value">2009</span><span class="fact-label">Founded &amp; operating in High Point, NC</span></div>
-        <div class="fact-tile"><span class="fact-value">Anisha Roy</span><span class="fact-label">Founder — HPU Class of 1991</span></div>
+        <div class="fact-tile"><span class="fact-value">Anissa Roy</span><span class="fact-label">Founder — HPU Class of 1991</span></div>
         <div class="fact-tile"><span class="fact-value">1000s</span><span class="fact-label">HPU students served since 2009</span></div>
         <div class="fact-tile"><span class="fact-value">336.549.5216</span><span class="fact-label">Call or text our office directly</span></div>
       </div>

@@ -170,6 +170,130 @@ final class CustomerReviewTest extends CIUnitTestCase
         $this->assertSame($source, $active['terms_snapshot']);
     }
 
+
+    public function testPaidBookingAcceptsWardrobeAndShowsNewBalance(): void
+    {
+        $this->assertWardrobeAddition(true);
+    }
+
+    public function testUnpaidBookingAcceptsWardrobeAndShowsNewBalance(): void
+    {
+        $this->assertWardrobeAddition(false);
+    }
+
+    private function assertWardrobeAddition(bool $paid): void
+    {
+        [$userId, $bookingId] = $this->order();
+        if ($paid) {
+            (new \App\Libraries\PaymentService())->create([
+                'booking_id' => $bookingId, 'user_id' => $userId, 'reference' => 'WARDROBE-PAYMENT',
+                'provider' => 'manual', 'method' => 'cash', 'amount' => '500.00', 'currency' => 'USD', 'status' => 'completed',
+            ]);
+        }
+        $this->assertSame($paid ? 'paid' : 'unpaid', (new BookingModel())->find($bookingId)['payment_status']);
+        $size = db_connect()->table('item_sizes')->select('item_sizes.id,item_sizes.unit_price')->join('items', 'items.id=item_sizes.item_id')->like('items.name', 'wardrobe')->orderBy('item_sizes.unit_price', 'ASC')->get()->getRowArray();
+        $this->assertNotNull($size);
+        $token = bin2hex(random_bytes(32));
+        $session = ['customer_user_id' => $userId, 'customer_is_logged_in' => true, 'order_addition_' . $bookingId => $token];
+        $result = $this->withSession($session)->post('/account/bookings/' . $bookingId . '/items', [
+            csrf_token() => csrf_hash(), 'request_token' => $token, 'additional_boxes' => '0', 'quantities' => [$size['id'] => '1'],
+        ]);
+        $result->assertRedirectTo('/account/bookings/' . $bookingId);
+        $booking = (new BookingModel())->find($bookingId);
+        $expectedTotal = 500 + (float) $size['unit_price'];
+        $this->assertSame($expectedTotal, (float) $booking['total_amount']);
+        $this->assertSame($paid ? 'partial' : 'unpaid', $booking['payment_status']);
+        $this->assertSame(1, (new BookingItemModel())->where('booking_id', $bookingId)->countAllResults());
+        $this->assertSame($paid ? 1 : 0, (new \App\Models\TransactionModel())->where('booking_id', $bookingId)->countAllResults());
+        $balance = $this->withSession($session)->get('/account/balance');
+        $balance->assertStatus(200);
+        $balance->assertSee('$' . number_format($expectedTotal - ($paid ? 500 : 0), 2));
+        $balance->assertSee('Pay now');
+    }
+
+    public function testRegistrationWithoutShippingCanOrderAfterVerification(): void
+    {
+        $details = array_filter(self::details(), static fn (string $field): bool => ! str_starts_with($field, 'shipping_'), ARRAY_FILTER_USE_KEY);
+        $result = $this->post('/register', [
+            csrf_token() => csrf_hash(), ...$details, 'name' => 'No Shipping Student', 'email' => 'no-shipping@example.com',
+            'password' => 'a unique registration passphrase', 'password_confirm' => 'a unique registration passphrase', 'terms' => '1',
+        ]);
+        $result->assertRedirectTo('/verify-email');
+        $user = (new UserModel())->where('email', 'no-shipping@example.com')->first();
+        $this->assertNotNull($user);
+        $this->assertTrue(\App\Libraries\CustomerDetails::complete($user));
+        $this->assertEmpty($user['shipping_street']);
+        (new UserModel())->update($user['id'], ['status' => 'active', 'email_verified_at' => date('Y-m-d H:i:s')]);
+        $this->withSession(['customer_user_id' => $user['id'], 'customer_is_logged_in' => true])->get('/account/bookings/new')->assertStatus(200);
+    }
+
+    public function testRegistrationRejectsEveryMissingRequiredField(): void
+    {
+        $payload = [...self::details(), 'name' => 'Required Student', 'email' => 'required@example.com', 'password' => 'a unique registration passphrase', 'password_confirm' => 'a unique registration passphrase', 'terms' => '1'];
+        foreach (['name', 'email', 'student_id', 'phone_number', 'parent_phone_number', 'parent_email_address', 'password', 'password_confirm', 'terms'] as $field) {
+            foreach ([null, ''] as $empty) {
+                $invalid = $payload;
+                if ($empty === null) { unset($invalid[$field]); } else { $invalid[$field] = ''; }
+                $this->post('/register', [csrf_token() => csrf_hash(), ...$invalid])->assertSessionHas('errors');
+                $this->assertArrayHasKey($field, session()->getFlashdata('errors'));
+            }
+        }
+        $this->assertSame(0, (new UserModel())->where('email', $payload['email'])->countAllResults());
+    }
+
+
+    public function testNewBookingUsesConfiguredPriceWithoutRepricingExistingOrder(): void
+    {
+        [$userId, $existingId] = $this->order();
+        (new BookingModel())->update($existingId, ['status' => 'completed']);
+        db_connect()->table('app_settings')->where('setting_key', 'summer_storage_base_price')->update(['setting_value' => '500.00']);
+        $result = $this->withSession(['customer_user_id' => $userId, 'customer_is_logged_in' => true])->post('/account/bookings', [
+            csrf_token() => csrf_hash(), 'booking_type' => 'summer_storage', 'additional_box_quantity' => '0', 'terms' => '1',
+        ]);
+        $created = (new CustomerOrderService())->activeOrder($userId);
+        $this->assertNotNull($created);
+        $result->assertRedirectTo('/account/bookings/' . $created['id'] . '/payment');
+        $this->assertSame(500.0, (float) $created['base_price']);
+        $this->assertSame(500.0, (float) (new BookingModel())->find($existingId)['base_price']);
+    }
+
+    public function testLateDatabaseFailureRollsBackItemsAndPreservesPaidBalance(): void
+    {
+        $db = db_connect();
+        if ($db->DBDriver !== 'MySQLi') {
+            $this->markTestSkipped('The deployment database failure regression requires MySQL SIGNAL.');
+        }
+        [$userId, $bookingId] = $this->order();
+        (new \App\Libraries\PaymentService())->create([
+            'booking_id' => $bookingId, 'user_id' => $userId, 'reference' => 'ROLLBACK-PAYMENT',
+            'provider' => 'manual', 'method' => 'cash', 'amount' => '500.00', 'currency' => 'USD', 'status' => 'completed',
+        ]);
+        $size = (new \App\Models\ItemSizeModel())->first();
+        $trigger = $db->protectIdentifiers($db->prefixTable('revision_fail_addition'));
+        $table = $db->protectIdentifiers($db->prefixTable('booking_additions'));
+        $db->query('CREATE TRIGGER ' . $trigger . ' BEFORE INSERT ON ' . $table . " FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'REVISION_TEST: simulated request persistence failure'");
+        try {
+            try {
+                (new CustomerOrderService())->add($userId, $bookingId, 0, [['size_id' => $size['id'], 'quantity' => 1]], bin2hex(random_bytes(32)));
+                $this->fail('A failed database write must not be reported as successful.');
+            } catch (RuntimeException $exception) {
+                $this->assertStringContainsString('additional-item request', $exception->getMessage());
+            }
+        } finally {
+            $db->query('DROP TRIGGER ' . $trigger);
+            $db->resetTransStatus();
+        }
+        $booking = (new BookingModel())->find($bookingId);
+        $this->assertSame(500.0, (float) $booking['total_amount']);
+        $this->assertSame('paid', $booking['payment_status']);
+        $this->assertSame(0, (new BookingItemModel())->where('booking_id', $bookingId)->countAllResults());
+        $this->assertSame(1, (new \App\Models\TransactionModel())->where('booking_id', $bookingId)->countAllResults());
+        $logs = glob(WRITEPATH . 'logs/log-*.log');
+        $logged = implode('\n', array_map('file_get_contents', $logs));
+        $this->assertStringContainsString('at record_request:', $logged);
+        $this->assertStringContainsString('REVISION_TEST: simulated request persistence failure', $logged);
+    }
+
     private function order(): array
     {
         $userId = (int) (new UserModel())->insert(['name' => 'Review Student', 'email' => 'review@example.com', 'password_hash' => password_hash('review password phrase', PASSWORD_DEFAULT), 'role' => 'customer', 'status' => 'active', ...self::details()], true);

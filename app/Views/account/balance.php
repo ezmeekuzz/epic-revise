@@ -7,11 +7,11 @@
             <div class="account-hero mb-4">
                 <span class="eyebrow">Customer portal</span>
                 <h1 class="h2 mt-2 mb-2">Balance management</h1>
-                <p class="mb-0 text-muted-brand">Track and pay the outstanding balance across every Epic Storage booking.</p>
+                <p class="mb-0 text-muted-brand">Track and pay the outstanding balance across every EPIC Storage booking.</p>
             </div>
 
             <div class="balance-banner mb-4">
-                <div><h2 class="h4">Total outstanding balance</h2><p>Across all of your Epic Storage bookings.</p></div>
+                <div><h2 class="h4">Total outstanding balance</h2><p>Across all of your EPIC Storage bookings.</p></div>
                 <strong class="balance-banner-amount">$<?= number_format((float) $totalBalance, 2) ?></strong>
             </div>
 

@@ -23,7 +23,7 @@
       <div class="portal-card d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
         <div>
           <span class="status-pill <?= $bookingOpen ? 'status-active' : 'status-inactive' ?>"><?= $bookingOpen ? 'Scheduling available' : 'Scheduling unavailable' ?></span>
-          <h2 class="h4 mt-3 mb-2" id="bookingAvailabilityTitle"><?= $bookingOpen ? 'Plan your Epic pickup window' : 'Online scheduling is temporarily paused' ?></h2>
+          <h2 class="h4 mt-3 mb-2" id="bookingAvailabilityTitle"><?= $bookingOpen ? 'Plan your EPIC pickup window' : 'Online scheduling is temporarily paused' ?></h2>
           <?php if ($bookingOpen): ?>
             <p class="text-muted-brand mb-0">Current pickup hours are <?= esc(date('g:i A', strtotime((string) ($bookingSettings['pickup_start_time'] ?? '09:00')))) ?> to <?= esc(date('g:i A', strtotime((string) ($bookingSettings['pickup_end_time'] ?? '17:00')))) ?>. Please plan at least <?= (int) ($bookingSettings['minimum_advance_hours'] ?? 24) ?> hours ahead.</p>
           <?php else: ?>

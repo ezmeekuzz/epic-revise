@@ -4,8 +4,12 @@ $detailGroups = [
     'Parent or guardian' => ['parent_phone_number', 'parent_email_address'],
     'Shipping address' => ['shipping_street', 'shipping_city', 'shipping_state', 'shipping_zip'],
 ];
+$registrationDetails = ($includeShipping ?? true) === false;
+if ($registrationDetails) {
+    unset($detailGroups['Shipping address']);
+}
 ?>
-<p class="text-muted-brand mt-4">Student, parent, and shipping details are required.</p>
+<p class="text-muted-brand mt-4"><?= $registrationDetails ? 'All student and parent details are required.' : 'Student, parent, and shipping details are required.' ?></p>
 <?php foreach ($detailGroups as $groupLabel => $groupFields): ?>
 <fieldset class="mb-4">
     <legend class="h5"><?= esc($groupLabel) ?></legend>
@@ -18,7 +22,7 @@ $detailGroups = [
             <div class="<?= $field === 'shipping_street' ? 'col-12' : 'col-md-6' ?>">
                 <label class="form-label" for="<?= esc($field, 'attr') ?>"><?= esc($label) ?> <span aria-hidden="true">*</span></label>
                 <input class="form-control<?= isset($errors[$field]) ? ' is-invalid' : '' ?>" id="<?= esc($field, 'attr') ?>" name="<?= esc($field, 'attr') ?>" type="<?= esc($type, 'attr') ?>" value="<?= esc(old($field, $user[$field] ?? ''), 'attr') ?>" maxlength="<?= (int) $length ?>" autocomplete="<?= esc($autocomplete, 'attr') ?>" required>
-                <?php if (isset($errors[$field])): ?><div class="invalid-feedback"><?= esc($errors[$field]) ?></div><?php endif ?>
+                <?php if ($registrationDetails || isset($errors[$field])): ?><div id="<?= esc($field, 'attr') ?>Error" class="invalid-feedback"><?= esc($errors[$field] ?? ('Please enter your ' . mb_strtolower($label) . '.')) ?></div><?php endif ?>
             </div>
         <?php endforeach ?>
     </div>

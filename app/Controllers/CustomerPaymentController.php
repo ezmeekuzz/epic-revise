@@ -33,7 +33,7 @@ final class CustomerPaymentController extends BaseController
         $user = (new UserModel())->find((int) session()->get('customer_user_id'));
 
         return view('account/payment', [
-            ...$this->pageData('Secure Payment | Epic Storage Solutions', 'Pay securely for your Epic Storage booking.', 'account'),
+            ...$this->pageData('Secure Payment | EPIC Storage Solutions', 'Pay securely for your EPIC Storage booking.', 'account'),
             'booking' => $booking,
             'user' => $user,
             'balance' => $balance,

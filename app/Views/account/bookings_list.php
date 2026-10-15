@@ -5,7 +5,7 @@
     <section class="py-5 py-lg-6">
         <div class="container">
             <div class="account-hero mb-4 d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3">
-                <div><span class="eyebrow">Customer portal</span><h1 class="h2 mt-2 mb-2">My bookings</h1><p class="mb-0 text-muted-brand">Every Summer Storage and Summer Advantage request you have made with Epic.</p></div>
+                <div><span class="eyebrow">Customer portal</span><h1 class="h2 mt-2 mb-2">My bookings</h1><p class="mb-0 text-muted-brand">Every Summer Storage and Summer Advantage request you have made with EPIC.</p></div>
                 <?php if ($bookingOpen): ?><a class="btn btn-brand-primary" href="<?= site_url('account/bookings/new') ?>">Request a service</a><?php endif ?>
             </div>
 

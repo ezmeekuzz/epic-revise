@@ -8,7 +8,7 @@
             <div class="account-hero mb-4">
                 <span class="eyebrow">Customer portal</span>
                 <h1 class="h2 mt-2 mb-2">Online payments</h1>
-                <p class="mb-0 text-muted-brand">Pay any booking balance securely through Square. Card details are never stored by Epic.</p>
+                <p class="mb-0 text-muted-brand">Pay any booking balance securely through Square. Card details are never stored by EPIC.</p>
             </div>
 
             <div class="portal-card">

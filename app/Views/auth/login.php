@@ -6,9 +6,9 @@
         <div class="container">
             <div class="auth-card mx-auto">
                 <div class="text-center mb-4">
-                    <img class="auth-logo" src="<?= base_url('assets/images/epic-logo.png') ?>" alt="Epic Storage Solutions">
+                    <img class="auth-logo" src="<?= base_url('assets/images/epic-logo.png') ?>" alt="EPIC Storage Solutions">
                     <h1 class="h3 mt-3 mb-2">Welcome back</h1>
-                    <p class="text-muted-brand mb-0">Log in to manage your Epic customer account.</p>
+                    <p class="text-muted-brand mb-0">Log in to manage your EPIC customer account.</p>
                 </div>
 
                 <?php $errors = session()->getFlashdata('errors') ?? []; ?>
@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-brand-primary w-100">Log in securely</button>
-                    <p class="text-center text-muted-brand mt-4 mb-0 small">New to Epic? <a href="<?= site_url('register') ?>">Create a customer account</a></p>
+                    <p class="text-center text-muted-brand mt-4 mb-0 small">New to EPIC? <a href="<?= site_url('register') ?>">Create a customer account</a></p>
                 </form>
             </div>
         </div>

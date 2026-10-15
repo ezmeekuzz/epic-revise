@@ -22,7 +22,7 @@ final class AuthController extends BaseController
 
     public function login(): string
     {
-        return $this->authView('auth/login', 'Customer Log In | Epic Storage Solutions', 'Securely access your Epic Storage Solutions customer account.');
+        return $this->authView('auth/login', 'Customer Log In | EPIC Storage Solutions', 'Securely access your EPIC Storage Solutions customer account.');
     }
 
     public function authenticate(): RedirectResponse
@@ -63,7 +63,7 @@ final class AuthController extends BaseController
 
     public function register(): string
     {
-        return $this->authView('auth/register', 'Create an Account | Epic Storage Solutions', 'Create your customer account for Epic Storage Solutions.');
+        return $this->authView('auth/register', 'Create an Account | EPIC Storage Solutions', 'Create your customer account for EPIC Storage Solutions.');
     }
 
     public function store(): RedirectResponse
@@ -224,7 +224,7 @@ final class AuthController extends BaseController
         (new AuthService())->startSession($user);
         $redirectPath = $this->safeRedirectPath((string) ($token['redirect_path'] ?? '')) ?? '/account';
 
-        return redirect()->to(site_url(ltrim($redirectPath, '/')))->with('success', 'Your email is confirmed. Welcome to Epic, ' . $user['name'] . '.');
+        return redirect()->to(site_url(ltrim($redirectPath, '/')))->with('success', 'Your email is confirmed. Welcome to EPIC, ' . $user['name'] . '.');
     }
 
     public function resendVerification(): RedirectResponse
@@ -278,7 +278,7 @@ final class AuthController extends BaseController
         return $this->verificationRedirect([
             'verification_email' => $email,
             'verification_heading' => $sent ? 'Confirmation email sent' : 'Check your inbox',
-            'verification_message' => $sent ? 'If an unconfirmed Epic customer account exists for that address, the mail server accepted a fresh confirmation message. Check spam or quarantine if it is not visible.' : 'If an unconfirmed Epic customer account exists for that address, we will send a fresh confirmation link after SMTP delivery is available.',
+            'verification_message' => $sent ? 'If an unconfirmed EPIC customer account exists for that address, the mail server accepted a fresh confirmation message. Check spam or quarantine if it is not visible.' : 'If an unconfirmed EPIC customer account exists for that address, we will send a fresh confirmation link after SMTP delivery is available.',
             'verification_error' => $sent ? null : 'The confirmation email could not be sent right now. Please check the SMTP settings and try again.',
             'verification_resend' => true,
         ]);
@@ -293,7 +293,7 @@ final class AuthController extends BaseController
 
     public function forgotPassword(): string
     {
-        return $this->authView('auth/forgot_password', 'Forgot Password | Epic Storage Solutions', 'Reset your Epic Storage Solutions customer account password.');
+        return $this->authView('auth/forgot_password', 'Forgot Password | EPIC Storage Solutions', 'Reset your EPIC Storage Solutions customer account password.');
     }
 
     public function sendPasswordReset(): RedirectResponse
@@ -326,7 +326,7 @@ final class AuthController extends BaseController
             }
         }
 
-        return redirect()->route('forgot.password')->with('success', 'If an Epic customer account exists for that address, we sent a password reset link. Check your inbox, spam, and quarantine folders.');
+        return redirect()->route('forgot.password')->with('success', 'If an EPIC customer account exists for that address, we sent a password reset link. Check your inbox, spam, and quarantine folders.');
     }
 
     public function resetPassword(): string
@@ -339,7 +339,7 @@ final class AuthController extends BaseController
         }
 
         return view('auth/reset_password', [
-            'title' => 'Reset Password | Epic Storage Solutions', 'description' => 'Choose a new Epic Storage Solutions password.',
+            'title' => 'Reset Password | EPIC Storage Solutions', 'description' => 'Choose a new EPIC Storage Solutions password.',
             'activePage' => 'login', 'canonicalUrl' => current_url(), 'socialImage' => null, 'robots' => 'noindex,nofollow',
             'token' => $rawToken, 'tokenValid' => $tokenValid,
         ]);
@@ -457,8 +457,8 @@ final class AuthController extends BaseController
     private function verificationNotice(): string
     {
         return view('auth/verify_email', [
-            'title' => 'Confirm Your Email | Epic Storage Solutions',
-            'description' => 'Confirm your Epic Storage Solutions customer account.',
+            'title' => 'Confirm Your Email | EPIC Storage Solutions',
+            'description' => 'Confirm your EPIC Storage Solutions customer account.',
             'activePage' => 'login', 'canonicalUrl' => current_url(), 'socialImage' => null, 'robots' => 'noindex,nofollow',
             'email' => session()->getFlashdata('verification_email'),
             'heading' => session()->getFlashdata('verification_heading') ?? 'Check your inbox',
@@ -482,7 +482,7 @@ final class AuthController extends BaseController
     private function verificationResult(string $heading, string $message, bool $showResend): string
     {
         return view('auth/verify_email', [
-            'title' => $heading . ' | Epic Storage Solutions', 'description' => $message,
+            'title' => $heading . ' | EPIC Storage Solutions', 'description' => $message,
             'activePage' => 'login', 'canonicalUrl' => current_url(), 'socialImage' => null, 'robots' => 'noindex,nofollow',
             'heading' => $heading, 'message' => $message, 'showResend' => $showResend,
         ]);

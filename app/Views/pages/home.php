@@ -20,7 +20,7 @@
       "foundingDate": "2009",
       "founder": {
         "@type": "Person",
-        "name": "Anisha Roy"
+        "name": "Anissa Roy"
       },
       "areaServed": {
         "@type": "Place",
@@ -69,7 +69,6 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<?php $summerStoragePrice = number_format((float) ($pricingSettings['summer_storage_base_price'] ?? 450), 2); $summerAdvantageBoxPrice = number_format((float) ($pricingSettings['summer_advantage_box_price'] ?? 50), 2); ?>
 <main>
 
   <section class="hero2">
@@ -105,7 +104,7 @@
       <div class="stats2-grid">
         <div class="stats2-item">
           <div class="stats2-value">2009</div>
-          <div class="stats2-label">Founded &amp; locally owned in High Point, NC</div>
+          <div class="stats2-label">Locally Owned</div>
         </div>
         <div class="stats2-item">
           <div class="stats2-value">1,000s</div>
@@ -113,7 +112,7 @@
         </div>
         <div class="stats2-item">
           <div class="stats2-value">HPU '91</div>
-          <div class="stats2-label">Founded by High Point University alum Anisha Roy</div>
+          <div class="stats2-label">High Point, North Carolina</div>
         </div>
       </div>
     </div>
@@ -134,49 +133,12 @@
   <section id="services" class="services2">
     <div class="container">
       <div class="services2-head">
-        <span class="pill-eyebrow">Our EPIC Services</span>
+        <span class="home-action pill-eyebrow">Our EPIC Services</span>
         <h2>Two ways to store your stuff</h2>
         <p>Pick the package that matches where you are in your HPU journey — we'll handle the rest.</p>
       </div>
 
-      <div class="split-card" data-plan-card>
-        <div class="split-photo img-storage" role="img" aria-label="Real EPIC Storage Solutions boxes with students' dorm belongings"></div>
-        <div class="split-panel">
-          <span class="pill-badge-outline">April – August</span>
-          <h3>Summer Storage</h3>
-          <p class="plan-audience2">For current HPU students. Standard package includes:</p>
-          <div class="split-price-row">
-            <span class="split-price">$<?= esc($summerStoragePrice) ?></span>
-            <span class="split-price-note">flat rate</span>
-          </div>
-          <ul class="split-bullets"><li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>5 large boxes (18&quot; &times; 18&quot; &times; 24&quot;)</li><li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Packing tape and supplies</li><li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Secured storage</li><li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Pickup from your dorm</li><li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Re-delivery to your dorm</li></ul>
-          <p class="split-note"><strong>Good to know:</strong> additional boxes and items can be added. Shipping services are available, along with summer school and study abroad options.</p>
-
-          <a class="btn btn-brand-secondary" href="<?= site_url('account/bookings/new?booking_type=summer_storage') ?>">Let's Get Started</a>
-        </div>
-      </div>
-
-      <div class="split-card reverse" data-plan-card>
-        <div class="split-photo img-advantage" role="img" aria-label="Labeling a box for the Summer Advantage program"></div>
-        <div class="split-panel">
-          <span class="pill-badge-outline">July – August</span>
-          <h3>Summer Advantage</h3>
-          <p class="plan-audience2">For incoming HPU freshmen attending the Summer Advantage Program.</p>
-          <div class="split-price-row">
-            <span class="split-price">$<?= esc($summerAdvantageBoxPrice) ?></span>
-            <span class="split-price-note">per box</span>
-          </div>
-          <p class="plan-audience2 plan-detail2">Large box (18"×18"×24") — ordered per box</p>
-          <ul class="split-bullets">
-            <li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Packing tape and supplies</li>
-            <li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Secured storage</li>
-            <li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Pick-up and redelivery to your dorm</li>
-          </ul>
-          <p class="split-note"><strong>Good to know:</strong> additional items can be added, and shipping services are available.</p>
-
-          <a class="btn btn-brand-secondary" href="<?= site_url('account/bookings/new?booking_type=summer_advantage') ?>">Let's Get Started</a>
-        </div>
-      </div>
+      <?= view('partials/storage_packages', ['pricingSettings' => $pricingSettings ?? [], 'homePackageCards' => true]) ?>
     </div>
   </section>
 
@@ -184,10 +146,10 @@
     <div class="container">
       <div class="process2-head">
         <div>
-          <span class="pill-eyebrow solid">The Process</span>
+          <span class="home-action pill-eyebrow solid">The Process</span>
           <h2>How it works</h2>
+          <p>Three simple steps between drop-off and move-in day.</p>
         </div>
-        <p>Four simple steps between drop-off and move-in day.</p>
       </div>
 
       <div class="process2-grid">
@@ -197,21 +159,15 @@
           <h3>Sign up</h3>
           <p>Sign up online, customize the services you need, and pay securely by credit card on the EPIC site.</p>
         </div>
-        <div class="process2-card outline">
-          <span class="process2-icon"><img src="<?= base_url('assets/images/noun_schedule_8469263.png') ?>" alt=""></span>
-          <span class="process2-num">2</span>
-          <h3>Schedule</h3>
-          <p>Go to our easy-to-use scheduling page to select a date and time for us to pick up your stuff from your dorm room.</p>
-        </div>
         <div class="process2-card fill">
           <span class="process2-icon"><img src="<?= base_url('assets/images/noun_pack_8473700.png') ?>" alt=""></span>
-          <span class="process2-num">3</span>
+          <span class="process2-num">2</span>
           <h3>Pack</h3>
           <p>Complimentary boxes and packing tape are available before your pick-up date, with all the specifics sent by email.</p>
         </div>
         <div class="process2-card outline">
           <span class="process2-icon"><img src="<?= base_url('assets/images/noun_ProductReturn_5063282.png') ?>" alt=""></span>
-          <span class="process2-num">4</span>
+          <span class="process2-num">3</span>
           <h3>Store &amp; return</h3>
           <p>EPIC picks up your items, stores them securely while you're away, and brings everything back when it's time.</p>
         </div>
@@ -238,9 +194,9 @@
           </div>
         </div>
         <div class="col-lg-7">
-          <span class="pill-eyebrow solid">About Us</span>
+          <span class="home-action pill-eyebrow solid">About Us</span>
           <h2 class="mt-2">Built by an HPU family, for HPU families</h2>
-          <p class="hero-lede mt-3">Our mission is to give High Point University students and parents a convenient, accountable, and safe moving experience. EPIC was established in 2009 and is locally owned and operated in High Point, NC by High Point University alum Anisha Roy. After a successful corporate career, Anisha set out to run a business of her own — and through the years, we've had the opportunity to serve thousands of HPU students, helping us grow into the company we are today.</p>
+          <p class="hero-lede mt-3">Our mission is to give High Point University students and parents a convenient, accountable, and safe moving experience. EPIC was established in 2009 and is locally owned and operated in High Point, NC by High Point University alum Anissa Roy. After a successful corporate career, Anissa set out to run a business of her own — and through the years, we've had the opportunity to serve thousands of HPU students, helping us grow into the company we are today.</p>
           <p class="hero-lede mt-3">We pride ourselves on a high-touch, always-available experience that lets us engage directly with every customer relationship, putting a personal touch on each parent and student's experience.</p>
           <div class="about2-badges">
             <span class="badge2">Established 2009</span>
@@ -255,7 +211,7 @@
   <section id="testimonials" class="testi2">
     <div class="container">
       <div class="testi2-head">
-        <span class="pill-eyebrow">Testimonials</span>
+        <span class="home-action pill-eyebrow">Testimonials</span>
         <h2>What EPIC families say</h2>
       </div>
 
@@ -269,7 +225,7 @@
                     <img src="<?= base_url('assets/images/pexels-gustavo-fring-7489129.png') ?>" alt="Two students packing boxes together">
                   </div>
                   <div class="testi2-panel">
-                    <p class="testi2-quote">&ldquo;When I called Epic Storage, Anissa was friendly, professional, and above all helpful! They took care of everything for a very reasonable cost. They supply the boxes and tape on campus, and all we needed to do was pack up. They picked everything up and took it to storage, then delivered right to the dorm room when we came back. We're excited to use them again this year!&rdquo;</p>
+                    <p class="testi2-quote">&ldquo;When I called EPIC Storage, Anissa was friendly, professional, and above all helpful! They took care of everything for a very reasonable cost. They supply the boxes and tape on campus, and all we needed to do was pack up. They picked everything up and took it to storage, then delivered right to the dorm room when we came back. We're excited to use them again this year!&rdquo;</p>
                     <div class="testi2-who">
                       <span class="testi2-avatar">S</span>
                       <span><strong>Steve</strong><span>Parent From Florida</span></span>
@@ -333,7 +289,7 @@
                     <img src="<?= base_url('assets/images/6-1.png') ?>" alt="Parent reviewing storage arrangements online">
                   </div>
                   <div class="testi2-panel">
-                    <p class="testi2-quote">&ldquo;Anissa was patient and kind, and she sincerely cared about providing timely and professional service. I'd recommend Epic Storage Solutions for any storage needs — you'll get excellent customer service in the process.&rdquo;</p>
+                    <p class="testi2-quote">&ldquo;Anissa was patient and kind, and she sincerely cared about providing timely and professional service. I'd recommend EPIC Storage Solutions for any storage needs — you'll get excellent customer service in the process.&rdquo;</p>
                     <div class="testi2-who">
                       <span class="testi2-avatar">C</span>
                       <span><strong>Carla</strong><span>New Jersey</span></span>

@@ -6,9 +6,9 @@
         <div class="container">
             <div class="auth-card mx-auto">
                 <div class="text-center mb-4">
-                    <img class="auth-logo" src="<?= base_url('assets/images/epic-logo.png') ?>" alt="Epic Storage Solutions">
+                    <img class="auth-logo" src="<?= base_url('assets/images/epic-logo.png') ?>" alt="EPIC Storage Solutions">
                     <h1 class="h3 mt-3 mb-2">Forgot your password?</h1>
-                    <p class="text-muted-brand mb-0">Enter the email on your Epic customer account and we will send you a link to reset it.</p>
+                    <p class="text-muted-brand mb-0">Enter the email on your EPIC customer account and we will send you a link to reset it.</p>
                 </div>
 
                 <?php $errors = session()->getFlashdata('errors') ?? []; ?>

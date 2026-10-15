@@ -7,7 +7,7 @@
             <div class="account-hero mb-4">
                 <span class="eyebrow">Customer portal</span>
                 <h1 class="h2 mt-2 mb-2">Payment history logs</h1>
-                <p class="mb-0 text-muted-brand">Every payment attempt recorded against your Epic Storage bookings.</p>
+                <p class="mb-0 text-muted-brand">Every payment attempt recorded against your EPIC Storage bookings.</p>
             </div>
 
             <div class="portal-card">

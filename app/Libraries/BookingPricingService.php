@@ -56,7 +56,7 @@ final class BookingPricingService
         array $requestedItems,
     ): array {
         if (! in_array($bookingType, ['summer_storage', 'summer_advantage'], true)) {
-            throw new InvalidArgumentException('Choose a valid Epic service.');
+            throw new InvalidArgumentException('Choose a valid EPIC service.');
         }
 
         if ($boxQuantity < ($bookingType === 'summer_advantage' ? 1 : 0) || $boxQuantity > 100) {

@@ -33,7 +33,7 @@ final class CustomerFilter implements FilterInterface
             return redirect()->route('login')->with(
                 'error',
                 $isBookingRequest
-                    ? 'Log in with your Epic customer account to continue with your selected service.'
+                    ? 'Log in with your EPIC customer account to continue with your selected service.'
                     : 'Please log in with an active customer account.',
             );
         }

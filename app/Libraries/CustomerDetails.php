@@ -35,7 +35,7 @@ final class CustomerDetails
     {
         $rules = [];
         foreach (self::FIELDS as $field => [$label, $type, $length]) {
-            $rules[$field] = 'required|max_length[' . $length . ']';
+            $rules[$field] = (str_starts_with($field, 'shipping_') ? 'permit_empty' : 'required') . '|max_length[' . $length . ']';
             if ($type === 'email') {
                 $rules[$field] .= '|valid_email';
             } elseif ($type === 'tel') {
@@ -48,6 +48,10 @@ final class CustomerDetails
     public static function complete(array $user): bool
     {
         foreach (array_keys(self::FIELDS) as $field) {
+            // Shipping is coordinated separately and must not block a newly registered customer.
+            if (str_starts_with($field, 'shipping_')) {
+                continue;
+            }
             if (trim((string) ($user[$field] ?? '')) === '') {
                 return false;
             }

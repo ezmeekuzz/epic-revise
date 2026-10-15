@@ -179,7 +179,7 @@ final class AuthenticationFlowTest extends CIUnitTestCase
         $result = $this->get('/account/bookings/new?booking_type=summer_storage');
 
         $result->assertRedirectTo('/login');
-        $result->assertSessionHas('error', 'Log in with your Epic customer account to continue with your selected service.');
+        $result->assertSessionHas('error', 'Log in with your EPIC customer account to continue with your selected service.');
         $result->assertSessionHas('customer_intended_url', '/account/bookings/new?booking_type=summer_storage');
 
         $this->createUser('Returning Customer', 'returning@example.com', 'customer');

@@ -23,6 +23,10 @@
 
   --font-display:'Jura','Poppins','Segoe UI',sans-serif;
   --font-body:'Montserrat','Segoe UI',sans-serif;
+  --font-size-base:clamp(17px,calc(16px + .14vw),18px);
+  --action-height:56px;
+  --action-width:248px;
+  --action-font-size:1rem;
   --fs-hero: clamp(2.2rem, 3.4vw + 1rem, 3.6rem);
 
   color-scheme: light;
@@ -45,6 +49,7 @@
    shot for a white page, so it always renders the brand's light palette
    regardless of OS/browser theme. */
 
+html{font-size:var(--font-size-base);}
 body{background:var(--paper);color:var(--ink);}
 h1,h2,h3,h4{font-family:var(--font-display);font-weight:800;line-height:1.15;text-wrap:balance;color:var(--ink);}
 a{text-decoration:none;}
@@ -240,3 +245,14 @@ a.contact-info-card:hover{border-color:rgba(255,255,255,.32);background:rgba(255
 @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important;}}
 /* Customer Square checkout */
 .payment-checkout-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);gap:24px;align-items:start}.payment-card,.payment-order-card{min-width:0}.payment-order-card{position:sticky;top:110px}.payment-environment{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eef4fa;color:#31536d;font-size:.72rem;font-weight:700;text-transform:uppercase}.square-card-container{min-height:105px;padding:16px;border:1px solid #d9e1e8;border-radius:8px;background:#fff}.payment-inline-status{min-height:24px;padding:0;color:#5b6975;font-size:.88rem}.payment-inline-status.is-error{padding:10px 12px;border-radius:6px;background:#fff1f2;color:#a92236}.payment-inline-status.is-success{padding:10px 12px;border-radius:6px;background:#eaf8f0;color:#117244}.payment-balance{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:22px 0 14px;padding:17px 0;border-top:1px solid #e4e9ee;border-bottom:1px solid #e4e9ee}.payment-balance span{color:#667786;font-weight:600}.payment-balance strong{color:#063a5d;font-size:1.2rem}.payment-card .form-check-label{color:#4e6070;font-size:.86rem;line-height:1.55}@media(max-width:991.98px){.payment-checkout-grid{grid-template-columns:1fr}.payment-order-card{position:static}}@media(max-width:575.98px){.square-card-container{padding:12px}.payment-balance{align-items:flex-start;flex-direction:column;gap:5px}}
+
+/* Shared large action style. Homepage applies it to existing calls to action. */
+.home-action,.page-home main .btn{
+  display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;
+  width:var(--action-width)!important;max-width:100%;height:var(--action-height);min-height:var(--action-height);
+  padding:10px 12px!important;font-size:var(--action-font-size)!important;line-height:1.35;
+}
+.page-home main .home-action{font-weight:700;}
+
+/* Keep large Bootstrap gutters within the phone viewport as the base type grows. */
+@media(max-width:575.98px){.row.g-5{--bs-gutter-x:1.5rem;}}

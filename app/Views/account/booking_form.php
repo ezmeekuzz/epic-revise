@@ -84,7 +84,7 @@ $processingConfig = [
                                 <div class="service-subsection mt-4">
                                     <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3"><div><h3 class="h5 mb-1">Additional storage items</h3><p class="text-muted-brand small mb-0">Select an item, size, and quantity, then add it to your booking.</p></div></div>
                                     <?php if ($itemCatalog === []): ?>
-                                        <div class="booking-empty-state">No storage items are available. Please contact Epic support.</div>
+                                        <div class="booking-empty-state">No storage items are available. Please contact EPIC support.</div>
                                     <?php else: ?>
                                         <div class="item-builder">
                                             <div><label class="form-label" for="storage_item">Item</label><select class="form-select" id="storage_item"><option value="">Select an item</option><?php foreach ($itemCatalog as $item): ?><option value="<?= (int) $item['id'] ?>"><?= esc($item['name']) ?></option><?php endforeach ?></select></div>

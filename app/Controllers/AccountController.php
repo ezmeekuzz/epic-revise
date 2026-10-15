@@ -35,7 +35,7 @@ final class AccountController extends BaseController
         $profileDorm = ! empty($user['dorm_id']) ? (new DormModel())->find((int) $user['dorm_id']) : null;
 
         return view('account/dashboard', [
-            ...$this->pageData('My Account | Epic Storage Solutions', 'Manage your Epic Storage Solutions customer account.', 'account'),
+            ...$this->pageData('My Account | EPIC Storage Solutions', 'Manage your EPIC Storage Solutions customer account.', 'account'),
             'user'     => $user,
             'profileDorm' => $profileDorm,
             'bookings' => (new BookingModel())->where('user_id', (int) session()->get('customer_user_id'))->orderBy('created_at', 'DESC')->findAll(),
@@ -46,7 +46,7 @@ final class AccountController extends BaseController
     public function editProfile(): string
     {
         return view('account/profile', [
-            ...$this->pageData('Personal Details | Epic Storage Solutions', 'Update your Epic customer profile.', 'account'),
+            ...$this->pageData('Personal Details | EPIC Storage Solutions', 'Update your EPIC customer profile.', 'account'),
             'user' => $this->currentCustomer(),
             'dorms' => $this->activeDorms(),
         ]);
@@ -110,7 +110,7 @@ final class AccountController extends BaseController
             return redirect()->to(site_url('account/bookings/' . $active['id'] . '/items'))->with('success', 'You already have an open order. Add additional items here.');
         }
         if (! CustomerDetails::complete($this->currentCustomer())) {
-            return redirect()->route('account.profile')->with('error', 'Complete your student, parent, and shipping details before ordering.');
+            return redirect()->route('account.profile')->with('error', 'Complete your student and parent details before ordering.');
         }
         $settings = new SettingsService();
         $pricingService = new BookingPricingService();
@@ -121,7 +121,7 @@ final class AccountController extends BaseController
         }
 
         return view('account/booking_form', [
-            ...$this->pageData('Request a Pickup | Epic Storage Solutions', 'Request an Epic Storage pickup window.', 'account'),
+            ...$this->pageData('Request a Pickup | EPIC Storage Solutions', 'Request an EPIC Storage pickup window.', 'account'),
             'user' => (new UserModel())->find((int) session()->get('customer_user_id')),
             'booking' => $settings->displayGroup('booking'),
             'pricing' => $pricingService->displayPrices(),
@@ -145,7 +145,7 @@ final class AccountController extends BaseController
             return redirect()->route('login')->with('error', 'Please log in again to request a booking.');
         }
         if (! CustomerDetails::complete($user)) {
-            return redirect()->route('account.profile')->with('error', 'Complete your student, parent, and shipping details before ordering.');
+            return redirect()->route('account.profile')->with('error', 'Complete your student and parent details before ordering.');
         }
         if ($this->request->getPost('terms') !== '1') {
             return redirect()->back()->withInput()->with('error', 'Please agree to the Terms and Conditions before ordering.');
@@ -277,7 +277,7 @@ final class AccountController extends BaseController
         $token = bin2hex(random_bytes(32));
         session()->set('order_addition_' . $id, $token);
         return view('account/add_items', [
-            ...$this->pageData('Add Additional Items | Epic Storage Solutions', 'Add items to your existing order.', 'account'),
+            ...$this->pageData('Add Additional Items | EPIC Storage Solutions', 'Add items to your existing order.', 'account'),
             'booking' => $booking, 'requestToken' => $token,
             'itemCatalog' => (new BookingPricingService())->catalog(),
         ]);
@@ -310,7 +310,10 @@ final class AccountController extends BaseController
         } catch (InvalidArgumentException $exception) {
             return redirect()->back()->withInput()->with('error', $exception->getMessage());
         } catch (Throwable $exception) {
-            log_message('error', 'Order additions failed: {type}', ['type' => $exception::class]);
+            log_message('error', 'Order additions request failed for booking {booking}: {type}: {message}', [
+                'booking' => $id, 'type' => $exception::class,
+                'message' => str_replace($token, '[request token redacted]', $exception->getMessage()),
+            ]);
             return redirect()->back()->withInput()->with('error', 'Your items could not be saved. Please try again.');
         }
         return redirect()->route('account.bookings.show', [$id])->with('success', 'Additional items saved to your existing order. Review the updated balance and continue to payment.');
@@ -321,7 +324,7 @@ final class AccountController extends BaseController
         $booking = $this->ownedBooking($id);
 
         return view('account/booking_show', [
-            ...$this->pageData('Booking ' . $booking['reference_code'] . ' | Epic Storage Solutions', 'View your Epic Storage booking details.', 'account'),
+            ...$this->pageData('Booking ' . $booking['reference_code'] . ' | EPIC Storage Solutions', 'View your EPIC Storage booking details.', 'account'),
             'booking' => $booking,
             'dorm' => $booking['dorm_id'] ? (new DormModel())->find((int) $booking['dorm_id']) : null,
             'items' => (new BookingItemModel())->where('booking_id', $id)->findAll(),
@@ -333,7 +336,7 @@ final class AccountController extends BaseController
     public function myBookings(): string
     {
         return view('account/bookings_list', [
-            ...$this->pageData('My Bookings | Epic Storage Solutions', 'View every Epic Storage booking you have made.', 'account'),
+            ...$this->pageData('My Bookings | EPIC Storage Solutions', 'View every EPIC Storage booking you have made.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
             'bookingOpen' => (new SettingsService())->get('bookings_enabled', '0') === '1',
         ]);
@@ -342,7 +345,7 @@ final class AccountController extends BaseController
     public function payments(): string
     {
         return view('account/payments_list', [
-            ...$this->pageData('Online Payments | Epic Storage Solutions', 'Pay securely for any Epic Storage booking balance.', 'account'),
+            ...$this->pageData('Online Payments | EPIC Storage Solutions', 'Pay securely for any EPIC Storage booking balance.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
         ]);
     }
@@ -350,7 +353,7 @@ final class AccountController extends BaseController
     public function pickupDates(): string
     {
         return view('account/pickup_dates', [
-            ...$this->pageData('Date Leaving Campus | Epic Storage Solutions', 'Review and manage the pickup date for every booking.', 'account'),
+            ...$this->pageData('Date Leaving Campus | EPIC Storage Solutions', 'Review and manage the pickup date for every booking.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
             'booking' => (new SettingsService())->displayGroup('booking'),
         ]);
@@ -359,7 +362,7 @@ final class AccountController extends BaseController
     public function dropoffDates(): string
     {
         return view('account/dropoff_dates', [
-            ...$this->pageData('Manage Drop-off Dates | Epic Storage Solutions', 'Review and manage the drop-off date for every booking.', 'account'),
+            ...$this->pageData('Manage Drop-off Dates | EPIC Storage Solutions', 'Review and manage the drop-off date for every booking.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
             'booking' => (new SettingsService())->displayGroup('booking'),
         ]);
@@ -368,7 +371,7 @@ final class AccountController extends BaseController
     public function paymentHistory(): string
     {
         return view('account/payment_history', [
-            ...$this->pageData('Payment History Logs | Epic Storage Solutions', 'Every payment made toward your Epic Storage bookings.', 'account'),
+            ...$this->pageData('Payment History Logs | EPIC Storage Solutions', 'Every payment made toward your EPIC Storage bookings.', 'account'),
             'payments' => (new PaymentModel())
                 ->select('payments.*, bookings.reference_code AS booking_reference, bookings.service_name')
                 ->join('bookings', 'bookings.id = payments.booking_id')
@@ -383,7 +386,7 @@ final class AccountController extends BaseController
         $bookings = $this->bookingsWithFinancials();
 
         return view('account/balance', [
-            ...$this->pageData('Balance Management | Epic Storage Solutions', 'Track and pay the outstanding balance on every booking.', 'account'),
+            ...$this->pageData('Balance Management | EPIC Storage Solutions', 'Track and pay the outstanding balance on every booking.', 'account'),
             'bookings' => $bookings,
             'totalBalance' => array_sum(array_column($bookings, 'balance')),
         ]);
@@ -392,7 +395,7 @@ final class AccountController extends BaseController
     public function editPickup(int $id): string
     {
         return view('account/pickup_form', [
-            ...$this->pageData('Pickup Details | Epic Storage Solutions', 'Add or update the pickup details for your booking.', 'account'),
+            ...$this->pageData('Pickup Details | EPIC Storage Solutions', 'Add or update the pickup details for your booking.', 'account'),
             'booking' => $this->ownedBooking($id),
             'user' => $this->currentCustomer(),
             'dorms' => $this->activeDorms(),
