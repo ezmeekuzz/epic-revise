@@ -1,0 +1,1722 @@
+EPIC STORAGE SOLUTIONS, LLC
+
+TERMS & CONDITIONS
+
+Consolidated Articles 1–15
+September 10, 2026
+
+
+
+INDEX
+
+
+
+Article 1 — Acceptance of Terms
+
+Article 2 — Definitions
+
+Article 3 — Customer Representations, Ownership & Authority
+
+Article 4 — Services Provided
+
+Article 5 — Customer Responsibilities
+
+Article 6 — Prohibited Property
+
+Article 7 — Payment, Billing, Chargebacks & Collections
+
+Article 8 — Insurance, Declared Value & Risk of Loss
+
+Article 9 — Pickup, Transportation, Storage & Delivery
+
+Article 10 — Packing Services
+
+Article 11 — Vehicle Storage Services
+
+Article 12 — Claims, Loss, Damage & Limitation of Liability
+
+Article 13 — Privacy, Electronic Communications & Website Terms
+
+Article 14 — Dispute Resolution, Arbitration, Governing Law & Force Majeure
+
+Article 15 — General Legal Provisions & Customer Acknowledgment
+
+
+
+
+ARTICLE 1
+ACCEPTANCE OF TERMS
+
+These Terms & Conditions constitute a legally binding agreement between EPIC Storage Solutions, LLC ("EPIC") and the Customer and govern use of EPIC’s website and all Services provided by EPIC.
+
+1.1 Agreement
+
+By placing an order through EPIC’s website, completing online checkout, electronically signing, selecting “I Agree,” or accepting Services, the Customer agrees to be bound by these Terms & Conditions.
+
+1.2 Electronic Acceptance
+
+Electronic acceptance and signatures have the legal effect described in Articles 13 and 15.
+
+1.3 Authority to Contract
+
+The person accepting this Agreement represents that they are legally capable of entering into a binding contract and, when acting for another person or entity, have authority to bind that person or entity.
+
+1.4 Customer Review
+
+The Customer’s opportunity-to-review acknowledgment is set forth in Article 15.
+
+1.5 Entire Agreement
+
+These Terms, together with the applicable order confirmation and any written addenda expressly incorporated by reference, constitute the agreement governing the Services.
+
+1.6 Modifications
+
+EPIC may revise these Terms prospectively. Material changes to an existing transaction shall apply only as permitted by this Agreement and applicable law.
+
+1.7 Insurance Acknowledgment
+
+Insurance, declared value, and liability limitations are governed by Articles 8 and 12.
+
+1.8 Customer Acknowledgments
+
+Core Customer duties regarding information accuracy, ownership authority, prohibited Property, and payment are governed by Articles 3, 5, 6, and 7.
+
+1.9 Severability
+
+If any provision is determined to be invalid or unenforceable, the remaining provisions shall remain in full force to the fullest extent permitted by law.
+
+1.10 No Waiver
+
+Failure by EPIC to enforce any provision on one occasion shall not waive the right to enforce that or any other provision later.
+
+1.11 Priority and Headings
+
+Headings are for convenience only. Specific written transaction terms control over general website descriptions to the extent of an actual conflict.
+
+1.12 Survival
+
+Provisions that by their nature should continue—including payment, claims, liability limitations, indemnification, dispute resolution, and governing law—survive completion or termination of Services.
+
+
+
+
+ARTICLE 2
+DEFINITIONS
+
+The following definitions apply throughout this Agreement. Singular terms include the plural where appropriate, and defined terms shall be interpreted consistently unless context clearly requires otherwise.
+
+2.1 Company
+
+“Company,” “EPIC,” “we,” “our,” or “us” means EPIC Storage Solutions, LLC, together with its owners, officers, members, managers, employees, agents, representatives, contractors, subcontractors, affiliates, successors, and assigns.
+
+2.2 Customer
+
+“Customer” means any individual, parent, guardian, student, business, university organization, corporation, partnership, limited liability company, trust, estate, or other legal entity requesting or receiving Services from EPIC. When Services are purchased by one individual for another, both may be jointly and severally responsible as provided in this Agreement.
+
+2.3 Property
+
+“Property” means all goods and tangible personal property delivered to, transported by, packed by, handled by, or stored with EPIC, including boxes, furniture, mattresses, appliances, electronics, computers, televisions, printers, gaming systems, bicycles, musical instruments, luggage, sporting equipment, dorm furnishings, vehicles, commercial inventory, and personal belongings.
+
+2.4 Services
+
+“Services” means services offered by EPIC, including pickup, transportation, loading, unloading, packing, unpacking, warehouse storage, controlled storage, vehicle storage, delivery, shipping coordination, inventory management, temporary storage, commercial moving, student move-in/move-out logistics, packaging-material sales, and other services offered through EPIC.
+
+2.5 Website
+
+“Website” means any website, customer portal, online ordering system, mobile application, payment portal, or electronic platform owned, operated, or authorized by EPIC.
+
+2.6 Electronic Acceptance
+
+“Electronic Acceptance” includes clicking “I Agree” or “Accept,” completing checkout, electronic signatures, digital acknowledgments, email confirmations, and mobile confirmations, with the same legal effect as a handwritten signature to the fullest extent permitted by law.
+
+2.7 Electronic Communications
+
+“Electronic Communications” include email, SMS/text messages, mobile notifications, telephone calls, voice messages, and customer-portal notifications concerning scheduling, invoices, payments, delivery, pickup, policy updates, claims, and service changes.
+
+2.8 Warehouse
+
+“Warehouse” means any storage facility, warehouse, commercial building, self-storage facility, secured lot, or other location owned, leased, managed, or utilized by EPIC for storage or handling.
+
+2.9 Storage Period
+
+“Storage Period” begins when Property is accepted by EPIC and ends when Property is delivered, released, or otherwise lawfully disposed of.
+
+2.10 Pickup Date
+
+“Pickup Date” means the scheduled date communicated by EPIC for collecting Property; pickup dates are estimates and may be adjusted for operational requirements.
+
+2.11 Delivery Date
+
+“Delivery Date” means the scheduled date EPIC intends to return Property. Delivery dates are estimates unless expressly guaranteed in writing by an authorized EPIC representative.
+
+2.12 Business Day
+
+“Business Day” means Monday through Friday, excluding federal holidays recognized in North Carolina, unless otherwise stated.
+
+2.13 Declared Value
+
+“Declared Value” means the total value assigned to Property by the Customer for purposes of establishing potential contractual liability limits. Declared Value is not insurance and is not a guarantee of reimbursement.
+
+2.14 Insurance
+
+“Insurance” means coverage issued by a licensed insurance company. EPIC is not an insurance company and does not provide insurance unless specifically stated in writing.
+
+2.15 Prohibited Property
+
+“Prohibited Property” means any item EPIC refuses to transport or store because of legal restrictions, safety concerns, excessive value, or operational limitations, including the items described in Article 6.
+
+2.16 Dangerous Conditions
+
+“Dangerous Conditions” include mold, mildew, water intrusion, infestation, biohazards, chemical contamination, structural instability, smoke damage, excessive odors, leaking containers, and other conditions that may endanger persons or property.
+
+2.17 University Property
+
+“University Property” means any residence hall, dormitory, apartment, fraternity/sorority house, university-owned housing, parking facility, or campus location where EPIC performs Services.
+
+2.18 Force Majeure Event
+
+“Force Majeure Event” means an event beyond EPIC’s reasonable control, including severe weather, natural disaster, public-health emergency, government action, university closure, labor dispute, utility or internet failure, cyberattack, civil unrest, terrorism, road closure, supply-chain disruption, or equipment failure despite reasonable maintenance.
+
+2.19 Claim
+
+“Claim” means any written allegation asserting loss, damage, delay, shortage, or other liability arising from EPIC’s Services and submitted under Article 12.
+
+2.20 Authorized Representative
+
+“Authorized Representative” means an individual designated by the Customer in writing to act on the Customer’s behalf regarding scheduling, delivery, payment, release of Property, or other matters.
+
+2.21 Interpretation
+
+Unless context requires otherwise: singular includes plural; references to one gender include all genders; “including” means “including without limitation”; headings are for convenience; and statutory references include amendments and successor laws.
+
+2.22 Construction of Agreement
+
+This Agreement shall be interpreted in a commercially reasonable manner consistent with safe transportation and storage and the allocation of risk stated herein. No provision expands EPIC’s liability beyond the express terms unless required by law.
+
+
+
+
+ARTICLE 3
+CUSTOMER REPRESENTATIONS, OWNERSHIP & AUTHORITY
+
+This Article establishes the Customer’s representations regarding ownership, authority to contract, and responsibilities associated with Property tendered to EPIC.
+
+3.1 Ownership of Property
+
+Customer represents and warrants that they are the legal owner of the Property or are otherwise lawfully entitled to possess, transport, store, and authorize Services relating to it.
+
+3.2 Authority to Tender Property
+
+Customer represents that no third party possesses superior rights that prohibit EPIC from accepting the Property. EPIC may suspend delivery while a bona fide ownership dispute is resolved.
+
+3.3 Property Subject to Liens
+
+Customer represents that the Property is free of undisclosed tax liens, judgment liens, security interests, repossession claims, court orders, bankruptcy restrictions, or other encumbrances impairing the right to tender it.
+
+3.4 Indemnification for Ownership Disputes
+
+Customer agrees to defend, indemnify, and hold harmless EPIC and its protected parties from claims, losses, costs, judgments, settlements, and reasonable attorneys’ fees arising from false ownership claims, unauthorized possession, family/divorce/probate disputes, bankruptcy, stolen property, repossession, or third-party ownership claims.
+
+3.5 Right to Refuse Property
+
+EPIC may refuse Property when ownership is questionable, authority is lacking, the Property creates unreasonable risk, possession may violate law, or acceptance could expose EPIC to liability.
+
+3.6 Identity Verification
+
+EPIC may require government/student identification, registration/title documents, proof of address, payment verification, or other reasonable documentation before accepting or releasing Property.
+
+3.7 Third-Party Authorization
+
+Only the Customer or an Authorized Representative may schedule, modify, collect, receive, or authorize delivery of Property. EPIC may rely on authorization until revoked in writing.
+
+3.8 Parent and Guardian Authorization
+
+When Services are purchased by a parent or guardian for a student, the purchaser represents authority to contract. The student and purchasing parent/guardian may be jointly and severally responsible for obligations under this Agreement.
+
+3.9 Business Customers
+
+A person executing this Agreement for an entity represents authority to bind that entity. Fraudulent or unauthorized representations may create personal responsibility to the extent permitted by law.
+
+3.10 Accurate Information
+
+Customer shall provide complete and accurate legal name, mailing address, email, mobile number, requested emergency contact, university, dorm/building/room/suite information, vehicle information, and other reasonably requested information.
+
+3.11 Duty to Update Information
+
+Customer shall promptly update contact, dorm/building/room, university status, delivery preferences, and Authorized Representative information.
+
+3.12 Delivery Information
+
+Customer is responsible for accurate delivery instructions and shall pay lawful additional charges caused by incorrect information.
+
+3.13 Inspection of Property
+
+Customer authorizes reasonable exterior inspection and, when necessary for safety, legal compliance, emergency response, or suspected prohibited items, inspection of contents. EPIC will reasonably preserve privacy of sealed containers.
+
+3.14 Photographic Documentation
+
+EPIC may photograph/video Property before pickup, during loading/transport/storage, upon delivery, and during claim investigations for inventory, claims, insurance, quality, training, legal, and fraud-prevention purposes.
+
+3.15 Fraud Prevention
+
+If EPIC reasonably suspects fraud, identity theft, unauthorized payment use, stolen Property, or unlawful conduct, it may suspend Services, delay delivery, require identification, contact authorities, refuse release, or cancel the transaction as permitted by law.
+
+3.16 Customer Cooperation
+
+Customer shall reasonably cooperate with information/document requests necessary to perform Services or resolve disputes.
+
+3.17 No Transfer of Ownership
+
+Nothing transfers ownership of Property to EPIC. EPIC acts as a service provider/bailee for limited purposes, subject to lawful lien rights.
+
+3.18 Customer Warranty
+
+Customer warrants that representations are true, complete, and accurate and will promptly correct any that become inaccurate.
+
+3.19 Remedies for Misrepresentation
+
+For material misrepresentation, EPIC may refuse/discontinue Services, retain Property as permitted by law, recover costs, pursue collections, report suspected crime, and exercise other lawful remedies.
+
+3.20 Survival
+
+Representations, warranties, indemnification obligations, and remedies survive completion, termination, and release of Property.
+
+
+
+
+ARTICLE 4
+SERVICES PROVIDED
+
+This Article describes Services offered by EPIC and limitations applicable to those Services, subject to availability, operational capacity, staffing, weather, university rules, safety requirements, and this Agreement.
+
+4.1 General Services
+
+EPIC may provide student summer storage, residential and commercial moving assistance, warehouse and controlled storage, vehicle storage, pickup and delivery, packing, packing supplies, shipping coordination, transportation, inventory management, temporary or extended storage, commercial warehousing, and special-project logistics.
+
+4.2 Scope of Services
+
+EPIC performs only the Services specifically purchased. Additional pickups, delivery locations, stair carries, elevator delays, long carries, hoisting, assembly, disassembly, special packaging, expedited service, or after-hours service may require additional charges.
+
+4.3 Student Storage Program
+
+Student Services may include dorm/apartment pickup, warehouse storage, inventory management, return delivery, pre-move-in delivery, and multi-campus logistics. EPIC makes reasonable efforts but does not guarantee delivery by a specific date unless expressly agreed in writing.
+
+4.4 Pickup Services
+
+Customer shall make Property accessible, sealed, labeled, free of dangerous items, and located in a safe pickup area. EPIC may refuse unsafe pickups.
+
+4.5 Delivery Services
+
+Customer shall provide accurate address/dorm/room information, building access, elevator availability, and university authorization where required. Delays caused by inaccurate information are not breach.
+
+4.6 Storage Services
+
+EPIC may select and relocate Property among suitable facilities for operational efficiency or safety.
+
+4.7 Controlled Storage
+
+Controlled storage is intended to reduce excessive heat and humidity but does not guarantee constant temperature or humidity or prevent mold, mildew, moisture, or condensation.
+
+4.8 Transportation Services
+
+EPIC determines transportation routes, schedules, equipment, personnel, vehicle type, driver, delivery sequence, and warehouse assignment unless otherwise agreed.
+
+4.9 Consolidated Transportation
+
+EPIC may combine multiple Customers’ Property in vehicles/routes; consolidation alone is not negligence or breach.
+
+4.10 Scheduling
+
+Pickup and delivery scheduling is governed by Article 9, including estimated dates, university restrictions, missed appointments, and operational delays.
+
+4.11 University Access
+
+University access restrictions are addressed in Article 9.
+
+4.12 Missed Appointments
+
+Missed appointments and related charges are addressed in Article 9.
+
+4.13 Additional Labor
+
+Additional lawful labor charges may apply for excessive walking, stairs, elevator delays, waiting, long carries, restrictions, oversized items, or excessive loading time.
+
+4.14 Oversized Items
+
+Oversized items may require personnel, specialized equipment, alternate transportation, or separate scheduling; EPIC may refuse them.
+
+4.15 Inventory
+
+Any inventory is operational only and is not a warranty of condition, completeness, or value.
+
+4.16 Property Condition
+
+Unless documented, EPIC makes no representation regarding pre-existing scratches, dents, wear, stains, loose hardware, mechanical defects, or other conditions.
+
+4.17 Packaging Materials
+
+EPIC may offer boxes, tape, mattress bags, packing paper, bubble/stretch wrap, and specialty cartons. Customer selects appropriate materials unless packing Services are purchased.
+
+4.18 Refusal of Service
+
+EPIC may refuse Services when safety is compromised, Property is improperly packed, dangerous materials are present, access is impossible, payment is unpaid, fraud is suspected, instructions violate law, or Services cannot reasonably be completed.
+
+4.19 Independent Contractors
+
+EPIC may use qualified employees, contractors, subcontractors, transportation providers, warehouse operators, and logistics partners without relieving EPIC of contractual obligations.
+
+4.20 No Guaranteed Delivery Time
+
+Exact pickup or delivery times are not guaranteed unless expressly confirmed in writing.
+
+4.21 Right to Modify Services
+
+EPIC may reasonably modify operational procedures, routing, warehouse assignments, scheduling, transportation methods, staffing, or processes for safety, efficiency, service, or compliance.
+
+4.22 Emergency Operations
+
+EPIC may temporarily suspend or modify Services during emergencies, natural disasters, severe weather, university closures, public-health emergencies, or extraordinary events.
+
+4.23 No Bailment Beyond Agreed Services
+
+EPIC assumes no responsibility for installation, assembly, decorating, furniture placement, utility connections, appliance setup, computer configuration, data recovery, repairs, cleaning, or disposal unless separately contracted.
+
+4.24 Reservation of Rights
+
+EPIC need not perform Services that violate law, endanger persons, damage equipment, exceed capabilities, or conflict with safety policies.
+
+
+
+
+ARTICLE 5
+CUSTOMER RESPONSIBILITIES
+
+The Customer’s cooperation is essential to safe, efficient, and timely Services. Noncompliance may result in delays, additional lawful fees, suspension, refusal of delivery, or termination.
+
+5.1 General Duty of Cooperation
+
+Customer shall cooperate with EPIC and promptly provide information reasonably requested.
+
+5.2 Accurate Information
+
+Customer is responsible for providing accurate legal name, contact information, university, dorm, room, return date, Authorized Representative, and vehicle information.
+
+5.3 Duty to Update Information
+
+Customer shall immediately update changes to contact, dorm, room, address, university status, return date, and representatives.
+
+5.4 Property Preparation
+
+Customer shall seal containers, remove trash/food/liquids/hazards, disconnect electronics, secure loose parts, drain liquids where appropriate, and label items.
+
+5.5 Labeling Requirements
+
+Each box, container, or loose item should be clearly labeled with the Customer’s name and recommended phone number.
+
+5.6 Fragile Items
+
+Customer shall disclose fragile items such as glass, mirrors, artwork, lamps, TVs, monitors, computers, instruments, ceramics, and china.
+
+5.7 Electronics
+
+Customer shall back up data, remove media where practical, password-protect devices, and remove confidential information. EPIC is not responsible for data/software/internal failure except as provided by law and this Agreement.
+
+5.8 High-Value Property
+
+Customer is discouraged from storing cash, jewelry, precious metals, watches, collectibles, antiques, original art, securities, crypto wallets, passports, birth certificates, or heirlooms.
+
+5.9 Removal of Prohibited Property
+
+Customer shall ensure no prohibited Property is tendered. EPIC may refuse pickup, suspend Services, remove hazards, notify authorities where required, and assess lawful handling charges.
+
+5.10 Hazardous Materials
+
+Customer shall not tender flammables, propane, ammunition, firearms, explosives, chemicals, paint/solvents, biohazards, radioactive materials, illegal drugs, or unlawfully possessed controlled substances.
+
+5.11 Food and Perishable Items
+
+Customer shall remove food, beverages, refrigerated/frozen items, plants, animals, and organic materials.
+
+5.12 Pest-Free Property
+
+Customer warrants Property is free from bed bugs, cockroaches, ants, rodents, fleas, mold, mildew, excessive moisture, and infestation, and is responsible for resulting contamination costs.
+
+5.13 Safe Access
+
+Customer shall provide clear walkways, safe stairs, functional elevators where available, adequate lighting, safe parking, and reasonable moving access.
+
+5.14 Presence During Pickup
+
+The student does not need to be present during pickup. The student is responsible for ensuring that all items for pickup are in the same room and that the provided order sheet includes an inventory of all pickup items.
+
+5.15 Presence During Delivery
+
+The student does not need to be present during drop-off if the Customer or an Authorized Representative is available to accept delivery and confirm receipt.
+
+5.16 Missed Appointments
+
+Failure to appear may result in lawful trip, waiting, labor, storage, rescheduling, or cancellation charges.
+
+5.17 Payment Responsibility
+
+Customer shall pay all lawful storage, transportation, packing, delivery, labor, extended-storage, missed-appointment, schedule-change, returned-payment, and collection charges.
+
+5.18 Inspection Before Pickup
+
+Customer shall inspect Property before tender and acknowledges EPIC is not responsible for pre-existing damage unless otherwise established.
+
+5.19 Insurance Responsibility
+
+Customer insurance responsibility is governed by Article 8.
+
+5.20 University Rules
+
+Customer is responsible for compliance with university move-in/out, parking, elevator, access, check-in, and delivery restrictions.
+
+5.21 Third-Party Property
+
+Customer shall not tender another person’s Property without authorization and assumes responsibility for resulting disputes.
+
+5.22 Property Left Behind
+
+EPIC is not responsible for Property the Customer fails to tender; Customer must confirm intended Property before EPIC departs.
+
+5.23 Duty to Inspect Upon Delivery
+
+Customer shall inspect delivered Property as soon as reasonably possible and promptly document visible damage.
+
+5.24 Claims Cooperation
+
+Customer shall preserve damaged Property, provide photographs/proof of ownership when reasonably requested, permit inspection, and cooperate with investigation.
+
+5.25 Indemnification
+
+Customer agrees to indemnify, defend, and hold harmless EPIC and protected parties from losses arising from breach, inaccurate information, improper packing, hazardous/prohibited Property, Customer negligence, third-party ownership disputes, or legal violations.
+
+5.26 Survival
+
+Customer obligations under this Article survive completion until all obligations are satisfied.
+
+
+
+
+ARTICLE 6
+PROHIBITED PROPERTY
+
+This Article identifies Property EPIC will not accept for transportation, storage, packing, or delivery. Customer is solely responsible for ensuring prohibited Property is not tendered.
+
+6.1 General Prohibition
+
+Customer shall not tender illegal, hazardous, dangerous, perishable, explosive, environmentally harmful, or otherwise prohibited items. EPIC may reasonably determine whether an item is unacceptable.
+
+6.2 Firearms and Weapons
+
+Unless expressly authorized in writing, firearms, handguns, rifles, shotguns, air/pellet/BB guns, ammunition, reloading supplies, gunpowder, suppressors, explosives, fireworks, military ordnance, crossbows, and explosive projectiles are prohibited.
+
+6.3 Explosive or Flammable Materials
+
+Gasoline, diesel, kerosene, propane, butane, lighter fluid, charcoal starter, fireworks, flares, explosives, compressed fuel canisters, fuel additives, and unsafe flammable aerosols are prohibited.
+
+6.4 Hazardous Chemicals
+
+Paint, thinner, solvents, acids, bulk bleach, pool chemicals, fertilizers, pesticides/herbicides, industrial/lab chemicals, mercury, lead waste, asbestos materials, and corrosives are prohibited.
+
+6.5 Illegal Property
+
+Illegal drugs, unlawfully possessed controlled substances, drug paraphernalia, counterfeit/stolen/fraudulently obtained property, property subject to seizure, and property associated with criminal activity are prohibited.
+
+6.6 Biohazardous Materials
+
+Medical waste, human/animal remains, blood products, biological specimens, infectious materials, needles/syringes, biomedical waste, and hazardous medical equipment are prohibited.
+
+6.7 Radioactive Materials
+
+Radioactive materials of any kind are prohibited.
+
+6.8 Perishable Property
+
+Fresh/frozen/refrigerated food, produce, meat, dairy, eggs, open beverages, organic waste, compost, and live plants requiring watering are prohibited.
+
+6.9 Live Animals
+
+Live animals of every kind are prohibited.
+
+6.10 High-Value Property
+
+EPIC strongly discourages cash, currency, coins, precious metals, jewelry, watches, rare collectibles, fine art, antiques, heirlooms, rare books, trading cards, stamps, crypto hardware wallets, and gemstones; if tendered without written acceptance, they remain at Customer’s risk subject to law.
+
+6.11 Important Documents
+
+Customers should not store original passports, birth certificates, Social Security cards, immigration documents, wills, trusts, deeds, titles, stock certificates, tax/medical/legal records, or diplomas.
+
+6.12 Hazardous Batteries
+
+EPIC may refuse damaged/swollen/loose lithium batteries, battery packs, scooter/e-bike batteries, and damaged rechargeable batteries.
+
+6.13 Property Creating Health Risks
+
+Mold-, mildew-, smoke-, sewage-, flood-, pest-, or odor-contaminated Property may be refused or require remediation.
+
+6.14 Wet Property
+
+Wet/damp Property may be refused; acceptance is not a warranty against mold, mildew, rust, corrosion, stains, or odors.
+
+6.15 Refrigerators and Appliances
+
+Customer shall empty, clean, dry, and defrost refrigerators, freezers, coolers, and similar appliances.
+
+6.16 Illegal Storage Requests
+
+EPIC will not perform Services intended to conceal crime, evade law enforcement, hide assets, avoid repossession, defraud creditors, or circumvent court orders.
+
+6.17 Suspicious Property
+
+EPIC may refuse, isolate, suspend, request information, or contact emergency/law-enforcement authorities when Property creates a reasonable safety/legal concern.
+
+6.18 Inspection Rights
+
+EPIC may inspect containers when reasonably necessary for safety, legal compliance, emergency response, or suspected prohibited items, minimizing disruption where practicable.
+
+6.19 Disposal of Dangerous Property
+
+EPIC may take reasonable action to eliminate immediate hazards, including contacting emergency services or lawful removal. Customer is responsible for reasonable handling, cleanup, remediation, storage, or disposal costs caused by prohibited Property.
+
+6.20 Customer Indemnification
+
+Customer shall indemnify, defend, and hold harmless EPIC and protected parties from losses, fines, penalties, cleanup costs, environmental claims, and lawful attorneys’ fees arising from violation of this Article.
+
+6.21 No Duty to Discover
+
+EPIC has no obligation to inspect every item and is not liable merely for failing to discover prohibited Property before acceptance.
+
+6.22 Reservation of Rights
+
+EPIC may revise prohibited-property rules prospectively for law, industry, insurance, operational, or safety changes.
+
+6.23 Survival
+
+Indemnification, reimbursement, and liability obligations survive termination and completion.
+
+
+
+
+ARTICLE 7
+PAYMENT, BILLING, CHARGEBACKS & COLLECTIONS
+
+This Article establishes payment obligations, billing practices, remedies for non-payment, and EPIC’s collection rights. Payment obligations continue until all amounts owed are paid.
+
+7.1 Payment Obligation
+
+Customer shall pay all charges for ordered and authorized additional Services.
+
+7.2 Payment Due Date
+
+Unless otherwise agreed, payment is due at online checkout and EPIC may require payment before pickup, packing, transportation, storage, delivery, or release.
+
+7.3 Accepted Forms of Payment
+
+EPIC may accept major cards, debit, ACH/bank transfer, cash where accepted, certified funds, or other approved methods and may discontinue methods.
+
+7.4 Authorization to Charge Payment Method
+
+By providing a payment method, Customer authorizes charges for initial Services and lawful additional labor, packing, storage, shipping, rescheduling, trip, missed-appointment, cleaning, prohibited-property damage, collection, and other authorized charges.
+
+7.5 Pricing
+
+Website pricing may change before order acceptance. Accepted-order pricing may change for Customer-requested changes, additional Services/Property/labor, schedule changes, or circumstances authorized by this Agreement.
+
+7.6 Additional Services
+
+Additional boxes, furniture, pickups, deliveries, storage time, packing, stairs, long carries, oversized items, or special handling will be billed additionally.
+
+7.7 Additional Property
+
+If actual Property exceeds the order, pricing may be adjusted for vehicle, labor, warehouse, transportation, and delivery requirements.
+
+7.8 Extended Storage
+
+Property remaining beyond the contracted period incurs additional storage charges at then-current rates until released, lawfully disposed of, or account resolved.
+
+7.9 Returned Payments
+
+Dishonored payments may incur a returned-payment fee as permitted by law and require alternate payment.
+
+7.10 Declined Credit Cards
+
+EPIC may suspend/delay Services, retain Property as permitted by law, or require certified funds.
+
+7.11 Automatic Payment Authorization
+
+If recurring payments are elected, Customer authorizes recurring charges until cancellation and payment of outstanding balances.
+
+7.12 Invoices
+
+Invoices may be delivered by email, portal, SMS notification, or online account and constitute valid notice to the extent permitted by law.
+
+7.13 Customer Review of Charges
+
+Customer should review invoices promptly and submit billing inquiries within fifteen days; undisputed amounts remain due.
+
+7.14 Chargebacks
+
+Customer agrees not to initiate a chargeback except for unauthorized payment or material failure and to give EPIC a reasonable opportunity to investigate first.
+
+7.15 Improper Chargebacks
+
+For improper, fraudulent, or unsupported chargebacks, Customer remains responsible for the original balance, processor fees, collection costs, lawful attorneys’ fees, and reasonable administrative expenses.
+
+7.16 Suspension of Services
+
+EPIC may suspend pickup, delivery, transportation, storage access, or release for non-payment as permitted by law.
+
+7.17 Lien Rights
+
+To the fullest extent permitted by North Carolina law, EPIC may assert lawful possessory/statutory lien rights for unpaid storage, transportation, packing, delivery, administrative, and collection charges.
+
+7.18 Collection Costs
+
+Customer shall reimburse reasonable collection agency fees, court/filing/service fees, attorneys’ fees where recoverable, and investigation costs to the extent permitted by law.
+
+7.19 Interest on Delinquent Accounts
+
+To the extent permitted by law, unpaid balances may accrue the lesser of 1.5% per month or the maximum lawful rate beginning thirty days after due date.
+
+7.20 Taxes
+
+Customer is responsible for applicable sales, use, excise, and governmental fees unless prohibited by law.
+
+7.21 Promotional Discounts
+
+Promotions have no cash value, may not be combined unless stated, may expire, and may be revoked for fraud/misuse.
+
+7.22 Refund Policy
+
+Refunds are governed by EPIC’s applicable Cancellation and Refund Policy and law; Services substantially performed are generally nonrefundable unless law requires otherwise.
+
+7.23 No Offset
+
+Customer shall not offset alleged amounts owed by EPIC against amounts due without written consent or final court order.
+
+7.24 Bankruptcy
+
+EPIC may exercise lawful rights in bankruptcy, insolvency, receivership, or similar proceedings.
+
+7.25 Release of Property
+
+EPIC need not release Property until lawful amounts are paid/cleared and identity requirements are satisfied.
+
+7.26 Payment Disputes
+
+Good-faith billing disputes are permitted; parties shall make reasonable efforts to resolve them directly before formal proceedings.
+
+7.27 Survival
+
+Payment, lien, collection, reimbursement, and remedy provisions survive completion, termination, and release until satisfied.
+
+
+
+
+ARTICLE 8
+INSURANCE, DECLARED VALUE & RISK OF LOSS
+
+This Article allocates responsibility for insurance, declared value, valuation, risk of loss, and limitations of EPIC’s liability. Customer may obtain independent insurance or request a higher declared value where offered.
+
+8.1 EPIC Is Not an Insurance Company
+
+EPIC provides storage/logistics Services and is not an insurance company. Service fees reflect limited contractual liability, not full replacement-value coverage.
+
+8.2 Customer Responsibility for Insurance
+
+Customer determines whether homeowner, renter, student, commercial, vehicle, or third-party insurance is appropriate and is responsible for policy terms, exclusions, deductibles, and limits.
+
+8.3 Existing Insurance Policies
+
+EPIC makes no representation about coverage under Customer’s existing policies; Customer must verify with the insurer.
+
+8.4 Declared Value
+
+Declared Value is used solely to establish potential contractual liability limits. It is not insurance, does not guarantee payment, and does not require replacement-cost payment.
+
+8.5 Higher Declared Values
+
+EPIC may accept or decline higher valuations, require additional charges, proof of insurance, or documentation. Acceptance must be in writing.
+
+8.6 Standard Limitation of Liability
+
+Unless otherwise agreed in writing and to the fullest extent permitted by law, EPIC’s maximum liability for loss or damage shall not exceed the amount actually paid for the specific Services directly related to the affected Property.
+
+8.7 No Replacement Cost Coverage
+
+EPIC does not provide replacement-cost coverage, appreciated market value, or sentimental value.
+
+8.8 Risk of Loss
+
+Except to the extent directly caused by proven negligence or willful misconduct, Customer assumes risks from theft, fire, flood, severe weather, water, mold/mildew, condensation/humidity, rust/corrosion, vermin/insects, acts of God, civil/government action, university closure, utility failure, cyber incidents, and Force Majeure Events.
+
+8.9 Excluded Property
+
+EPIC assumes no liability for cash, precious metals, jewelry, watches, firearms/ammunition, controlled substances, negotiable instruments, securities, crypto wallets, passports, birth certificates, original legal documents/photos, heirlooms, collectibles, or rare art unless specifically accepted in writing and permitted by law.
+
+8.10 Electronics
+
+EPIC does not warrant data, software, firmware, internal components, drives, batteries, display panels, or mechanical functionality; Customers must back up data.
+
+8.11 Mechanical Equipment
+
+EPIC does not verify operational condition of appliances, TVs, gaming/audio/computer/fitness equipment, instruments, or tools. Post-storage failure alone does not establish negligence.
+
+8.12 Pre-Existing Damage
+
+EPIC is not liable for pre-existing scratches, dents, chips, tears, loose joints, water damage, defects, failures, cosmetic wear, or manufacturer defects.
+
+8.13 Mold, Moisture and Environmental Conditions
+
+Controlled storage conditions reduce, but do not eliminate, humidity, condensation, mold, mildew, corrosion, oxidation, or temperature fluctuations.
+
+8.14 Improper Packing by Customer
+
+EPIC assumes no responsibility for damage resulting from Customer overloading, weak containers, inadequate cushioning/tape, loose contents, or improper labeling.
+
+8.15 Concealed Damage
+
+EPIC is not responsible for concealed damage inside Customer-packed boxes where exterior packaging shows no evidence of damage, except as required by law.
+
+8.16 Damage Caused by Prohibited Property
+
+Customer is responsible for losses, cleanup, remediation, and lawful attorneys’ fees caused by prohibited Property.
+
+8.17 Salvage Rights
+
+If EPIC pays a claim, it may require surrender of damaged Property and may inspect, repair, retain, dispose of, or salvage it as appropriate.
+
+8.18 Mitigation of Damages
+
+Customer shall take reasonable steps to prevent further loss; failure may reduce recovery.
+
+8.19 No Consequential Damages
+
+To the fullest extent permitted by law, EPIC is not liable for lost income/profits, tuition, housing/hotel/travel expenses, missed classes, lost opportunities, emotional distress, sentimental value, loss of use, special/incidental/consequential/punitive damages.
+
+8.20 Customer Acknowledgment of Risk
+
+Customer acknowledges inherent storage/transport risks, the opportunity to obtain insurance, and that pricing reflects this allocation of risk.
+
+8.21 Claims Subject to Article 12
+
+All compensation requests are governed by Article 12 and compliance is a condition precedent to recovery to the extent permitted by law.
+
+8.22 No Waiver of Defenses
+
+Acceptance, payment, inspection, or attempted repair is not an admission of liability or waiver of defenses.
+
+8.23 Survival
+
+This Article survives completion, termination, release, and claim resolution.
+
+
+
+
+ARTICLE 9
+PICKUP, TRANSPORTATION, STORAGE & DELIVERY
+
+This Article governs pickup, transportation, storage, handling, scheduling, warehouse operations, and delivery. EPIC operates a consolidated logistics system serving multiple customers and institutions.
+
+9.1 Scheduling of Services
+
+EPIC schedules based on efficiency, staffing, routes, capacity, university access, and seasonal demand. Requested dates are not guaranteed unless confirmed in writing.
+
+9.2 Pickup Window
+
+Estimated pickup windows may vary because of traffic, weather, restrictions, prior appointments, equipment, emergencies, and seasonal demand.
+
+9.3 Delivery Window
+
+Delivery may occur within an estimated window; EPIC will make commercially reasonable efforts to communicate significant changes.
+
+9.4 University Move-In Operations
+
+During high-volume move-in periods, schedules/routes may change and deliveries may be consolidated. EPIC makes reasonable efforts but does not guarantee pre-arrival delivery unless agreed in writing.
+
+9.5 Dorm Room Deliveries
+
+Where permitted, Customer authorizes limited entry for delivery when access is provided by the university or otherwise authorized. If room access is unavailable, EPIC may use an approved alternate location.
+
+9.6 Unattended Deliveries
+
+If requested and permitted, delivery may be completed without Customer present; delivery is complete when Property is placed in the designated location, risk transfers at completion, photographs may document delivery, and absence of signature alone does not invalidate delivery.
+
+9.7 Incorrect Delivery Information
+
+Customer bears lawful additional costs caused by incorrect information, including failed delivery, labor, storage, rescheduling, or multiple attempts.
+
+9.8 University Restrictions
+
+EPIC is not responsible for delays caused by university closures, elevator restrictions, parking limitations, security requirements, check-in procedures, staffing limitations, move-in restrictions, construction, or loading restrictions.
+
+9.9 Customer Availability
+
+Unless unattended delivery is authorized, the Customer or an Authorized Representative shall be available; failure to be available may result in lawful delivery, storage, or rescheduling charges.
+
+9.10 Missed Pickup Appointments
+
+If Property is unavailable, access denied, Customer absent, Property unprepared, or conditions unsafe, EPIC may reschedule and assess lawful trip/labor/administrative fees.
+
+9.11 Refusal of Pickup
+
+EPIC may refuse pickup for unpaid charges, hazards, improper packing, unsafe access/weather, suspected fraud, or Agreement violations.
+
+9.12 Transportation Methods
+
+EPIC determines vehicle, route, warehouse, driver, sequence, and transfer points unless agreed otherwise.
+
+9.13 Consolidated Transportation
+
+Multiple Customers’ Property may share vehicles/routes; consolidation alone is not negligence.
+
+9.14 Warehouse Transfers
+
+EPIC may transfer Property among facilities for capacity, safety, efficiency, maintenance, disaster recovery, or continuity.
+
+9.15 Controlled Storage
+
+Controlled storage facilities moderate, but do not guarantee, constant temperature or humidity and do not prevent mold, mildew, condensation, or corrosion.
+
+9.16 Warehouse Access
+
+Customer access may be by appointment, during business hours, and subject to identity/security requirements.
+
+9.17 Inventory Procedures
+
+Inventory records are operational and not warranties of condition/value or sealed-box contents.
+
+9.18 Photographic Documentation
+
+EPIC may photograph/video Property throughout custody for inventory, quality, insurance, legal, fraud-prevention, and claims purposes.
+
+9.19 Temporary Storage Delays
+
+If delivery cannot be completed for reasons beyond EPIC’s control, Property may remain stored until practicable; additional fees may apply when delay is Customer-caused.
+
+9.20 Extended Storage
+
+Beyond the contracted term, EPIC may charge storage, require a new agreement, transfer Property, and exercise lawful lien rights.
+
+9.21 Partial Deliveries
+
+EPIC may make multiple shipments due to capacity, routing, university restrictions, safety, or efficiency.
+
+9.22 Delivery Verification
+
+Signature, electronic acknowledgment, photographs, GPS, delivery logs, university confirmation, or employee records may document delivery to the extent permitted by law.
+
+9.23 Failure to Accept Delivery
+
+Unjustified refusal may result in return to storage and additional lawful transportation/storage charges.
+
+9.24 Force Majeure Delays
+
+EPIC is not liable for delays caused by Force Majeure Events as provided in Article 14.
+
+9.25 Right to Suspend Services
+
+EPIC may temporarily suspend Services to protect persons, Property, equipment, vehicles, or public safety.
+
+9.26 Customer Acknowledgment
+
+Customer acknowledges logistics complexity, estimated dates, university effects, consolidated transportation, and that reasonable temporary delays do not alone establish negligence.
+
+9.27 Survival
+
+Rights and obligations survive until all Service-related obligations are satisfied.
+
+
+
+
+ARTICLE 10
+PACKING SERVICES
+
+This Article governs packing Services performed by EPIC and standards applicable to Customer-packed and EPIC-packed Property. Packing reduces but does not guarantee against loss or damage.
+
+10.1 Scope of Packing Services
+
+Packing may include loose goods, dorm/office belongings, electronics, furniture wrapping, padding, mattress bags, stretch wrap, labeling, inventory identification, and preparation for transport/storage.
+
+10.2 Packing Materials
+
+EPIC may use corrugated boxes, wardrobe boxes, dish boxes, paper, bubble wrap, foam, stretch wrap, shrink wrap, furniture pads, mattress bags, tape, labels, and corner guards and may determine reasonable quantities and types.
+
+10.3 Customer-Packed Property
+
+EPIC is not responsible for damage caused by improper packing, overloaded containers, underfilled containers, weak containers, poor sealing, inadequate cushioning, poor weight distribution, or inadequate protection.
+
+10.4 EPIC-Packed Property
+
+EPIC will exercise reasonable care consistent with accepted practices. Packing is not a warranty against damage. Unless otherwise agreed in writing, EPIC charges $150 per person per hour for packing services.
+
+10.5 Customer Inspection
+
+Customer may inspect completed packing and should immediately identify visible concerns.
+
+10.6 Sealed Containers
+
+EPIC ordinarily will not open Customer-sealed boxes and assumes no responsibility for concealed damage, improper packing, missing contents, incorrect inventory, or overloading except as required by law.
+
+10.7 Inspection of Customer-Packed Boxes
+
+EPIC may inspect when reasonably necessary for safety, Agreement compliance, suspected prohibited Property, emergencies, or legal requirements.
+
+10.8 Fragile Items
+
+Customer shall identify fragile glass, mirrors, art, TVs, monitors, computers, lamps, ceramics, china, and instruments.
+
+10.9 Electronics
+
+Customer shall back up data, remove confidential information, disconnect equipment, remove batteries where appropriate, and secure accessories. EPIC is not responsible for data/software/internal failure except as provided by law.
+
+10.10 Furniture Preparation
+
+Unless separately contracted, Customer shall empty drawers where necessary, remove loose contents, disconnect electrical components, and remove breakables; EPIC may determine necessary disassembly.
+
+10.11 Mattresses and Upholstered Furniture
+
+Protective coverings may be used but do not guarantee against moisture, mold, dust, tears, punctures, or stains.
+
+10.12 Refrigerators and Appliances
+
+Customer shall empty, defrost, dry, remove ice, and secure appliances; EPIC may refuse those containing food, liquids, or excessive moisture.
+
+10.13 Box Weight Limits
+
+Boxes should generally not exceed 50 pounds unless designed for heavier contents. EPIC may repack or assess lawful additional labor charges.
+
+10.14 Hazardous Materials During Packing
+
+Discovery of hazards may cause EPIC to stop work, refuse Services, evacuate employees, or notify authorities where required.
+
+10.15 Additional Packing Charges
+
+Additional boxes/materials/time/services or excess Property may result in additional lawful charges.
+
+10.16 Packing Time Estimates
+
+Time estimates are planning tools and may vary with quantity, condition, access, requests, weather, and operations.
+
+10.17 Inventory Labels
+
+EPIC may place labels/barcodes/tags on Property; Customers should not remove them before delivery.
+
+10.18 Photographic Documentation
+
+EPIC may photograph before/during/after packing for inventory, claims, quality, training, fraud prevention, and legal purposes.
+
+10.19 Customer-Supplied Packing Materials
+
+EPIC makes no representation about adequacy of Customer-supplied materials and is not responsible for damage caused by defective/inadequate materials.
+
+10.20 Refusal to Pack
+
+EPIC may refuse packing for safety hazards, prohibited Property, nonpayment, unsafe conditions, fraud, or inconsistent requests.
+
+10.21 No Guarantee Against Damage
+
+Commercially reasonable packing cannot eliminate all risks from handling, transportation, storage, environment, or inherent characteristics.
+
+10.22 Customer Responsibility After Packing
+
+Customer shall not open, remove protection, repack, or add items to EPIC-packed/sealed containers without notice; EPIC is not responsible for resulting damage.
+
+10.23 Claims Relating to Packing
+
+Packing claims are governed by Article 12; Customer shall preserve materials and damaged Property for inspection.
+
+10.24 Survival
+
+Rights, responsibilities, limitations, and indemnification obligations survive completion and delivery.
+
+
+
+
+ARTICLE 11
+VEHICLE STORAGE SERVICES
+
+This Article governs acceptance, transportation, storage, handling, release, and delivery of motor vehicles and other titled/registered vehicles accepted by EPIC, subject to capacity, insurance requirements, and law.
+
+11.1 Eligible Vehicles
+
+EPIC may accept automobiles, trucks, SUVs, vans, motorcycles, golf carts, UTVs, personal watercraft, boats/trailers, utility trailers, RVs, and commercial fleet vehicles when separately contracted.
+
+11.2 Proof of Ownership
+
+Customer shall provide title, registration, bill of sale, lease, owner authorization, identification, or other satisfactory documentation.
+
+11.3 Authority to Store
+
+Customer warrants ownership or lawful authority and indemnifies EPIC from ownership/possession disputes.
+
+11.4 Vehicle Condition
+
+Customer warrants the vehicle is reasonably safe, not an unreasonable fire hazard, contains no hazardous materials, does not excessively leak, and has no dangerous illegal modifications.
+
+11.5 Mechanical Inspection
+
+EPIC is not a mechanical inspection service; acceptance is not a representation of roadworthiness, safety, emissions, or structural condition.
+
+11.6 Existing Damage
+
+EPIC may document visible damage by photos/reports; failure to document every defect is not acknowledgment that none existed.
+
+11.7 Personal Property Inside Vehicles
+
+Customers should remove personal belongings; EPIC assumes no responsibility for contents left inside unless otherwise agreed.
+
+11.8 Removal of Valuables
+
+Customer shall remove cash, jewelry, firearms/ammunition, medications, confidential documents, portable electronics, collectibles, and valuable effects.
+
+11.9 Fuel Level
+
+Customer should maintain enough fuel for reasonable movement; EPIC need not add fuel except as operationally necessary.
+
+11.10 Battery Maintenance
+
+Unless separately contracted, EPIC need not start, charge/disconnect batteries, maintain chargers, or exercise vehicles; ordinary battery deterioration is Customer responsibility.
+
+11.11 Tire Pressure
+
+EPIC is not responsible for ordinary pressure changes, flat spots, air loss, aging, or dry rot.
+
+11.12 Fluids
+
+Customer shall prevent excessive leaks; EPIC may refuse leaking vehicles and Customer shall reimburse reasonable cleanup/remediation costs caused by leaks.
+
+11.13 Alarm Systems
+
+Customer shall provide alarm-disabling instructions; EPIC is not responsible for battery depletion from alarms.
+
+11.14 Keys
+
+Customer shall provide keys needed for loading, storage, movement, emergency relocation, and delivery; EPIC may retain duplicates for operations.
+
+11.15 Emergency Movement
+
+Customer authorizes movement for fire prevention, weather, maintenance, efficiency, safety, disaster response, or government orders.
+
+11.16 Vehicle Operation
+
+EPIC may operate vehicles only as reasonably necessary for loading, unloading, parking, repositioning, inspection, or emergency relocation.
+
+11.17 Weather Exposure
+
+Unless enclosed indoor storage is specifically contracted, ordinary environmental exposure may occur; EPIC is not responsible for ordinary dust, pollen, rainwater, sunlight, bird droppings, tree sap, or similar exposure except as required by law.
+
+11.18 Insurance
+
+Customer is responsible for desired vehicle insurance; EPIC does not insure vehicles unless expressly stated in writing.
+
+11.19 Abandoned Vehicles
+
+Vehicles remaining beyond term without payment may be handled under applicable North Carolina law and lawful lien procedures.
+
+11.20 Release of Vehicle
+
+EPIC may require ID, proof of ownership, authorization, and payment of lawful charges before release.
+
+11.21 Vehicle Pickup by Third Parties
+
+Third-party pickup requires written authorization and identity verification.
+
+11.22 Damage Claims
+
+Vehicle damage claims are governed by Article 12 and the vehicle shall be preserved for reasonable inspection.
+
+11.23 Limitation of Liability
+
+Except for proven negligence/willful misconduct and subject to law, EPIC is not liable for ordinary mechanical failure, battery/tire/fluid issues, environmental exposure, manufacturer defects, aging, pre-existing damage, acts of God, or Force Majeure Events; Articles 8 and 12 apply.
+
+11.24 Customer Indemnification
+
+Customer indemnifies EPIC for false ownership, hazardous vehicle conditions, leaks, dangerous modifications, illegal contents, legal violations, or breach.
+
+11.25 Third-Party Carrier Services
+
+EPIC is not a car carrier firm and does not provide vehicle carrier services. All carrier services shall be negotiated and scheduled directly by the Customer and the carrier. EPIC’s role is limited to accepting vehicles from the Customer and making them available to the carrier, and EPIC assumes no liability for carrier acts, omissions, delays, damage, loss, or other carrier-related claims.
+
+11.26 Survival
+
+Representations, warranties, indemnification, third-party carrier limitations, and liability limitations survive release.
+
+
+
+
+
+
+ARTICLE 12
+CLAIMS, LOSS, DAMAGE & LIMITATION OF LIABILITY
+
+This Article establishes the exclusive procedures for reporting, investigating, and resolving claims involving alleged loss, damage, shortage, delay, or other disputes relating to Property entrusted to EPIC.
+
+12.1 Exclusive Claims Procedure
+
+Claims for loss, damage, delay, shortage, misdelivery, theft, mishandling, packing, transportation, storage, or delivery are governed by this Article.
+
+12.2 Written Notice Required
+
+Formal Claims must be written and submitted through an approved portal, email, certified mail, or other approved method; verbal/text/social-media complaints alone are not formal notice.
+
+12.3 Time for Filing Claims
+
+Claims must be received no later than thirty calendar days after delivery/release or discovery of damage not reasonably discoverable at delivery, to the fullest extent permitted by law.
+
+12.4 Information Required
+
+Claims should include Customer, contact, and order information; a description of the issue; relevant dates; photographs if available; the amount claimed; and supporting receipts where available.
+
+12.5 Duty to Preserve Evidence
+
+Customer shall preserve damaged Property, packaging, labels, photos, boxes, and wrapping until reasonable inspection.
+
+12.6 Right to Inspect
+
+Before repair/disposal/replacement, Customer shall allow reasonable in-person, video, photographic, independent, or third-party inspection.
+
+12.7 Right to Repair
+
+EPIC may elect to repair, replace, pay applicable contractual value, or arrange third-party repair; Customer shall not unreasonably reject a commercially reasonable repair.
+
+12.8 Burden of Proof
+
+Customer bears the burden of establishing tender in good condition, occurrence while in EPIC custody, amount of damages, and compliance with this Agreement, subject to applicable law.
+
+12.9 Limitation of Liability
+
+EPIC’s maximum liability is subject to Article 8 and applicable law.
+
+12.10 Excluded Damages
+
+To the fullest extent permitted by law, EPIC is not liable for lost profits/opportunities, tuition, hotel/housing/travel costs, missed classes, emotional distress, sentimental value, loss of use, consequential/special/incidental/punitive/exemplary damages.
+
+12.11 Environmental Damage
+
+EPIC is not liable for mold, mildew, humidity, condensation, corrosion, rust, oxidation, insects, rodents, vermin, or contamination unless directly caused by proven negligence.
+
+12.12 Electronics
+
+EPIC is not responsible for data/software/firmware/internal failures, battery deterioration, programming loss, or configuration changes unless directly caused by proven negligence.
+
+12.13 Mechanical Equipment
+
+Post-transport/storage mechanical failure alone does not establish negligence.
+
+12.14 Customer-Packed Boxes
+
+EPIC is not liable for concealed damage inside Customer-packed/sealed boxes with no exterior evidence, except as required by law.
+
+12.15 Ordinary Wear
+
+EPIC is not liable for minor scratches, scuffs, abrasions, cosmetic wear, or normal handling marks consistent with ordinary transport/storage, except as required by law.
+
+12.16 Acts Beyond EPIC’s Control
+
+EPIC is not liable for losses caused by Force Majeure Events except as required by law.
+
+12.17 Missing Items
+
+Missing-item Claims should include detailed inventory, approximate purchase date, estimated value, and supporting documentation where available.
+
+12.18 Fraudulent Claims
+
+EPIC may deny Claims involving false statements, fabricated evidence, altered receipts, fraudulent valuations, or material misrepresentation and pursue lawful remedies.
+
+12.19 Duty to Mitigate
+
+Customer shall take reasonable steps to minimize further damage.
+
+12.20 Settlement
+
+Acceptance of a settlement constitutes full satisfaction of the Claim unless otherwise agreed in writing.
+
+12.21 No Admission of Liability
+
+Investigation, inspection, repair, or settlement discussions do not constitute admission of liability.
+
+12.22 Release
+
+EPIC may require a written release before issuing Claim payment.
+
+12.23 Salvage Rights
+
+Upon compensation, EPIC may retain, dispose of, salvage, or recover value from damaged Property as appropriate.
+
+12.24 Insurance Subrogation
+
+EPIC retains contractual defenses against insurer subrogation; insurance payment does not expand EPIC liability.
+
+12.25 Attorney’s Fees
+
+If EPIC successfully defends a Claim determined fraudulent, frivolous, or in bad faith, it may seek reasonable attorneys’ fees/costs to the extent permitted by law.
+
+12.26 Exclusive Remedy
+
+Contractual remedies are exclusive to the extent permitted by law.
+
+12.27 Claims Against Employees
+
+To the fullest extent permitted by law, claims arising from Services performed within scope shall be asserted against EPIC rather than protected individuals.
+
+12.28 Limitation Period
+
+To the fullest extent permitted by law, legal action arising under this Agreement must commence within one year after accrual.
+
+12.29 Arbitration
+
+Unresolved disputes are governed by Article 14.
+
+12.30 Survival
+
+Claims procedures, liability limits, releases, settlements, and defenses survive completion, delivery, termination, and payment.
+
+
+
+
+ARTICLE 13
+PRIVACY, ELECTRONIC COMMUNICATIONS & WEBSITE TERMS
+
+This Article governs the collection and use of Customer information, electronic communications, website and online services, electronic records, and technology used in connection with Services.
+
+13.1 Customer Information
+
+EPIC may collect Customer, student, and parent names; addresses; email addresses; phone numbers; university, dorm, and room information; pickup and delivery information; authorized contacts; order and payment-related information; vehicle information; communications; claims information; and other voluntarily provided information.
+
+13.2 Purposes for Which Information May Be Used
+
+Information may be used to maintain accounts, process orders/payments, schedule/perform Services, send invoices/receipts/notices, confirm delivery information, respond to inquiries, process Claims, prevent fraud, maintain security, enforce this Agreement, comply with law, and improve operations.
+
+13.3 Privacy Policy
+
+A separate Privacy Policy may supplement these Terms; mandatory privacy law controls any conflict.
+
+13.4 Payment Information
+
+EPIC may use third-party payment processors and authorizes processing reasonably necessary for approved transactions.
+
+13.5 Third-Party Service Providers
+
+EPIC may share information with payment, hosting, CRM, email/SMS, warehouse/transportation, claims, accounting, technology vendors, and professional advisers as reasonably necessary.
+
+13.6 Sale of Personal Information
+
+EPIC does not sell personal information for monetary consideration unless expressly disclosed and permitted by law; necessary service-provider sharing is not prohibited.
+
+13.7 Information Security
+
+EPIC will use commercially reasonable safeguards but cannot guarantee absolute security of electronic systems.
+
+13.8 Customer Responsibility for Account Security
+
+Customer shall protect usernames, passwords, access/verification codes, and authentication credentials and report suspected unauthorized access.
+
+13.9 Electronic Communications Consent
+
+Customer agrees to email, SMS, portal messages, electronic invoices/receipts, pickup/delivery reminders, payment/account notices, and claims communications.
+
+13.10 Transactional Text Messages
+
+Providing a mobile number authorizes transactional texts related to Services; carrier message/data rates may apply.
+
+13.11 Marketing Communications
+
+Marketing is separate from transactional communications and will be sent with consent where required; opt-out does not stop necessary service communications.
+
+13.12 Telephone Communications
+
+EPIC may call voluntarily provided numbers for service, scheduling, pickup/delivery, payment, claims, and administration; automated/prerecorded calls only as permitted by law.
+
+13.13 Electronic Notices
+
+Where permitted, contractual notices may be electronic, but statutory lien/disposition notices must use legally required methods.
+
+13.14 Electronic Records
+
+EPIC may electronically maintain agreements, orders, signatures, invoices, receipts, communications, inventories, photos/videos, delivery/GPS, claims, and payment records.
+
+13.15 Electronic Signatures
+
+Electronic signatures/acceptance have the legal effect described in Article 1.
+
+13.16 Website Use
+
+Customer shall not attempt unauthorized access, circumvent security, introduce malware, interfere with operation, scrape without authorization, impersonate others, submit fraud, use stolen payment data, or use the site unlawfully.
+
+13.17 Website Availability
+
+EPIC does not guarantee uninterrupted website/portal/payment availability; maintenance, outages, cyber incidents, third-party failures, and power issues may interrupt service.
+
+13.18 Website Pricing Errors
+
+EPIC may correct obvious pricing/service-description errors before performance and allow Customer to accept corrected terms or cancel the affected portion, subject to law.
+
+13.19 Order Acceptance
+
+Online submission is not necessarily final acceptance. EPIC may reject/cancel before performance for capacity, pricing error, payment failure, fraud, safety, prohibited Property, incorrect information, or operational limits; unperformed-service payments are handled under refund policy/law.
+
+13.20 Website Descriptions
+
+Photos, illustrations, dimensions, facility descriptions, schedules, and materials may be representative and are not warranties unless expressly identified.
+
+13.21 Intellectual Property
+
+EPIC’s name, logos, trademarks, website design, graphics, photos/videos, written content, marketing materials, forms, and proprietary software are owned/licensed and protected by law.
+
+13.22 Limited Permission to Use Website
+
+Customer receives a limited, non-exclusive, revocable right to use the website for legitimate transactions; unauthorized reproduction, distribution, modification, exploitation, or derivative works are prohibited.
+
+13.23 Third-Party Websites and Services
+
+EPIC is not responsible for independent third-party content, availability, security, privacy, or terms.
+
+13.24 Cookies and Similar Technologies
+
+EPIC may use cookies/analytics for functionality, security, fraud prevention, preferences, usage understanding, and experience improvement, with notice/consent where required.
+
+13.25 Fraud Prevention and Verification
+
+EPIC may use reasonable measures to prevent fraud, identity theft, unauthorized transactions, chargeback abuse, account takeover, and misuse and may require verification.
+
+13.26 Photographs and Video for Operational Purposes
+
+EPIC may photograph/video Property for inventory, condition, pickup/delivery confirmation, claims, security, fraud prevention, and training; this operational authorization does not by itself authorize advertising use.
+
+13.27 Marketing Use of Customer Images
+
+EPIC will obtain separate permission before intentional advertising use of identifiable Customer images, testimonials, or Property where required by law.
+
+13.28 Data Retention
+
+EPIC may retain information as reasonably necessary for Services, transactions, Claims, disputes, fraud prevention, accounting, enforcement, and legal compliance, then delete/destroy/anonymize under its practices.
+
+13.29 Legal Disclosure
+
+EPIC may disclose information to comply with law, subpoenas/warrants/orders, protect safety/property, investigate fraud/crime, establish/defend claims, or enforce this Agreement.
+
+13.30 Children’s Information
+
+Online contracting is intended for legally capable persons or authorized adults; EPIC does not knowingly solicit under-13 information for unrelated purposes.
+
+13.31 Change of Ownership or Business Transaction
+
+Customer records may transfer in a merger, acquisition, reorganization, financing, asset sale, or similar transaction subject to law/privacy obligations.
+
+13.32 Customer Requests Regarding Personal Information
+
+Customers may request reasonable corrections and other access/delete/correct rights as required by law; identity verification may be required.
+
+13.33 No Guarantee of Electronic Delivery
+
+Spam filters, incorrect addresses/numbers, carrier restrictions, full mailboxes, outages, and technical issues may prevent delivery; Customer must maintain accurate information and monitor Service communications.
+
+13.34 Customer Communications as Business Records
+
+Emails, texts, submissions, acknowledgments, and other Service communications may be retained to document instructions, changes, authorizations, billing, Claims, and other matters.
+
+13.35 Relationship to Other Articles
+
+This Article is interpreted with Articles 1, 3, 5, 7, 9, and 12; mandatory law controls conflicts.
+
+13.36 Survival
+
+Electronic-record, intellectual-property, retention, legal-disclosure, security, and similar provisions survive as appropriate.
+
+
+
+
+ARTICLE 14
+DISPUTE RESOLUTION, ARBITRATION, GOVERNING LAW & FORCE MAJEURE
+
+This Article establishes procedures for resolving disputes efficiently and addresses governing law and events beyond EPIC’s reasonable control.
+
+14.1 Good-Faith Resolution of Disputes
+
+Before arbitration/litigation, the complaining party shall provide written notice describing the dispute, transaction, Property if applicable, amount, relief requested, and supporting information; parties shall attempt good-faith resolution.
+
+14.2 Claims Procedure Required
+
+Loss/damage disputes must first follow Article 12 to the fullest extent permitted by law.
+
+14.3 Informal Resolution Period
+
+Except for necessary immediate relief, arbitration shall not begin until at least thirty days after written dispute notice; parties may extend by agreement.
+
+14.4 Optional Mediation
+
+Parties may mutually agree to non-binding mediation in North Carolina or remotely, jointly select a mediator, bear their own costs, and split mediator fees unless otherwise agreed.
+
+14.5 Agreement to Arbitrate
+
+Except excluded disputes or where prohibited, controversies arising from this Agreement, Property, packing, pickup, transportation, storage, delivery, payment, billing, Claims, website transactions, communications, interpretation, or the EPIC-Customer relationship shall be resolved by binding individual arbitration.
+
+14.6 Federal Arbitration Act
+
+The Federal Arbitration Act governs the arbitration provision to the extent applicable; North Carolina substantive law otherwise applies as stated below.
+
+14.7 Arbitration Administrator and Rules
+
+Unless otherwise agreed, arbitration shall be administered by the American Arbitration Association under applicable consumer or commercial rules. If unavailable, parties shall seek another nationally recognized provider or court appointment as permitted by law.
+
+14.8 Location of Arbitration
+
+Unless consumer law requires otherwise, arbitration may occur in Guilford County, North Carolina, by phone/video, or written submissions under applicable rules.
+
+14.9 Individual Arbitration
+
+Disputes shall be resolved individually; unrelated claims may not be consolidated absent written agreement to the fullest extent permitted by law.
+
+14.10 Class Action Waiver
+
+TO THE FULLEST EXTENT PERMITTED BY LAW, EACH PARTY MAY BRING CLAIMS ONLY IN AN INDIVIDUAL CAPACITY AND NOT AS A PLAINTIFF, CLAIMANT, OR CLASS MEMBER IN A CLASS, COLLECTIVE, CONSOLIDATED, MASS, OR REPRESENTATIVE PROCEEDING.
+
+14.11 Jury Trial Waiver
+
+TO THE EXTENT A DISPUTE IS SUBJECT TO ARBITRATION, THE PARTIES WAIVE THE RIGHT TO HAVE THAT DISPUTE DECIDED BY A JUDGE OR JURY. Any court jury waiver applies only to the extent enforceable.
+
+14.12 Small Claims Exception
+
+Either party may bring an eligible individual claim in small claims court. If it later proceeds outside small claims, arbitration may be invoked as permitted by law.
+
+14.13 Collection Actions
+
+EPIC may exercise lawful collection, lien, preservation, and statutory disposition remedies where arbitration would not provide timely or sufficient relief; statutory procedures remain subject to law.
+
+14.14 Emergency and Injunctive Relief
+
+Either party may seek temporary/emergency court relief to prevent immediate harm, protect Property/evidence/confidentiality/intellectual property, or maintain status quo without waiving arbitration of the underlying dispute.
+
+14.15 Arbitrator Authority
+
+Courts and arbitrators shall apply the liability and claims limitations in Articles 8 and 12 to the fullest extent permitted by law. The arbitrator may award individual relief available under law consistent with this Agreement and shall apply applicable federal and North Carolina law and enforceable contractual limitations.
+
+14.16 Written Decision
+
+Arbitrator shall issue a written decision/award as required; award may be entered as judgment in a court with jurisdiction.
+
+14.17 Arbitration Fees
+
+Fees are governed by applicable rules/law; EPIC pays fees the business is required to pay; each party otherwise bears its own costs unless fee shifting is legally authorized.
+
+14.18 Attorney’s Fees
+
+No automatic right to attorneys’ fees is created; fees may be awarded only when permitted by law or enforceable contract.
+
+14.19 Confidentiality of Arbitration
+
+To the extent permitted, parties will reasonably protect non-public arbitration information while allowing disclosures necessary for advice, claims, enforcement, or legal compliance.
+
+14.20 Governing Law
+
+Except controlling federal law, this Agreement is governed by North Carolina law without conflict-of-law rules that would require another jurisdiction, while preserving non-waivable consumer protections.
+
+14.21 Court Venue
+
+Non-arbitrable court disputes shall proceed in an appropriate state/federal court serving Guilford County, North Carolina, except where law requires another venue.
+
+14.22 Contractual Limitation Period
+
+Proceedings are subject to Section 12.28 to the extent enforceable; no prohibited shortening of statutory periods is intended.
+
+14.23 Limitation of Remedies
+
+Courts/arbitrators shall apply Articles 8 and 12 to the fullest extent permitted by law.
+
+14.24 Force Majeure
+
+EPIC is not in breach and is not liable for delay/interruption/failure caused by events beyond reasonable control.
+
+14.25 Force Majeure Events
+
+Events include severe weather/natural disasters, pandemics/health emergencies, government orders, campus/building closures, evacuations, road closures, civil unrest/terrorism/war, labor/transport/fuel/supply disruptions, utility/power/internet/telecom failures, cyber/ransomware/third-party technology failures, equipment failure despite reasonable maintenance, and similar events.
+
+14.26 Effect of Force Majeure
+
+EPIC may suspend/delay Services, modify routes/locations, transfer Property, modify hours, reschedule, close facilities, use alternatives, or take other commercially reasonable protective actions.
+
+14.27 Protection and Relocation of Property
+
+Customer authorizes reasonable emergency measures including moving/transferring Property, repacking damaged containers, opening containers when necessary to prevent further damage, moving vehicles, or engaging contractors.
+
+14.28 Costs Resulting From Force Majeure
+
+EPIC bears ordinary operating response costs; reasonable additional costs specifically caused by Customer requests/conditions, prohibited Property, or special handling may be charged where permitted.
+
+14.29 Notice of Material Disruption
+
+When practicable, EPIC will attempt notice by email, text, website, portal, telephone, or other reasonable means; failed delivery due to inaccurate information or system failure does not create liability.
+
+14.30 Duty to Resume Performance
+
+EPIC will make commercially reasonable efforts to resume when safe/practicable and need not endanger persons or Property to meet original schedules.
+
+14.31 No Waiver of Payment Obligations
+
+Force Majeure does not erase charges for Services already performed; refunds/credits for unperformed Services are governed by this Agreement, refund policy, and law.
+
+14.32 Severability of Arbitration Provisions
+
+Unenforceable provisions shall be severed/limited where legally permissible. If a class waiver is unenforceable as to a claim that cannot proceed individually in arbitration, that claim may proceed in court while arbitrable claims remain in arbitration unless law requires otherwise.
+
+14.33 Survival
+
+Dispute resolution, arbitration, governing law, venue, limitation, confidentiality, and related provisions survive completion/termination.
+
+
+
+
+ARTICLE 15
+GENERAL LEGAL PROVISIONS & CUSTOMER ACKNOWLEDGMENT
+
+This Article contains general provisions governing interpretation, administration, modification, enforcement, and continuing effect of this Agreement.
+
+15.1 Entire Agreement
+
+This Agreement, applicable order confirmation, service selection, pricing, accepted addenda, and incorporated documents constitute the entire agreement concerning Services and supersede prior representations concerning the same subject matter.
+
+15.2 Order of Precedence
+
+Actual conflicts are resolved in this order: mutually accepted amendment/addendum; order confirmation as to specific Services/quantities/dates/pricing; these Terms; general website/promotional descriptions.
+
+15.3 Amendments to Existing Transactions
+
+Material amendments to existing transactions require written/electronic agreement or other lawful enforceability; non-material operational changes may be implemented reasonably.
+
+15.4 Changes to Future Terms
+
+EPIC may revise Terms prospectively for future transactions; existing transactions are affected only as separately agreed or permitted/required by law.
+
+15.5 No Oral Modification
+
+Employees, drivers, movers, warehouse staff, contractors, or sales representatives cannot orally modify this Agreement unless specifically authorized; verbal requests must be confirmed in an authorized record.
+
+15.6 Severability
+
+Invalid/illegal/unenforceable provisions shall be enforced to the maximum lawful extent or severed, leaving the remainder effective.
+
+15.7 No Waiver
+
+Failure/delay in enforcing rights is not waiver; waiver of one transaction/breach/customer/payment/circumstance is not future waiver; express waiver must be written.
+
+15.8 Cumulative Remedies
+
+Unless expressly otherwise, lawful contractual/statutory/common-law/equitable remedies are cumulative.
+
+15.9 Assignment by EPIC
+
+EPIC may assign/transfer this Agreement in merger, acquisition, business/asset sale, restructuring, financing, or affiliate transfer, subject to law.
+
+15.10 Assignment by Customer
+
+Customer may not assign rights/obligations without prior written consent except as law provides; Authorized Representative status is not assignment.
+
+15.11 Independent Contractor Relationship
+
+EPIC is an independent service provider; no partnership, joint venture, employment, fiduciary, or agency relationship is created.
+
+15.12 Relationship With Universities and Colleges
+
+Unless separately agreed, EPIC operates independently from the Customer’s college/university; the institution is not a party, guarantor, custodian, or responsible for EPIC claims merely by allowing access.
+
+15.13 Third-Party Beneficiaries
+
+Except protected EPIC parties where expressly covered, no unrelated third party receives enforceable rights.
+
+15.14 Employees, Agents and Contractors
+
+Defenses, liability limitations, indemnification rights, and protections extend to EPIC’s members, managers, officers, employees, drivers, warehouse personnel, agents, contractors, subcontractors, affiliates, and authorized representatives acting within scope, to the fullest extent permitted by law.
+
+15.15 Notices
+
+Unless law requires another method, notices may be email, portal, electronic notification, U.S. mail, recognized delivery service, or other reasonable written method; statutory lien/disposition notices must comply with law.
+
+15.16 Customer Contact Information
+
+Customer shall maintain accurate mailing, email, mobile, university, dorm, and other contact information and promptly update changes.
+
+15.17 Headings
+
+Article titles, headings, captions, numbering, and formatting are for organization only and do not alter substance.
+
+15.18 Defined Terms
+
+Capitalized terms have meanings assigned in Article 2 or elsewhere and are interpreted consistently.
+
+15.19 Singular and Plural
+
+Singular includes plural and vice versa where appropriate; persons include individuals/entities where context permits.
+
+15.20 “Including” and Similar Terms
+
+“Include,” “includes,” and “including” mean “including without limitation” unless expressly stated otherwise.
+
+15.21 Interpretation of Agreement
+
+Agreement is interpreted by its plain/commercially reasonable meaning and not automatically against a party merely because it participated in drafting.
+
+15.22 Applicable Law Controls
+
+No provision waives a non-waivable right; mandatory law controls only to the extent of conflict and the remainder continues.
+
+15.23 Compliance With Law
+
+Each party shall comply with applicable law; EPIC may refuse/discontinue Services it reasonably believes unlawful.
+
+15.24 Regulatory Changes
+
+EPIC may reasonably modify procedures for new legal/regulatory/governmental/university/safety requirements and provide notice where material rights/charges are affected as required by law.
+
+15.25 No Guarantee of Continuous Services
+
+EPIC does not guarantee indefinite availability of every Service, facility, delivery/pickup method, website function, or storage option and may modify future offerings for business, capacity, safety, insurance, technology, regulatory, or operational reasons.
+
+15.26 Business Records
+
+EPIC’s ordinary records may include orders, profiles, inventories, photos/videos, GPS, pickup/delivery/payment records, emails/texts, signatures, and warehouse records; admissibility/weight is governed by law.
+
+15.27 Electronic Copies
+
+Electronic copies of this Agreement, signatures, confirmations, invoices, and records may be treated as originals to the fullest extent permitted by law.
+
+15.28 Survival
+
+Payment, collection, indemnification, claims, liability, insurance/declared value, IP, electronic records, dispute resolution, arbitration, governing law, and accrued rights survive as appropriate.
+
+15.29 Customer Opportunity to Review
+
+Customer acknowledges reasonable opportunity to review Terms/pricing/liability limits, consider insurance, ask questions, and decide whether to proceed.
+
+15.30 Material Terms
+
+Customer specifically acknowledges Articles 5, 6, 7, 8, 9, 12, 13, and 14 as material provisions and is encouraged to review them carefully.
+
+15.31 Insurance Acknowledgment
+
+Customer acknowledges EPIC is not an insurer, liability is limited, Declared Value is not insurance, some losses are excluded/limited, independent insurance may be obtained, and Customer determines adequacy.
+
+15.32 Claims Acknowledgment
+
+Customer acknowledges Article 12 notice, inspection, documentation, and limitation requirements.
+
+15.33 Arbitration Acknowledgment
+
+Customer acknowledges Article 14 contains binding arbitration and a class-action waiver to the extent permitted by law and that Customer had an opportunity to review them.
+
+15.34 Electronic Acceptance
+
+Checking an acceptance box, electronically signing, or completing EPIC’s authorized acceptance process constitutes signature/agreement to the fullest extent permitted by law.
+
+15.35 Final Customer Acknowledgment
+
+BY SELECTING “I AGREE,” ELECTRONICALLY SIGNING, OR COMPLETING THE ORDER, CUSTOMER ACKNOWLEDGES THAT CUSTOMER HAS READ AND AGREES TO THESE TERMS; UNDERSTANDS EPIC IS NOT AN INSURANCE COMPANY AND THAT LIABILITY IS LIMITED; UNDERSTANDS ARTICLE 12 CLAIM REQUIREMENTS AND ARTICLE 14 ARBITRATION; AUTHORIZES ARTICLE 13 ELECTRONIC COMMUNICATIONS; REPRESENTS PROVIDED INFORMATION IS ACCURATE; AND HAS HAD AN OPPORTUNITY TO ASK QUESTIONS.
+
+15.36 Suggested Website Acceptance Language
+
+Recommended required unchecked checkbox: “I have read and agree to the EPIC Storage Solutions, LLC Terms & Conditions, including the Limitation of Liability, Claims, Insurance/Declared Value, and Binding Arbitration provisions.” The Terms should be linked and the system should retain the date/time, Terms version, order/customer identifier, and acceptance event.
+
+LEGAL REVIEW NOTICE: This consolidated draft is intended for review and implementation planning. Before publication or customer use, EPIC should have North Carolina counsel review the complete agreement, particularly lien remedies, liability limitations, claims deadlines, electronic contracting, privacy disclosures, and arbitration/class-action provisions.

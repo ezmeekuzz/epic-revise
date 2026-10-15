@@ -1,0 +1,121 @@
+/* EPIC customer portal — reuses the admin panel's shell (admin.css) and
+   adds the customer-only components (booking wizard, payment checkout)
+   in the same visual language: white cards, thin borders, admin-blue
+   accent, Jura type. Loaded only by layouts/account.php. */
+
+.text-muted-brand{color:var(--admin-muted)!important}
+
+/* ---------- page intro (mirrors admin's plain page-heading, no card) ---------- */
+.account-hero{margin-bottom:25px}
+.account-hero.d-flex{flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px}
+.account-hero .eyebrow{margin:0 0 5px}
+.account-hero h1{font-size:clamp(1.55rem,2.5vw,2rem);font-weight:700;margin:0 0 5px;color:var(--admin-ink)}
+.account-hero p{color:var(--admin-muted);margin:0}
+
+/* ---------- cards (mirrors .admin-card) ---------- */
+.portal-card{padding:clamp(20px,3vw,28px);background:#fff;border:1px solid var(--admin-line);border-radius:6px;box-shadow:0 3px 14px rgb(43 46 61/.04)}
+.account-main{background:transparent}
+
+/* tables/empty-states already carry their own cell padding — let them run
+   to the card's own edge instead of double-padding */
+.portal-card>.table-responsive{margin:0 calc(clamp(20px,3vw,28px) * -1) calc(clamp(20px,3vw,28px) * -1)}
+.portal-card>.table-responsive:first-child{margin-top:calc(clamp(20px,3vw,28px) * -1)}
+
+/* ---------- key/value detail rows ---------- */
+.account-details{display:grid;gap:0;margin-top:20px}
+.account-details div{display:grid;grid-template-columns:110px 1fr;gap:15px;padding:13px 0;border-bottom:1px solid #eff0f3}
+.account-details div:last-child{border-bottom:0}
+.account-details dt{color:var(--admin-muted);font-weight:600;font-size:.82rem}
+.account-details dd{margin:0;font-weight:700;overflow-wrap:break-word;font-size:.84rem}
+@media(max-width:575.98px){.account-details div{grid-template-columns:1fr;gap:4px}}
+
+.account-details-heading{display:flex;align-items:center;gap:10px;margin:22px 0 4px;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--admin-muted)}
+
+/* ---------- balance management banner ---------- */
+.balance-banner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:24px 28px;border-radius:6px;background:linear-gradient(135deg,var(--admin-blue),var(--admin-blue-dark));color:#fff}
+.balance-banner h2,.balance-banner p{color:#fff;margin:0}
+.balance-banner p{opacity:.85;margin-top:4px}
+.balance-banner-amount{font-size:2rem;font-weight:800;font-family:var(--admin-font)}
+.balance-progress{min-width:110px}
+
+/* ---------- account overview (profile card on the dashboard) ---------- */
+.account-overview-head{display:flex;align-items:center;gap:14px;padding-bottom:18px;margin-bottom:6px;border-bottom:1px solid var(--admin-line)}
+.account-overview-avatar{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,var(--admin-blue),var(--admin-cyan));color:#fff;font-weight:700;font-size:1.05rem}
+.account-overview-head strong{display:block;font-size:1.02rem;color:var(--admin-ink)}
+.account-overview-head .status-pill{margin-top:5px}
+.account-overview-actions{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+.account-overview-actions .btn{width:100%}
+
+/* ---------- buttons (brand-named classes kept so templates stay unchanged) ---------- */
+.btn-brand-primary{--bs-btn-bg:var(--admin-blue);--bs-btn-border-color:var(--admin-blue);--bs-btn-hover-bg:var(--admin-blue-dark);--bs-btn-hover-border-color:var(--admin-blue-dark);background:var(--admin-blue);border-color:var(--admin-blue);color:#fff;font-weight:700;border-radius:4px;font-size:.82rem;padding:.62rem 1.3rem}
+.btn-brand-primary:hover{background:var(--admin-blue-dark);border-color:var(--admin-blue-dark);color:#fff}
+.btn-brand-secondary{background:#edf4ff;border-color:#edf4ff;color:var(--admin-blue);font-weight:700;border-radius:4px;font-size:.82rem;padding:.62rem 1.3rem}
+.btn-brand-secondary:hover{filter:brightness(.97);color:var(--admin-blue)}
+.btn-brand-outline{background:#fff;border:1px solid var(--admin-line);color:var(--admin-ink);font-weight:600;border-radius:4px;font-size:.82rem;padding:.58rem 1.2rem}
+.btn-brand-outline:hover{border-color:var(--admin-blue);color:var(--admin-blue)}
+
+/* ---------- quantity stepper ---------- */
+.quantity-stepper{display:grid;grid-template-columns:44px minmax(84px,1fr) 44px;align-items:stretch;overflow:hidden;border:1px solid var(--admin-line);border-radius:6px;background:#fff;transition:border-color .15s ease,box-shadow .15s ease}
+.quantity-stepper:focus-within{border-color:var(--admin-blue);box-shadow:0 0 0 .18rem rgb(13 110 253/.11)}
+.quantity-stepper button{display:grid;place-items:center;min-height:44px;border:0;background:#fafafb;color:var(--admin-ink);font:800 1.3rem/1 var(--admin-font);transition:background-color .15s ease,color .15s ease}
+.quantity-stepper button:hover,.quantity-stepper button:focus-visible{background:var(--admin-blue);color:#fff;outline:0}
+.quantity-stepper .form-control{min-width:0;border:0;border-right:1px solid var(--admin-line);border-left:1px solid var(--admin-line);border-radius:0;text-align:center;font-weight:700;box-shadow:none;appearance:textfield}
+.quantity-stepper .form-control::-webkit-inner-spin-button,.quantity-stepper .form-control::-webkit-outer-spin-button{margin:0;appearance:none}
+
+/* ---------- booking wizard ---------- */
+.booking-processing-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,380px);gap:24px;align-items:start}
+.booking-processing-main{min-width:0}
+.portal-section-heading{display:flex;align-items:flex-start;gap:14px}
+.booking-step{width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center;border-radius:50%;background:var(--admin-blue);color:#fff;font-weight:800}
+.service-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.service-choice{position:relative;display:block;min-height:160px;padding:20px;border:1px solid var(--admin-line);border-radius:6px;background:#fff;cursor:pointer;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.service-choice:hover{transform:translateY(-2px);border-color:var(--admin-blue);box-shadow:0 14px 28px rgb(37 39 53/.08)}
+.service-choice.is-selected{border-color:var(--admin-blue);box-shadow:0 0 0 4px rgb(13 110 253/.14)}
+.service-choice input{position:absolute;top:18px;right:18px;width:18px;height:18px;accent-color:var(--admin-blue)}
+.service-choice-copy{display:flex;flex-direction:column;height:100%;padding-right:25px}
+.service-choice-copy strong{font:800 1.05rem/1.3 var(--admin-font);color:var(--admin-ink)}
+.service-choice-copy small{margin:9px 0 17px;color:var(--admin-muted);line-height:1.55}
+.service-choice-copy b{margin-top:auto;color:var(--admin-ink);font-size:.86rem}
+.service-subsection{padding-top:22px;border-top:1px solid var(--admin-line)}
+.item-builder{display:grid;grid-template-columns:minmax(150px,1.1fr) minmax(170px,1.2fr) minmax(176px,.9fr) auto;gap:10px;align-items:end}
+.item-builder .btn{min-height:44px}
+.booking-item-list{display:grid;gap:8px}
+.booking-selected-item{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 15px;border:1px solid var(--admin-line);border-radius:6px;background:#fafbfc}
+.booking-selected-item>div{display:flex;flex-direction:column}
+.booking-selected-item>div:last-of-type{align-items:flex-end;flex-direction:row;gap:14px}
+.booking-selected-item small{margin-top:3px;color:var(--admin-muted)}
+.booking-empty-state{padding:17px;border:1px dashed var(--admin-line);border-radius:6px;color:var(--admin-muted);text-align:center}
+.binary-choice{height:100%;margin:0;padding:17px;border:1px solid var(--admin-line);border-radius:6px}
+.binary-choice legend{float:none;width:auto;margin:0;font:800 .95rem/1.4 var(--admin-font);color:var(--admin-ink)}
+.binary-choice p{min-height:42px;margin:5px 0 12px;color:var(--admin-muted);font-size:.78rem}
+.binary-choice>div{display:flex;gap:18px}
+.binary-choice label{display:flex;align-items:center;gap:6px;font-weight:700}
+.binary-choice input{accent-color:var(--admin-blue)}
+.booking-price-summary{position:sticky;top:100px}
+.booking-summary-lines{display:grid;gap:0;margin-top:18px}
+.booking-summary-lines>div,.booking-summary-total{display:flex;justify-content:space-between;gap:20px;padding:11px 0;border-bottom:1px solid var(--admin-line)}
+.booking-summary-lines span{color:var(--admin-muted);font-size:.82rem}
+.booking-summary-lines strong{white-space:nowrap;font-size:.84rem}
+.booking-summary-total{margin-top:6px;padding-top:17px;border-bottom:0;font-weight:800}
+.booking-summary-total strong{color:var(--admin-ink);font:900 1.3rem/1 var(--admin-font)}
+@media(max-width:991.98px){.booking-processing-grid{grid-template-columns:1fr}.booking-price-summary{position:static}}
+@media(max-width:767.98px){.service-choice-grid{grid-template-columns:1fr}.item-builder{grid-template-columns:1fr 1fr}.item-builder>div:nth-child(3),.item-builder .btn{grid-column:1/-1}.booking-selected-item{align-items:flex-start;flex-direction:column}.booking-selected-item>div:last-of-type{width:100%;align-items:center;justify-content:space-between}}
+@media(max-width:575.98px){.item-builder{grid-template-columns:1fr}.booking-selected-item>div:last-of-type{align-items:flex-start;flex-direction:column}.portal-section-heading{gap:10px}}
+
+/* ---------- Square checkout ---------- */
+.payment-checkout-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);gap:24px;align-items:start}
+.payment-card,.payment-order-card{min-width:0}
+.payment-order-card{position:sticky;top:110px}
+.payment-environment{display:inline-flex;padding:5px 9px;border-radius:999px;background:#edf4ff;color:var(--admin-blue);font-size:.72rem;font-weight:700;text-transform:uppercase}
+.square-card-container{min-height:105px;padding:16px;border:1px solid var(--admin-line);border-radius:6px;background:#fff}
+.payment-inline-status{min-height:24px;padding:0;color:var(--admin-muted);font-size:.88rem}
+.payment-inline-status.is-error{padding:10px 12px;border-radius:6px;background:#fff0f2;color:#c92e43}
+.payment-inline-status.is-success{padding:10px 12px;border-radius:6px;background:#e5f8ee;color:#168b50}
+.payment-balance{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:22px 0 14px;padding:17px 0;border-top:1px solid var(--admin-line);border-bottom:1px solid var(--admin-line)}
+.payment-balance span{color:var(--admin-muted);font-weight:600}
+.payment-balance strong{color:var(--admin-ink);font-size:1.2rem}
+.payment-card .form-check-label{color:var(--admin-muted);font-size:.86rem;line-height:1.55}
+@media(max-width:991.98px){.payment-checkout-grid{grid-template-columns:1fr}.payment-order-card{position:static}}
+@media(max-width:575.98px){.square-card-container{padding:12px}.payment-balance{align-items:flex-start;flex-direction:column;gap:5px}}
+
+.order-terms{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;}
