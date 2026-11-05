@@ -77,10 +77,10 @@ final class PaymentsController extends BaseController
         try {
             (new PaymentService())->create($data);
         } catch (RuntimeException $exception) {
-            return redirect()->back()->withInput()->with('error', $exception->getMessage());
+            return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Payment not recorded', 'message' => $exception->getMessage()]);
         } catch (Throwable $exception) {
             log_message('error', 'Unable to record payment: {type}', ['type' => $exception::class]);
-            return redirect()->back()->withInput()->with('error', 'The payment could not be recorded. No completed transaction was confirmed.');
+            return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Payment not recorded', 'message' => 'The payment could not be recorded. No completed transaction was confirmed.']);
         }
 
         return redirect()->route('admin.payments')->with('success', 'Payment ' . $data['reference'] . ' was recorded.');
@@ -92,10 +92,10 @@ final class PaymentsController extends BaseController
             (new PaymentService())->complete($id);
             return redirect()->route('admin.payments')->with('success', 'Pending payment completed and posted to the transaction ledger.');
         } catch (RuntimeException $exception) {
-            return redirect()->route('admin.payments')->with('error', $exception->getMessage());
+            return redirect()->route('admin.payments')->with('alert', ['type' => 'error', 'title' => 'Payment not completed', 'message' => $exception->getMessage()]);
         } catch (Throwable $exception) {
             log_message('error', 'Unable to complete payment: {type}', ['type' => $exception::class]);
-            return redirect()->route('admin.payments')->with('error', 'The payment could not be completed. No completed transaction was confirmed.');
+            return redirect()->route('admin.payments')->with('alert', ['type' => 'error', 'title' => 'Payment not completed', 'message' => 'The payment could not be completed. No completed transaction was confirmed.']);
         }
     }
 
@@ -105,10 +105,10 @@ final class PaymentsController extends BaseController
             (new PaymentService())->refund($id);
             return redirect()->route('admin.payments')->with('success', 'Refund recorded in the immutable transaction ledger.');
         } catch (RuntimeException $exception) {
-            return redirect()->route('admin.payments')->with('error', $exception->getMessage());
+            return redirect()->route('admin.payments')->with('alert', ['type' => 'error', 'title' => 'Refund not recorded', 'message' => $exception->getMessage()]);
         } catch (Throwable $exception) {
             log_message('error', 'Unable to refund payment: {type}', ['type' => $exception::class]);
-            return redirect()->route('admin.payments')->with('error', 'The refund could not be recorded. Check the transaction ledger before retrying.');
+            return redirect()->route('admin.payments')->with('alert', ['type' => 'error', 'title' => 'Refund not recorded', 'message' => 'The refund could not be recorded. Check the transaction ledger before retrying.']);
         }
     }
 }

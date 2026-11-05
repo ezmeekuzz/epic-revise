@@ -29,7 +29,7 @@ final class AuthController extends BaseController
         $throttler = service('throttler');
 
         if (! $throttler->check($key, 5, MINUTE * 15) || ! $throttler->check($ipKey, 50, MINUTE * 15)) {
-            return redirect()->back()->withInput()->with('error', 'Too many administrator login attempts. Please wait 15 minutes and try again.');
+            return redirect()->back()->withInput()->with('alert', ['type' => 'warning', 'title' => 'Too many attempts', 'message' => 'Too many administrator login attempts. Please wait 15 minutes and try again.']);
         }
 
         if (! $this->validateData(['email' => $email, 'password' => $password], [

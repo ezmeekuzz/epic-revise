@@ -12,13 +12,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Jura:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/sweetalert2/sweetalert2.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/vendor/toastr/toastr.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/admin.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/notifications.css') ?>">
 </head>
 <body class="admin-login-body">
     <?= view('components/notification') ?>
     <?= $this->renderSection('content') ?>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="<?= base_url('assets/vendor/sweetalert2/sweetalert2.all.min.js') ?>"></script>
+    <script src="<?= base_url('assets/vendor/toastr/toastr.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/notifications.js') ?>"></script>
     <script src="<?= base_url('assets/js/main.js') ?>"></script>
 </body>

@@ -72,7 +72,27 @@ final class PublicPagesTest extends CIUnitTestCase
         $body = (string) $result->response()->getBody();
         $this->assertStringContainsString('id="epicNotification"', $body);
         $this->assertStringContainsString('data-type="success"', $body);
+        $this->assertStringContainsString('data-channel="toast"', $body);
+        $result->assertSee('assets/vendor/toastr/toastr.min.css');
+        $result->assertSee('assets/vendor/toastr/toastr.min.js');
         $result->assertSee('Account action completed.');
+    }
+
+    public function testAlertFlashRendersAsModalAndValidationErrorsJoinTheErrorToast(): void
+    {
+        $result = $this->withSession([
+            'alert'     => ['type' => 'warning', 'title' => 'Login link unavailable', 'message' => 'This login link is not valid.'],
+            'error'     => 'Your details could not be saved.',
+            'errors'    => ['email' => 'The email field is required.'],
+            '__ci_vars' => ['alert' => 'new', 'error' => 'new', 'errors' => 'new'],
+        ])->get('/login');
+
+        $result->assertStatus(200);
+        $body = (string) $result->response()->getBody();
+        $this->assertStringContainsString('data-channel="modal" data-type="warning" data-title="' . esc('Login link unavailable', 'attr') . '" data-message="' . esc('This login link is not valid.', 'attr') . '"', $body);
+        $this->assertStringContainsString('data-channel="toast" data-type="error"', $body);
+        $this->assertStringContainsString(esc(json_encode(['The email field is required.']), 'attr'), $body);
+        $this->assertSame(2, substr_count($body, 'data-epic-notification'));
     }
 
     public function testAdminLoginUsesItsOwnAdministrationLayout(): void

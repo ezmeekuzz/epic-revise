@@ -26,6 +26,7 @@ $activeProfile      = $currentPath === 'account/profile';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.3/css/dataTables.dataTables.min.css">
     <link rel="stylesheet" href="<?= base_url('assets/vendor/sweetalert2/sweetalert2.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/vendor/toastr/toastr.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/admin.css') ?>?v=<?= (int) filemtime(FCPATH . 'assets/css/admin.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/notifications.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/account.css') ?>?v=<?= (int) filemtime(FCPATH . 'assets/css/account.css') ?>">
@@ -91,6 +92,7 @@ $activeProfile      = $currentPath === 'account/profile';
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/2.3.3/js/dataTables.min.js"></script>
     <script src="<?= base_url('assets/vendor/sweetalert2/sweetalert2.all.min.js') ?>"></script>
+    <script src="<?= base_url('assets/vendor/toastr/toastr.min.js') ?>"></script>
     <script src="<?= base_url('assets/js/notifications.js') ?>"></script>
     <script src="<?= base_url('assets/js/admin.js') ?>"></script>
     <?= $this->renderSection('scripts') ?>

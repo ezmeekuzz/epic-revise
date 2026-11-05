@@ -1,3 +1,16 @@
+/*
+ * EPIC notifications.
+ *
+ * Toastr (epicToast)       - non-blocking feedback: saves, updates, sends, sign-in/out,
+ *                            recoverable validation problems.
+ * SweetAlert2 (epicAlert)  - blocking dialogs: things the user must read or decide on,
+ *                            such as lockouts, failed payments/emails, milestones.
+ * SweetAlert2 (epicConfirm) - confirmations before destructive or important actions.
+ * SweetAlert2 loading       - shown while a POST form submits.
+ *
+ * epicNotify(type, message, options) is kept for existing callers: it uses a toast,
+ * or a modal when options.modal is true.
+ */
 (function () {
   "use strict";
 
@@ -9,6 +22,7 @@
     info: "Notice",
     question: "Please confirm"
   };
+  var toastTimeouts = { success: 4000, info: 5000, warning: 6500, error: 8000 };
 
   function safeType(type) {
     return allowedTypes.indexOf(type) !== -1 ? type : "info";
@@ -18,19 +32,64 @@
     return window.Swal && typeof window.Swal.fire === "function";
   }
 
-  window.epicNotify = function (type, message, options) {
+  function toastrAvailable() {
+    return window.toastr && typeof window.toastr.success === "function";
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  // Builds safe HTML from plain text and an optional list of plain-text items.
+  function buildBody(message, items) {
+    var html = message ? "<p class=\"epic-notify-text\">" + escapeHtml(message) + "</p>" : "";
+    if (items && items.length) {
+      html += "<ul class=\"epic-notify-list\">" + items.map(function (item) {
+        return "<li>" + escapeHtml(item) + "</li>";
+      }).join("") + "</ul>";
+    }
+    return html;
+  }
+
+  function plainText(message, items) {
+    return [message].concat(items || []).filter(Boolean).join("\n");
+  }
+
+  if (toastrAvailable()) {
+    window.toastr.options = {
+      closeButton: true,
+      newestOnTop: true,
+      progressBar: true,
+      positionClass: "toast-top-right",
+      preventDuplicates: true,
+      showDuration: 200,
+      hideDuration: 200,
+      extendedTimeOut: 2000,
+      escapeHtml: false, // bodies are escaped by buildBody()
+      toastClass: "toast epic-toast"
+    };
+  }
+
+  window.epicAlert = function (type, message, options) {
     var normalizedType = safeType(type);
-    var settings = options || {};
+    var settings = Object.assign({}, options || {});
+    var items = settings.items;
+    delete settings.items;
 
     if (!swalAvailable()) {
-      window.alert(String(message));
+      window.alert(plainText(message, items));
       return Promise.resolve({ isConfirmed: true });
     }
 
-    var defaults = {
+    return window.Swal.fire(Object.assign({
       icon: normalizedType,
-      title: titles[normalizedType],
-      text: String(message),
+      title: settings.title || titles[normalizedType],
+      html: buildBody(message, items),
       confirmButtonText: "OK",
       confirmButtonColor: "#005aab",
       cancelButtonColor: "#687583",
@@ -41,18 +100,50 @@
         confirmButton: "epic-swal-confirm",
         cancelButton: "epic-swal-cancel"
       }
-    };
+    }, settings, { title: settings.title || titles[normalizedType] }));
+  };
 
-    if (normalizedType === "success" && !settings.modal) {
-      defaults.toast = true;
-      defaults.position = "top-end";
-      defaults.showConfirmButton = false;
-      defaults.timer = 3500;
-      defaults.timerProgressBar = true;
+  window.epicToast = function (type, message, options) {
+    var normalizedType = safeType(type);
+    if (normalizedType === "question") normalizedType = "info";
+    var settings = options || {};
+    var body = buildBody(message, settings.items);
+    var title = settings.title ? escapeHtml(settings.title) : undefined;
+
+    if (toastrAvailable()) {
+      window.toastr[normalizedType](body, title, {
+        timeOut: settings.timeout || toastTimeouts[normalizedType]
+      });
+      return;
     }
 
+    // Fallback: SweetAlert2 toast, then native alert.
+    if (swalAvailable()) {
+      window.Swal.fire({
+        toast: true,
+        position: "top-end",
+        icon: normalizedType,
+        title: settings.title || undefined,
+        html: body,
+        showConfirmButton: false,
+        timer: toastTimeouts[normalizedType],
+        timerProgressBar: true
+      });
+      return;
+    }
+
+    window.alert(plainText(message, settings.items));
+  };
+
+  window.epicNotify = function (type, message, options) {
+    var settings = Object.assign({}, options || {});
+    var modal = settings.modal === true;
     delete settings.modal;
-    return window.Swal.fire(Object.assign(defaults, settings));
+
+    if (modal) return window.epicAlert(type, message, settings);
+
+    window.epicToast(type, message, settings);
+    return Promise.resolve({ isConfirmed: true });
   };
 
   window.epicConfirm = function (message, options) {
@@ -90,6 +181,8 @@
       button.disabled = true;
     });
 
+    if (window.toastr && typeof window.toastr.clear === "function") window.toastr.clear();
+
     if (swalAvailable()) {
       window.Swal.fire({
         title: title,
@@ -98,6 +191,7 @@
         allowEscapeKey: false,
         showConfirmButton: false,
         heightAuto: false,
+        customClass: { popup: "epic-swal-popup" },
         didOpen: function () {
           window.Swal.showLoading();
         }
@@ -133,7 +227,7 @@
       var invalidField = form.querySelector(":invalid");
       if (invalidField) invalidField.focus();
 
-      window.epicNotify("warning", "Please complete the required fields and correct the highlighted information.");
+      window.epicToast("warning", "Please complete the required fields and correct the highlighted information.");
       return;
     }
 
@@ -155,10 +249,33 @@
   });
 
   document.addEventListener("DOMContentLoaded", function () {
-    var notification = document.getElementById("epicNotification");
+    var nodes = document.querySelectorAll("#epicNotification [data-epic-notification]");
+    var modals = [];
 
-    if (notification && notification.dataset.message) {
-      window.epicNotify(notification.dataset.type || "info", notification.dataset.message);
-    }
+    nodes.forEach(function (node) {
+      var items = [];
+      try {
+        items = JSON.parse(node.dataset.items || "[]");
+      } catch (error) {
+        items = [];
+      }
+
+      var options = { title: node.dataset.title || "", items: Array.isArray(items) ? items : [] };
+      var type = node.dataset.type || "info";
+      var message = node.dataset.message || "";
+
+      if (node.dataset.channel === "modal") {
+        modals.push([type, message, options]);
+      } else {
+        window.epicToast(type, message, options);
+      }
+    });
+
+    // Show modals one after another so none is lost.
+    modals.reduce(function (chain, args) {
+      return chain.then(function () {
+        return window.epicAlert(args[0], args[1], args[2]);
+      });
+    }, Promise.resolve());
   });
 })();

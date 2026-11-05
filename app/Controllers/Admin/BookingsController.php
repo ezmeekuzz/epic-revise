@@ -271,7 +271,7 @@ final class BookingsController extends BaseController
         } catch (Throwable $exception) {
             log_message('error', 'Booking confirmation notice failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
 
-            return redirect()->route('admin.bookings.show', [$id])->with('error', 'The confirmation email could not be sent. Check the email settings.');
+            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The confirmation email could not be sent. Check the email settings.']);
         }
 
         return redirect()->route('admin.bookings.show', [$id])->with('success', 'Booking confirmation sent to ' . $booking['customer_email'] . '.');
@@ -299,7 +299,7 @@ final class BookingsController extends BaseController
         } catch (Throwable $exception) {
             log_message('error', 'Balance due notice failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
 
-            return redirect()->route('admin.bookings.show', [$id])->with('error', 'The balance due notice could not be sent. Check the email settings.');
+            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The balance due notice could not be sent. Check the email settings.']);
         }
 
         return redirect()->route('admin.bookings.show', [$id])->with('success', 'Balance due notice sent to ' . $booking['customer_email'] . '.');
@@ -323,7 +323,7 @@ final class BookingsController extends BaseController
         } catch (Throwable $exception) {
             log_message('error', 'Pickup reminder failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
 
-            return redirect()->route('admin.bookings.show', [$id])->with('error', 'The pickup reminder could not be sent. Check the email settings.');
+            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The pickup reminder could not be sent. Check the email settings.']);
         }
 
         return redirect()->route('admin.bookings.show', [$id])->with('success', 'Pickup reminder sent to ' . $booking['customer_email'] . '.');
@@ -347,7 +347,7 @@ final class BookingsController extends BaseController
         } catch (Throwable $exception) {
             log_message('error', 'Drop-off reminder failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
 
-            return redirect()->route('admin.bookings.show', [$id])->with('error', 'The drop-off reminder could not be sent. Check the email settings.');
+            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The drop-off reminder could not be sent. Check the email settings.']);
         }
 
         return redirect()->route('admin.bookings.show', [$id])->with('success', 'Drop-off reminder sent to ' . $booking['customer_email'] . '.');
@@ -378,7 +378,7 @@ final class BookingsController extends BaseController
             return redirect()->back()->with('error', 'No bookings matched.');
         }
         if (count($bookings) > 200) {
-            return redirect()->back()->with('error', 'That matches more than 200 bookings. Narrow the filters before sending in bulk.');
+            return redirect()->back()->with('alert', ['type' => 'warning', 'title' => 'Too many bookings', 'message' => 'That matches more than 200 bookings. Narrow the filters before sending in bulk.']);
         }
         if (! $this->throttleBulkNotification($type)) {
             return redirect()->back()->with('error', 'Please wait a couple of minutes before sending another bulk notice.');
@@ -472,7 +472,7 @@ final class BookingsController extends BaseController
         } catch (DatabaseException $exception) {
             log_message('error', 'Booking delete failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
 
-            return redirect()->back()->with('error', 'This booking has payment or transaction records and cannot be deleted. Cancel it instead, or remove its financial records first.');
+            return redirect()->back()->with('alert', ['type' => 'warning', 'title' => 'Booking cannot be deleted', 'message' => 'This booking has payment or transaction records and cannot be deleted. Cancel it instead, or remove its financial records first.']);
         }
 
         return redirect()->back()->with('success', 'Booking ' . $booking['reference_code'] . ' deleted.');

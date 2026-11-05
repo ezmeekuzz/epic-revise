@@ -262,7 +262,7 @@ final class AccountController extends BaseController
             $db->transRollback();
             log_message('error', 'Customer booking creation failed: {type}', ['type' => $exception::class]);
 
-            return redirect()->back()->withInput()->with('error', 'Your booking request could not be saved. Please try again.');
+            return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Booking not saved', 'message' => 'Your booking request could not be saved. Please try again.']);
         }
 
         return redirect()->route('account.bookings.payment', [$bookingId])->with('success', 'Your service request was saved. Continue with secure payment.');
@@ -314,7 +314,7 @@ final class AccountController extends BaseController
                 'booking' => $id, 'type' => $exception::class,
                 'message' => str_replace($token, '[request token redacted]', $exception->getMessage()),
             ]);
-            return redirect()->back()->withInput()->with('error', 'Your items could not be saved. Please try again.');
+            return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Items not saved', 'message' => 'Your items could not be saved. Please try again.']);
         }
         return redirect()->route('account.bookings.show', [$id])->with('success', 'Additional items saved to your existing order. Review the updated balance and continue to payment.');
     }
@@ -475,7 +475,7 @@ final class AccountController extends BaseController
         } catch (Throwable $exception) {
             log_message('error', 'Customer pickup update failed: {type}', ['type' => $exception::class]);
 
-            return redirect()->back()->withInput()->with('error', 'Pickup details could not be saved. Please try again.');
+            return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Pickup details not saved', 'message' => 'Pickup details could not be saved. Please try again.']);
         }
 
         return redirect()->route('account.bookings.show', [$id])->with('success', 'Pickup and drop-off details updated.');

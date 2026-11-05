@@ -45,7 +45,7 @@ final class AccountController extends BaseController
 
         $key = 'admin_reauth_' . hash('sha256', (string) session()->get('admin_user_id') . '|' . $this->request->getIPAddress());
         if (! service('throttler')->check($key, 5, MINUTE * 5)) {
-            return redirect()->back()->with('error', 'Too many verification attempts. Please wait five minutes and try again.');
+            return redirect()->back()->with('alert', ['type' => 'warning', 'title' => 'Too many attempts', 'message' => 'Too many verification attempts. Please wait five minutes and try again.']);
         }
 
         $user = $this->currentUser();

@@ -35,7 +35,7 @@ final class AuthController extends BaseController
 
         $throttler = service('throttler');
         if (! $throttler->check($key, 5, MINUTE * 15) || ! $throttler->check($ipKey, 50, MINUTE * 15)) {
-            return redirect()->back()->withInput()->with('error', 'Too many login attempts. Please wait 15 minutes and try again.');
+            return redirect()->back()->withInput()->with('alert', ['type' => 'warning', 'title' => 'Too many attempts', 'message' => 'Too many login attempts. Please wait 15 minutes and try again.']);
         }
 
         if (! $this->validateData(['email' => $email, 'password' => $password], [
@@ -224,7 +224,7 @@ final class AuthController extends BaseController
         (new AuthService())->startSession($user);
         $redirectPath = $this->safeRedirectPath((string) ($token['redirect_path'] ?? '')) ?? '/account';
 
-        return redirect()->to(site_url(ltrim($redirectPath, '/')))->with('success', 'Your email is confirmed. Welcome to EPIC, ' . $user['name'] . '.');
+        return redirect()->to(site_url(ltrim($redirectPath, '/')))->with('alert', ['type' => 'success', 'title' => 'Email confirmed', 'message' => 'Your email is confirmed. Welcome to EPIC, ' . $user['name'] . '.']);
     }
 
     public function resendVerification(): RedirectResponse
@@ -301,7 +301,7 @@ final class AuthController extends BaseController
         $email = mb_strtolower(trim((string) $this->request->getPost('email')));
         $key = 'forgot_password_' . hash('sha256', $this->request->getIPAddress() . '|' . $email);
         if (! service('throttler')->check($key, 3, MINUTE * 30)) {
-            return redirect()->route('forgot.password')->with('error', 'Too many requests. Please wait 30 minutes and try again.');
+            return redirect()->route('forgot.password')->with('alert', ['type' => 'warning', 'title' => 'Too many requests', 'message' => 'Too many requests. Please wait 30 minutes and try again.']);
         }
 
         if (! $this->validateData(['email' => $email], ['email' => 'required|valid_email|max_length[254]'])) {
@@ -326,7 +326,7 @@ final class AuthController extends BaseController
             }
         }
 
-        return redirect()->route('forgot.password')->with('success', 'If an EPIC customer account exists for that address, we sent a password reset link. Check your inbox, spam, and quarantine folders.');
+        return redirect()->route('forgot.password')->with('alert', ['type' => 'info', 'title' => 'Check your email', 'message' => 'If an EPIC customer account exists for that address, we sent a password reset link. Check your inbox, spam, and quarantine folders.']);
     }
 
     public function resetPassword(): string
@@ -351,7 +351,7 @@ final class AuthController extends BaseController
         $password = (string) $this->request->getPost('password');
 
         if (! preg_match('/^[a-f0-9]{64}$/', $rawToken)) {
-            return redirect()->route('forgot.password')->with('error', 'This reset link is not valid. Request a new one below.');
+            return redirect()->route('forgot.password')->with('alert', ['type' => 'warning', 'title' => 'Reset link unavailable', 'message' => 'This reset link is not valid. Request a new one below.']);
         }
         if (! $this->validateData(['password' => $password, 'password_confirm' => (string) $this->request->getPost('password_confirm')], [
             'password'         => 'required|min_length[12]|max_length[72]',
@@ -363,13 +363,13 @@ final class AuthController extends BaseController
         $tokens = new PasswordResetTokenModel();
         $token = $tokens->where('token_hash', hash('sha256', $rawToken))->where('used_at', null)->first();
         if ($token === null || strtotime((string) $token['expires_at']) < time()) {
-            return redirect()->route('forgot.password')->with('error', 'This reset link is missing, expired, or has already been used. Request a new link below.');
+            return redirect()->route('forgot.password')->with('alert', ['type' => 'warning', 'title' => 'Reset link unavailable', 'message' => 'This reset link is missing, expired, or has already been used. Request a new link below.']);
         }
 
         $users = new UserModel();
         $user = $users->find((int) $token['user_id']);
         if ($user === null || $user['role'] !== 'customer') {
-            return redirect()->route('forgot.password')->with('error', 'This reset link is no longer associated with an active customer account.');
+            return redirect()->route('forgot.password')->with('alert', ['type' => 'warning', 'title' => 'Reset link unavailable', 'message' => 'This reset link is no longer associated with an active customer account.']);
         }
 
         $now = date('Y-m-d H:i:s');
@@ -379,7 +379,7 @@ final class AuthController extends BaseController
         if (! $claimed || $db->affectedRows() !== 1) {
             $db->transRollback();
 
-            return redirect()->route('forgot.password')->with('error', 'This reset link is missing, expired, or has already been used. Request a new link below.');
+            return redirect()->route('forgot.password')->with('alert', ['type' => 'warning', 'title' => 'Reset link unavailable', 'message' => 'This reset link is missing, expired, or has already been used. Request a new link below.']);
         }
 
         $updated = $users->update((int) $user['id'], ['password_hash' => password_hash($password, PASSWORD_DEFAULT)]);
@@ -399,30 +399,30 @@ final class AuthController extends BaseController
 
         $user = $users->find((int) $user['id']);
         if ($user === null) {
-            return redirect()->route('login')->with('success', 'Your password has been reset. Please log in.');
+            return redirect()->route('login')->with('alert', ['type' => 'success', 'title' => 'Password reset', 'message' => 'Your password has been reset. Please log in.']);
         }
         (new AuthService())->startSession($user);
 
-        return redirect()->to(site_url('account'))->with('success', 'Your password has been reset. Welcome back, ' . $user['name'] . '.');
+        return redirect()->to(site_url('account'))->with('alert', ['type' => 'success', 'title' => 'Password reset', 'message' => 'Your password has been reset. Welcome back, ' . $user['name'] . '.']);
     }
 
     public function magicLogin(): RedirectResponse
     {
         $rawToken = strtolower(trim((string) $this->request->getGet('token')));
         if (! preg_match('/^[a-f0-9]{64}$/', $rawToken)) {
-            return redirect()->route('login')->with('error', 'This login link is not valid.');
+            return redirect()->route('login')->with('alert', ['type' => 'warning', 'title' => 'Login link unavailable', 'message' => 'This login link is not valid.']);
         }
 
         $tokens = new MagicLoginTokenModel();
         $token = $tokens->where('token_hash', hash('sha256', $rawToken))->where('used_at', null)->first();
         if ($token === null || strtotime((string) $token['expires_at']) < time()) {
-            return redirect()->route('login')->with('error', 'This login link is missing, expired, or has already been used. Please log in with your password.');
+            return redirect()->route('login')->with('alert', ['type' => 'warning', 'title' => 'Login link unavailable', 'message' => 'This login link is missing, expired, or has already been used. Please log in with your password.']);
         }
 
         $users = new UserModel();
         $user = $users->find((int) $token['user_id']);
         if ($user === null || $user['role'] !== 'customer' || $user['status'] !== 'active') {
-            return redirect()->route('login')->with('error', 'This login link is no longer associated with an active customer account.');
+            return redirect()->route('login')->with('alert', ['type' => 'warning', 'title' => 'Login link unavailable', 'message' => 'This login link is no longer associated with an active customer account.']);
         }
 
         $now = date('Y-m-d H:i:s');
@@ -432,7 +432,7 @@ final class AuthController extends BaseController
         if (! $claimed || $db->affectedRows() !== 1 || ! $db->transStatus()) {
             $db->transRollback();
 
-            return redirect()->route('login')->with('error', 'This login link has already been used. Please log in with your password.');
+            return redirect()->route('login')->with('alert', ['type' => 'warning', 'title' => 'Login link unavailable', 'message' => 'This login link has already been used. Please log in with your password.']);
         }
         $db->transCommit();
 

@@ -83,7 +83,7 @@ final class SettingsController extends BaseController
             (new SettingsService())->saveGroup($group, $payload['values'], $payload['clearSecrets'], (int) session()->get('admin_user_id'));
         } catch (Throwable $exception) {
             log_message('error', 'Unable to save {group} settings: {type}', ['group' => $group, 'type' => $exception::class]);
-            return redirect()->to(site_url('admin/settings#' . $group))->with('error', 'The settings could not be saved. Check that the application encryption key is configured.');
+            return redirect()->to(site_url('admin/settings#' . $group))->with('alert', ['type' => 'error', 'title' => 'Settings not saved', 'message' => 'The settings could not be saved. Check that the application encryption key is configured.']);
         }
 
         return redirect()->to(site_url('admin/settings#' . $group))->with('success', ucfirst($group) . ' settings updated.');
@@ -107,10 +107,10 @@ final class SettingsController extends BaseController
             }
         } catch (Throwable $exception) {
             log_message('error', 'SMTP test failed: {type}', ['type' => $exception::class]);
-            return redirect()->to(site_url('admin/settings#email'))->with('error', 'SMTP test failed. Verify the saved host, port, encryption, username, and password.');
+            return redirect()->to(site_url('admin/settings#email'))->with('alert', ['type' => 'error', 'title' => 'SMTP test failed', 'message' => 'SMTP test failed. Verify the saved host, port, encryption, username, and password.']);
         }
 
-        return redirect()->to(site_url('admin/settings#email'))->with('success', 'The SMTP server accepted the test message. Confirm arrival in the recipient inbox or spam folder.');
+        return redirect()->to(site_url('admin/settings#email'))->with('alert', ['type' => 'success', 'title' => 'Test email accepted', 'message' => 'The SMTP server accepted the test message. Confirm arrival in the recipient inbox or spam folder.']);
     }
 
     /** @return array{values: array<string, string>, rules: array<string, string>, clearSecrets: list<string>}|null */

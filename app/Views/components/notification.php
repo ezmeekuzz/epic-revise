@@ -1,29 +1,76 @@
 <?php
 
-$notificationType    = null;
-$notificationMessage = null;
-$successMessage      = session()->getFlashdata('success');
-$errorMessage        = session()->getFlashdata('error');
+/*
+ * Flash notification bridge.
+ *
+ * Channels:
+ *   toast - Toastr. Non-blocking feedback for routine results: saved, updated,
+ *           archived, sent, signed in/out, and recoverable form errors.
+ *           Flash keys: success, error, warning, info, errors, profileErrors, passwordErrors.
+ *   modal - SweetAlert2. Blocking dialogs the user must read: lockouts, expired
+ *           links, failed payments or emails, and key account milestones.
+ *           Flash key: alert => ['type' => ..., 'title' => ..., 'message' => ...].
+ */
 
-if (is_string($successMessage) && $successMessage !== '') {
-    $notificationType    = 'success';
-    $notificationMessage = $successMessage;
-} elseif (is_string($errorMessage) && $errorMessage !== '') {
-    $notificationType    = 'error';
-    $notificationMessage = $errorMessage;
-} else {
-    foreach (['errors', 'profileErrors', 'passwordErrors'] as $errorKey) {
-        $validationErrors = session()->getFlashdata($errorKey);
+$allowedTypes  = ['success', 'error', 'warning', 'info'];
+$notifications = [];
 
-        if (is_array($validationErrors) && $validationErrors !== []) {
-            $messages            = array_values(array_filter(array_map('strval', $validationErrors)));
-            $notificationType    = 'warning';
-            $notificationMessage = implode(' ', $messages);
-            break;
+$alert = session()->getFlashdata('alert');
+if (is_array($alert) && isset($alert['message']) && (string) $alert['message'] !== '') {
+    $notifications[] = [
+        'channel' => 'modal',
+        'type'    => in_array($alert['type'] ?? '', $allowedTypes, true) ? $alert['type'] : 'info',
+        'title'   => (string) ($alert['title'] ?? ''),
+        'message' => (string) $alert['message'],
+        'items'   => [],
+    ];
+}
+
+$validationItems = [];
+foreach (['errors', 'profileErrors', 'passwordErrors'] as $errorKey) {
+    $validationErrors = session()->getFlashdata($errorKey);
+
+    if (is_array($validationErrors)) {
+        foreach ($validationErrors as $validationError) {
+            if (is_scalar($validationError) && (string) $validationError !== '') {
+                $validationItems[] = (string) $validationError;
+            }
         }
     }
 }
+$validationItems = array_values(array_unique($validationItems));
+
+foreach ($allowedTypes as $type) {
+    $message = session()->getFlashdata($type);
+
+    if (! is_string($message) || $message === '') {
+        continue;
+    }
+
+    $items = [];
+    if ($type === 'error' && $validationItems !== []) {
+        // Attach field errors to the matching error toast instead of stacking a second one.
+        $items           = $validationItems;
+        $validationItems = [];
+    }
+
+    $notifications[] = ['channel' => 'toast', 'type' => $type, 'title' => '', 'message' => $message, 'items' => $items];
+}
+
+if ($validationItems !== []) {
+    $notifications[] = [
+        'channel' => 'toast',
+        'type'    => 'warning',
+        'title'   => 'Please check the highlighted fields',
+        'message' => '',
+        'items'   => $validationItems,
+    ];
+}
 ?>
-<?php if ($notificationType !== null && $notificationMessage !== null): ?>
-    <div id="epicNotification" data-type="<?= esc($notificationType, 'attr') ?>" data-message="<?= esc($notificationMessage, 'attr') ?>" hidden></div>
+<?php if ($notifications !== []): ?>
+    <div id="epicNotification" hidden>
+        <?php foreach ($notifications as $notification): ?>
+            <div data-epic-notification data-channel="<?= esc($notification['channel'], 'attr') ?>" data-type="<?= esc($notification['type'], 'attr') ?>" data-title="<?= esc($notification['title'], 'attr') ?>" data-message="<?= esc($notification['message'], 'attr') ?>" data-items="<?= esc(json_encode($notification['items'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 'attr') ?>"></div>
+        <?php endforeach ?>
+    </div>
 <?php endif ?>

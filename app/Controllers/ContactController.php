@@ -18,7 +18,7 @@ final class ContactController extends BaseController
     {
         $key = 'contact_message_' . hash('sha256', $this->request->getIPAddress());
         if (! service('throttler')->check($key, 5, MINUTE * 10)) {
-            return redirect()->route('contact')->with('error', 'Too many messages sent. Please wait a few minutes and try again.');
+            return redirect()->route('contact')->with('alert', ['type' => 'warning', 'title' => 'Please slow down', 'message' => 'Too many messages sent. Please wait a few minutes and try again.']);
         }
 
         $data = [
@@ -45,7 +45,7 @@ final class ContactController extends BaseController
         } catch (Throwable $exception) {
             log_message('error', 'Contact message could not be saved: {type}', ['type' => $exception::class]);
 
-            return redirect()->route('contact')->withInput()->with('error', 'Your message could not be sent. Please try again or call us directly.');
+            return redirect()->route('contact')->withInput()->with('alert', ['type' => 'error', 'title' => 'Message not sent', 'message' => 'Your message could not be sent. Please try again or call us directly.']);
         }
 
         $smtp = new SmtpService();
@@ -65,6 +65,6 @@ final class ContactController extends BaseController
             }
         }
 
-        return redirect()->route('contact')->with('success', 'Thank you for contacting us! We will get back to you soon.');
+        return redirect()->route('contact')->with('alert', ['type' => 'success', 'title' => 'Message sent', 'message' => 'Thank you for contacting us! We will get back to you soon.']);
     }
 }
