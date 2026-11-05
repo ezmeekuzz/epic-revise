@@ -21,30 +21,25 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="email">Email address</label>
-                        <input type="email" class="form-control<?= isset($errors['email']) ? ' is-invalid' : '' ?>" id="email" name="email" value="<?= esc(old('email'), 'attr') ?>" autocomplete="email" maxlength="254" required>
+                        <input type="email" class="form-control<?= isset($errors['email']) ? ' is-invalid' : '' ?>" id="email" name="email" value="<?= esc(old('email', $prefillEmail ?? ''), 'attr') ?>" autocomplete="email" maxlength="254" required>
                         <div id="emailError" class="invalid-feedback"><?= esc($errors['email'] ?? 'Please enter a valid email address.') ?></div>
                     </div>
-                    <?= view('partials/customer_details', ['errors' => $errors, 'user' => [], 'includeShipping' => false]) ?>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label" for="password">Password</label>
+                    <div class="mb-1">
+                        <label class="form-label" for="password">Password</label>
+                        <div class="input-group has-validation">
                             <input type="password" class="form-control<?= isset($errors['password']) ? ' is-invalid' : '' ?>" id="password" name="password" autocomplete="new-password" minlength="12" maxlength="72" aria-describedby="passwordHelp" required>
+                            <button class="btn btn-brand-outline password-toggle" type="button" data-password-toggle="password" aria-label="Show password">Show</button>
                             <div id="passwordError" class="invalid-feedback"><?= esc($errors['password'] ?? 'Use a password with 12 to 72 characters.') ?></div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="password_confirm">Confirm password</label>
-                            <input type="password" class="form-control<?= isset($errors['password_confirm']) ? ' is-invalid' : '' ?>" id="password_confirm" name="password_confirm" autocomplete="new-password" minlength="12" maxlength="72" required>
-                            <div id="password_confirmError" class="invalid-feedback"><?= esc($errors['password_confirm'] ?? 'Enter the same password again.') ?></div>
-                        </div>
                     </div>
-                    <p id="passwordHelp" class="form-text mb-3">Use at least 12 characters. A long, unique passphrase works best.</p>
+                    <p id="passwordHelp" class="form-text mb-3">Use at least 12 characters. A long, unique passphrase works best. Student and parent details are asked for when you book.</p>
                     <div class="form-check mb-4">
                         <input type="checkbox" class="form-check-input<?= isset($errors['terms']) ? ' is-invalid' : '' ?>" id="terms" name="terms" value="1"<?= old('terms') === '1' ? ' checked' : '' ?> required>
                         <label class="form-check-label" for="terms">I agree to the <a href="<?= site_url('terms') ?>" target="_blank" rel="noopener">Terms and Conditions</a>.</label>
                         <div id="termsError" class="invalid-feedback"><?= esc($errors['terms'] ?? 'Please agree to the Terms and Conditions.') ?></div>
                     </div>
                     <button type="submit" class="btn btn-brand-primary w-100">Create account</button>
-                    <p class="text-center text-muted-brand mt-4 mb-0 small">Already registered? <a href="<?= site_url('login') ?>">Log in</a></p>
+                    <p class="text-center text-muted-brand mt-4 mb-0 small">Already registered? <a href="<?= site_url('login') ?>">Log in</a> · Just want to book? <a href="<?= site_url('book') ?>">Book without an account</a></p>
                 </form>
             </div>
         </div>

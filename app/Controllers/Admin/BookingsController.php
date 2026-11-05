@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
-use App\Libraries\AuthService;
+use App\Libraries\BookingLinkService;
 use App\Libraries\BookingService;
 use App\Libraries\SmtpService;
 use App\Models\BookingItemModel;
@@ -165,6 +165,7 @@ final class BookingsController extends BaseController
         if (! $this->linkedCustomerIsValid($data['user_id']) || ! $this->dormIsValid($data['dorm_id'])) {
             return redirect()->back()->withInput()->with('errors', ['user_id' => 'Select an active customer and dorm, or leave customer/dorm blank.']);
         }
+        $data = $this->withAutoLinkedCustomer($data);
 
         $data['reference_code'] = (new BookingService())->reference();
         $data['ordernumber'] ??= (new BookingService())->orderNumber();
@@ -216,6 +217,7 @@ final class BookingsController extends BaseController
         if (! $this->linkedCustomerIsValid($data['user_id']) || ! $this->dormIsValid($data['dorm_id'])) {
             return redirect()->back()->withInput()->with('errors', ['user_id' => 'Select an active customer and dorm, or leave customer/dorm blank.']);
         }
+        $data = $this->withAutoLinkedCustomer($data);
 
         $db = db_connect();
         $db->transBegin();
@@ -223,6 +225,10 @@ final class BookingsController extends BaseController
         try {
             if (! (new BookingModel())->update($id, $data)) {
                 throw new DatabaseException('Booking update failed.');
+            }
+            if ($data['user_id'] !== null) {
+                // Payments made before the booking was linked follow it into the account.
+                $db->table('payments')->where('booking_id', $id)->where('user_id', null)->update(['user_id' => $data['user_id']]);
             }
             if ($existing['booking_type'] !== 'summer_advantage' && $data['booking_type'] === 'summer_advantage') {
                 (new BookingItemModel())->where('booking_id', $id)->delete();
@@ -264,7 +270,7 @@ final class BookingsController extends BaseController
         try {
             $bookingItems = (new BookingItemModel())->where('booking_id', $id)->orderBy('created_at', 'ASC')->findAll();
             $dorm = $booking['dorm_id'] ? (new DormModel())->find($booking['dorm_id']) : null;
-            $scheduleUrl = $booking['pickup_date'] ? null : $this->accountCtaUrl($booking['user_id'] ? (int) $booking['user_id'] : null, '/account/bookings/' . $id . '/pickup');
+            $scheduleUrl = $booking['pickup_date'] ? null : $this->accountCtaUrl($booking, '/account/bookings/' . $id . '/pickup');
             if (! (new SmtpService())->sendBookingConfirmation($booking, $bookingItems, $dorm, $scheduleUrl)) {
                 throw new RuntimeException('The mail server rejected the message.');
             }
@@ -275,6 +281,31 @@ final class BookingsController extends BaseController
         }
 
         return redirect()->route('admin.bookings.show', [$id])->with('success', 'Booking confirmation sent to ' . $booking['customer_email'] . '.');
+    }
+
+    /** "Invite to register": claim link if the email has an account, otherwise sign-up with the email pre-filled. */
+    public function notifyAccountInvite(int $id): RedirectResponse
+    {
+        $booking = $this->find($id);
+        if (! empty($booking['user_id'])) {
+            return redirect()->route('admin.bookings.show', [$id])->with('info', 'This booking is already linked to a customer account.');
+        }
+        if (! $this->throttleNotification($id, 'account-invite')) {
+            return redirect()->route('admin.bookings.show', [$id])->with('error', 'Please wait a minute before resending this notice.');
+        }
+
+        try {
+            $link = (new BookingLinkService())->accountLink($booking, '/account/bookings/' . $id);
+            if (! (new SmtpService())->sendAccountInvite($booking, $link)) {
+                throw new RuntimeException('The mail server rejected the message.');
+            }
+        } catch (Throwable $exception) {
+            log_message('error', 'Account invite failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
+
+            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The invitation could not be sent. Check the email settings.']);
+        }
+
+        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Invitation sent to ' . $booking['customer_email'] . '.');
     }
 
     public function notifyBalanceDue(int $id): RedirectResponse
@@ -292,7 +323,7 @@ final class BookingsController extends BaseController
         try {
             $bookingItems = (new BookingItemModel())->where('booking_id', $id)->orderBy('created_at', 'ASC')->findAll();
             $dorm = $booking['dorm_id'] ? (new DormModel())->find($booking['dorm_id']) : null;
-            $paymentUrl = $this->accountCtaUrl($booking['user_id'] ? (int) $booking['user_id'] : null, '/account/bookings/' . $id . '/payment');
+            $paymentUrl = $this->accountCtaUrl($booking, '/account/bookings/' . $id . '/payment');
             if (! (new SmtpService())->sendBalanceDueNotice($booking, $bookingItems, $dorm, $paid, $balance, $paymentUrl)) {
                 throw new RuntimeException('The mail server rejected the message.');
             }
@@ -499,6 +530,8 @@ final class BookingsController extends BaseController
             'user_id' => $userId > 0 ? $userId : null, 'customer_name' => trim((string) $this->request->getPost('customer_name')),
             'customer_email' => mb_strtolower(trim((string) $this->request->getPost('customer_email'))), 'customer_phone' => trim((string) $this->request->getPost('customer_phone')),
             'student_id' => trim((string) $this->request->getPost('student_id')), 'dorm_id' => $dormId > 0 ? $dormId : null,
+            'parent_phone_number' => trim((string) $this->request->getPost('parent_phone_number')) ?: null,
+            'parent_email_address' => mb_strtolower(trim((string) $this->request->getPost('parent_email_address'))) ?: null,
             'booking_type' => $type, 'service_name' => $this->serviceLabels()[$type] ?? '',
             'ordernumber' => trim((string) $this->request->getPost('ordernumber')) ?: null, 'card_holder_name' => trim((string) $this->request->getPost('card_holder_name')) ?: null,
             'booking_date' => (string) $this->request->getPost('booking_date') ?: date('Y-m-d'), 'base_price' => number_format($isStorage ? max(0, (float) $this->request->getPost('base_price')) : 0, 2, '.', ''),
@@ -523,6 +556,7 @@ final class BookingsController extends BaseController
         return [
             'user_id' => 'permit_empty|is_natural_no_zero', 'customer_name' => 'required|min_length[2]|max_length[120]', 'customer_email' => 'required|valid_email|max_length[254]',
             'customer_phone' => 'permit_empty|max_length[30]', 'student_id' => 'permit_empty|max_length[50]', 'dorm_id' => 'permit_empty|is_natural_no_zero',
+            'parent_phone_number' => 'permit_empty|max_length[30]', 'parent_email_address' => 'permit_empty|valid_email|max_length[254]',
             'booking_type' => 'required|in_list[summer_storage,summer_advantage]', 'service_name' => 'required|max_length[120]',
             'ordernumber' => 'permit_empty|max_length[20]', 'card_holder_name' => 'permit_empty|max_length[100]', 'booking_date' => 'required|valid_date[Y-m-d]',
             'base_price' => 'required|decimal|greater_than_equal_to[0]', 'additional_box_quantity' => 'required|is_natural|less_than_equal_to[100]', 'additional_box_amount' => 'required|decimal|greater_than_equal_to[0]',
@@ -650,17 +684,39 @@ final class BookingsController extends BaseController
     }
 
     /**
-     * A one-click link to $path that also signs the customer in, so a
-     * notification email's call-to-action does not stall on a login form.
-     * Falls back to a plain login link for guest bookings with no account.
+     * Link for a notification email's call-to-action.
+     * Linked booking: one-click login to $path. No account yet: payment emails get a secure
+     * pay link; other emails get "add to my account" (email has an account) or sign-up.
+     *
+     * @param array<string, mixed> $booking
      */
-    private function accountCtaUrl(?int $userId, string $path): string
+    private function accountCtaUrl(array $booking, string $path): string
     {
-        if ($userId === null || $userId < 1) {
-            return site_url('login');
+        $links = new BookingLinkService();
+        if (empty($booking['user_id']) && str_ends_with($path, '/payment')) {
+            return $links->paymentUrl($booking);
         }
 
-        return (new AuthService())->createMagicLoginUrl($userId, $path) ?? site_url('login');
+        return $links->accountLink($booking, $path)['url'];
+    }
+
+    /**
+     * Staff walk-in bookings: if the email belongs to an active customer account, link it.
+     * Staff seeing the customer in person is the proof of ownership here.
+     *
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function withAutoLinkedCustomer(array $data): array
+    {
+        if ($data['user_id'] === null) {
+            $match = (new BookingLinkService())->activeCustomerByEmail((string) $data['customer_email']);
+            if ($match !== null) {
+                $data['user_id'] = (int) $match['id'];
+            }
+        }
+
+        return $data;
     }
 
     /** @return array<string, string> */
@@ -698,7 +754,7 @@ final class BookingsController extends BaseController
                 $booking,
                 (new BookingItemModel())->where('booking_id', $id)->orderBy('created_at', 'ASC')->findAll(),
                 $booking['dorm_id'] ? (new DormModel())->find($booking['dorm_id']) : null,
-                $booking['pickup_date'] ? null : $this->accountCtaUrl($booking['user_id'] ? (int) $booking['user_id'] : null, '/account/bookings/' . $id . '/pickup'),
+                $booking['pickup_date'] ? null : $this->accountCtaUrl($booking, '/account/bookings/' . $id . '/pickup'),
             ),
             'balance-due' => $smtp->sendBalanceDueNotice(
                 $booking,
@@ -706,10 +762,10 @@ final class BookingsController extends BaseController
                 $booking['dorm_id'] ? (new DormModel())->find($booking['dorm_id']) : null,
                 $paidByBooking[$id] ?? 0.0,
                 max(0, round((float) $booking['total_amount'] - ($paidByBooking[$id] ?? 0.0), 2)),
-                $this->accountCtaUrl($booking['user_id'] ? (int) $booking['user_id'] : null, '/account/bookings/' . $id . '/payment'),
+                $this->accountCtaUrl($booking, '/account/bookings/' . $id . '/payment'),
             ),
             'pickup-reminder' => $smtp->sendPickupReminder($booking['customer_email'], $booking['customer_name'], $booking['reference_code'], $booking['pickup_date'], $booking['pickup_time'], $booking['pickup_location'] ?: null),
-            'pickup-needed' => $smtp->sendPickupNeededNotice($booking['customer_email'], $booking['customer_name'], $booking['reference_code'], $this->accountCtaUrl($booking['user_id'] ? (int) $booking['user_id'] : null, '/account/bookings/' . $id . '/pickup')),
+            'pickup-needed' => $smtp->sendPickupNeededNotice($booking['customer_email'], $booking['customer_name'], $booking['reference_code'], $this->accountCtaUrl($booking, '/account/bookings/' . $id . '/pickup')),
             'dropoff-reminder' => $smtp->sendDropoffReminder($booking['customer_email'], $booking['customer_name'], $booking['reference_code'], $booking['dropoff_date'], $booking['dropoff_time'], $booking['dropoff_location'] ?: null),
             default => false,
         };

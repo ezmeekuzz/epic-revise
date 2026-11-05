@@ -25,7 +25,7 @@ $summerAdvantageBoxPrice = number_format((float) ($pricingSettings['summer_advan
               <span>Summer school and study abroad options</span>
             </div>
 
-            <a class="btn btn-brand-primary w-100 mt-4<?= ! empty($homePackageCards) ? ' home-action' : '' ?>" href="<?= site_url('account/bookings/new?booking_type=summer_storage') ?>">Let's Get Started</a>
+            <a class="btn btn-brand-primary w-100 mt-4<?= ! empty($homePackageCards) ? ' home-action' : '' ?>" href="<?= site_url('book?booking_type=summer_storage') ?>">Let's Get Started</a>
           </div>
         </div>
 
@@ -49,7 +49,7 @@ $summerAdvantageBoxPrice = number_format((float) ($pricingSettings['summer_advan
               <span>Shipping services are available</span>
             </div>
 
-            <a class="btn btn-brand-primary w-100 mt-4<?= ! empty($homePackageCards) ? ' home-action' : '' ?>" href="<?= site_url('account/bookings/new?booking_type=summer_advantage') ?>">Let's Get Started</a>
+            <a class="btn btn-brand-primary w-100 mt-4<?= ! empty($homePackageCards) ? ' home-action' : '' ?>" href="<?= site_url('book?booking_type=summer_advantage') ?>">Let's Get Started</a>
           </div>
         </div>
       </div>

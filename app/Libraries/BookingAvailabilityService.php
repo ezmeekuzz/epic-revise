@@ -10,6 +10,46 @@ use DateTimeZone;
 
 final class BookingAvailabilityService
 {
+    /**
+     * Every slot for one date, each checked with the same rules as validationError(),
+     * so the slot buttons on the booking form never offer a time the server would refuse.
+     *
+     * @return array{date: string, available: bool, message: string|null, slots: list<array{time: string, label: string, available: bool}>}
+     */
+    public function slotsFor(string $date, string $leg = 'pickup'): array
+    {
+        $parsed = \DateTimeImmutable::createFromFormat('!Y-m-d', $date);
+        if ($parsed === false || $parsed->format('Y-m-d') !== $date) {
+            return ['date' => $date, 'available' => false, 'message' => 'Choose a valid date.', 'slots' => []];
+        }
+
+        $settings = new SettingsService();
+        $start = $settings->get('pickup_start_time', '09:00');
+        $end = $settings->get('pickup_end_time', '17:00');
+        $slotMinutes = max(1, (int) $settings->get('slot_duration_minutes', '30'));
+        $startMinutes = ((int) substr($start, 0, 2) * 60) + (int) substr($start, 3, 2);
+        $endMinutes = ((int) substr($end, 0, 2) * 60) + (int) substr($end, 3, 2);
+
+        $slots = [];
+        $dateMessage = null;
+        for ($minutes = $startMinutes; $minutes + $slotMinutes <= $endMinutes && count($slots) < 96; $minutes += $slotMinutes) {
+            $time = sprintf('%02d:%02d', intdiv($minutes, 60), $minutes % 60);
+            $error = $this->validationError($date, $time);
+            $slots[] = ['time' => $time, 'label' => date('g:i A', strtotime($time)), 'available' => $error === null];
+            // Capacity, blackout and booking-pause errors apply to the whole date.
+            if ($error !== null && ! str_contains($error, 'hours from now')) {
+                $dateMessage ??= $error;
+            }
+        }
+
+        $available = in_array(true, array_column($slots, 'available'), true);
+        if (! $available && $dateMessage === null) {
+            $dateMessage = 'No times are left on this date. Please choose another date.';
+        }
+
+        return ['date' => $date, 'available' => $available, 'message' => $available ? null : $dateMessage, 'slots' => $slots];
+    }
+
     public function validationError(string $date, string $time, string $leg = 'pickup'): ?string
     {
         $leg   = $leg === 'dropoff' ? 'dropoff' : 'pickup';

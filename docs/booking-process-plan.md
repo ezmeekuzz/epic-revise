@@ -1,6 +1,6 @@
 # EPIC Booking Process Plan
 
-**Status:** Agreed, not yet built. Two decisions are still open (see [Open decisions](#open-decisions)).
+**Status:** Built on 2026-11-06. Steps 1–4 are implemented and covered by automated tests. The two open decisions were built with the safe defaults described under [Decisions](#decisions) and can still be changed.
 
 ## Goal
 
@@ -26,12 +26,12 @@ Get a customer from **Book** to **paid** in as few steps as possible, without br
 1. Click **Book** on the Services page. The booking form opens directly.
 2. Choose the service, boxes and items. Each item and size has **− / +** buttons, so adding one takes a single tap.
 3. Enter name, email, student ID, phone, parent phone and parent email. Pickup dorm, room, date and time are optional; times are chosen from the available slots.
-4. Click **Continue**. There is no confirmation popup.
+4. Tick the terms checkbox next to the button and click **Continue to payment**. There is no confirmation popup.
 5. Pay on the payment page by card, **Apple Pay or Google Pay**.
 6. The confirmation page looks the same for everyone:
-   > Payment received, booking EPIC-1234 confirmed. Receipt sent to j\*\*\*@gmail.com.
+   > Payment received, booking EPIC-1234 confirmed. We emailed your booking details to j\*\*\*@gmail.com.
    > Already have an EPIC account? The email has a button to add this booking to it in one click.
-7. The **email** depends on whether the address already has an account:
+7. The **email** is sent as soon as the booking is saved, so a customer who leaves before paying still has a **Pay now** link. Its account button depends on whether the address already has an account:
    - **Account exists:** "This email already has an EPIC account. **[Add this booking to my account]**". One click links the booking and logs them in.
    - **No account:** "**[Set up my account]**". The email is pre-filled; they choose a password, and the booking moves into the new account automatically.
 
@@ -119,14 +119,18 @@ Each step includes tests, and the full test suite is run before moving to the ne
 - Pickup time slots shown as buttons, with full slots greyed out, so customers don't find out a slot is full only after submitting.
 - Apple Pay and Google Pay through Square. This needs domain verification in the Square dashboard.
 
-## Open decisions
+## Decisions
 
-1. **Terms checkbox.** Customers currently agree to the terms three times: at sign-up, on the booking form and on the payment page. Options:
-   - Keep only the payment page's "I authorize… and agree to the Terms" checkbox, or
-   - Move the booking-form checkbox next to the **Continue** button.
+These were open when the plan was agreed. They were built with the safer option, and either can be changed later.
 
-   Check with whoever owns the terms. The server and one automated test currently require the booking-form checkbox.
+1. **Terms checkbox.** The booking-form checkbox was **moved next to the Continue button**; it is still required, and the accepted terms are still saved with each order. The alternative (keep only the payment page's "I authorize… and agree to the Terms" checkbox) needs sign-off from whoever owns the terms before the booking-form checkbox is removed.
 
-2. **Customers with more than one open order.** The system allows one open order per account. A customer who doesn't log in can create a second order even if they already have an open one, because the website can't check without revealing that the account exists. Options:
-   - Allow it, and staff merge or cancel duplicates (recommended, since duplicates should be rare), or
-   - When the booking is linked, add its items to the existing open order.
+2. **Customers with more than one open order.** **Allowed.** A customer who doesn't log in can create a second order even if they already have an open one, because the website can't check without revealing that the account exists. Staff merge or cancel duplicates, which should be rare. The alternative (add a linked booking's items to the existing open order) was not built.
+
+3. **Email confirmation.** Booking no longer needs an account, so nobody has to confirm an email before booking. Creating an account still requires email confirmation, and walk-in bookings move into an account only after that confirmation.
+
+## Setup notes
+
+- **Database:** run `php spark migrate` on each server. The migration adds parent contact columns to bookings and a `booking_access_tokens` table.
+- **Apple Pay:** register the site's domain in the Square Developer Dashboard. Until then the Apple Pay button simply doesn't appear; card and Google Pay work without it.
+- **Email:** the "booking received" and "invite to register" emails use the existing SMTP settings. If SMTP is off, bookings still save; staff can resend from the admin booking page.

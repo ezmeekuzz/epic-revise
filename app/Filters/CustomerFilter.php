@@ -19,6 +19,14 @@ final class CustomerFilter implements FilterInterface
 
         if ($user === null || $user['status'] !== 'active') {
             $session->remove(['customer_user_id', 'customer_user_name', 'customer_user_email', 'customer_is_logged_in']);
+
+            // Booking no longer needs an account: send logged-out visitors to the public booking form.
+            if ($request->getMethod() === 'GET' && '/' . ltrim($request->getUri()->getPath(), '/') === '/account/bookings/new') {
+                $query = $request->getUri()->getQuery();
+
+                return redirect()->to(site_url('book' . ($query !== '' ? '?' . $query : '')));
+            }
+
             if ($request->getMethod() === 'GET') {
                 $intended = '/' . ltrim($request->getUri()->getPath(), '/');
                 $query = $request->getUri()->getQuery();
@@ -28,14 +36,7 @@ final class CustomerFilter implements FilterInterface
                 $session->set('customer_intended_url', $intended);
             }
 
-            $isBookingRequest = $request->getUri()->getPath() === '/account/bookings/new';
-
-            return redirect()->route('login')->with(
-                'error',
-                $isBookingRequest
-                    ? 'Log in with your EPIC customer account to continue with your selected service.'
-                    : 'Please log in with an active customer account.',
-            );
+            return redirect()->route('login')->with('error', 'Please log in with an active customer account.');
         }
 
         if ($user['role'] !== 'customer') {

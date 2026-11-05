@@ -4,38 +4,62 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Libraries\BookingLinkService;
 use App\Libraries\PaymentService;
 use App\Libraries\SquarePaymentGateway;
 use App\Models\BookingModel;
 use App\Models\PaymentModel;
 use App\Models\TransactionModel;
-use App\Models\UserModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 use RuntimeException;
 use Throwable;
 
+/**
+ * Square checkout for one booking. Serves two entry points with the same page and logic:
+ * - account: the booking must belong to the logged-in customer;
+ * - guest:   the booking was created in this browser session, or opened from an emailed pay link.
+ */
 final class CustomerPaymentController extends BaseController
 {
     protected $helpers = ['form', 'url'];
 
     public function show(int $id): string|ResponseInterface
     {
-        $booking = $this->ownedBooking($id);
+        return $this->renderPayment($this->ownedBooking($id), false);
+    }
+
+    public function guestShow(int $id): string|ResponseInterface
+    {
+        return $this->renderPayment($this->guestBooking($id), true);
+    }
+
+    public function process(int $id): ResponseInterface
+    {
+        return $this->processPayment($this->ownedBooking($id), false);
+    }
+
+    public function guestProcess(int $id): ResponseInterface
+    {
+        return $this->processPayment($this->guestBooking($id), true);
+    }
+
+    /** @param array<string, mixed> $booking */
+    private function renderPayment(array $booking, bool $guest): string|ResponseInterface
+    {
+        $id = (int) $booking['id'];
         $balance = $this->outstandingBalance($booking);
         if ($balance < 0.01) {
-            return redirect()->route('account.bookings.show', [$id])->with('success', 'This booking is already paid.');
+            return redirect()->to($this->doneUrl($id, $guest))->with('success', 'This booking is already paid.');
         }
 
-        $gateway = new SquarePaymentGateway();
-        $configuration = $gateway->clientConfiguration();
-        $paymentKey = $this->paymentKey($id);
-        $user = (new UserModel())->find((int) session()->get('customer_user_id'));
+        $configuration = (new SquarePaymentGateway())->clientConfiguration();
 
         return view('account/payment', [
             ...$this->pageData('Secure Payment | EPIC Storage Solutions', 'Pay securely for your EPIC Storage booking.', 'account'),
+            'layout' => $guest ? 'layouts/site' : 'layouts/account',
+            'guest' => $guest,
             'booking' => $booking,
-            'user' => $user,
             'balance' => $balance,
             'square' => $configuration,
             'clientConfig' => [
@@ -43,23 +67,25 @@ final class CustomerPaymentController extends BaseController
                 'locationId' => $configuration['locationId'],
                 'currency' => $configuration['currency'],
                 'amount' => number_format($balance, 2, '.', ''),
-                'paymentKey' => $paymentKey,
-                'endpoint' => site_url('account/bookings/' . $id . '/payment'),
-                'successUrl' => site_url('account/bookings/' . $id),
+                'paymentKey' => $this->paymentKey($id),
+                'endpoint' => site_url($guest ? 'book/' . $id . '/pay' : 'account/bookings/' . $id . '/payment'),
+                'successUrl' => $this->doneUrl($id, $guest),
                 'csrfHeader' => config('Security')->headerName,
                 'csrfToken' => csrf_hash(),
                 'billingContact' => [
-                    'givenName' => (string) ($user['name'] ?? ''),
-                    'email' => (string) ($user['email'] ?? ''),
-                    'phone' => (string) ($user['phone_number'] ?? ''),
+                    'givenName' => (string) ($booking['customer_name'] ?? ''),
+                    'email' => (string) ($booking['customer_email'] ?? ''),
+                    'phone' => (string) ($booking['customer_phone'] ?? ''),
                 ],
             ],
         ]);
     }
 
-    public function process(int $id): ResponseInterface
+    /** @param array<string, mixed> $booking */
+    private function processPayment(array $booking, bool $guest): ResponseInterface
     {
-        $booking = $this->ownedBooking($id);
+        $id = (int) $booking['id'];
+        $doneUrl = $this->doneUrl($id, $guest);
         $configuration = (new SquarePaymentGateway())->clientConfiguration();
         if (! $configuration['ready']) {
             return $this->response->setStatusCode(503)->setJSON(['status' => 'error', 'message' => 'Square payment is not available yet. Your booking remains saved.']);
@@ -83,7 +109,7 @@ final class CustomerPaymentController extends BaseController
         if ($balance < 0.01) {
             session()->remove($this->sessionKey($id));
 
-            return $this->response->setJSON(['status' => 'success', 'message' => 'This booking is already paid.', 'redirect' => site_url('account/bookings/' . $id)]);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'This booking is already paid.', 'redirect' => $doneUrl]);
         }
 
         $payments = new PaymentModel();
@@ -92,14 +118,15 @@ final class CustomerPaymentController extends BaseController
             if ($payment === null) {
                 $paymentId = (new PaymentService())->create([
                     'booking_id' => $id,
-                    'user_id' => (int) session()->get('customer_user_id'),
+                    // A guest booking has no owner yet; linking it to an account later updates this too.
+                    'user_id' => ! empty($booking['user_id']) ? (int) $booking['user_id'] : null,
                     'reference' => $submittedKey,
                     'provider' => 'square',
                     'method' => 'card',
                     'amount' => number_format($balance, 2, '.', ''),
                     'currency' => $configuration['currency'],
                     'status' => 'pending',
-                    'notes' => 'Customer-initiated Square payment.',
+                    'notes' => $guest ? 'Customer-initiated Square payment (no account).' : 'Customer-initiated Square payment.',
                 ]);
                 $payment = $payments->find($paymentId);
             }
@@ -109,7 +136,7 @@ final class CustomerPaymentController extends BaseController
             if ($payment['status'] === 'completed') {
                 session()->remove($this->sessionKey($id));
 
-                return $this->response->setJSON(['status' => 'success', 'message' => 'Payment completed.', 'redirect' => site_url('account/bookings/' . $id)]);
+                return $this->response->setJSON(['status' => 'success', 'message' => 'Payment completed.', 'redirect' => $doneUrl]);
             }
             if ($payment['status'] !== 'pending') {
                 throw new RuntimeException('This payment attempt can no longer be processed. Refresh the page and try again.');
@@ -148,7 +175,7 @@ final class CustomerPaymentController extends BaseController
             return $this->response->setJSON([
                 'status' => 'success',
                 'message' => 'Payment completed successfully.',
-                'redirect' => site_url('account/bookings/' . $id),
+                'redirect' => $doneUrl,
             ]);
         } catch (Throwable $exception) {
             log_message('error', 'Customer Square payment persistence failed for booking {booking}: {type}', [
@@ -160,10 +187,30 @@ final class CustomerPaymentController extends BaseController
         }
     }
 
+    private function doneUrl(int $id, bool $guest): string
+    {
+        return site_url($guest ? 'book/' . $id . '/confirmed' : 'account/bookings/' . $id);
+    }
+
     /** @return array<string, mixed> */
     private function ownedBooking(int $id): array
     {
         $booking = (new BookingModel())->where('id', $id)->where('user_id', (int) session()->get('customer_user_id'))->first();
+        if ($booking === null) {
+            throw PageNotFoundException::forPageNotFound('Booking not found.');
+        }
+
+        return $booking;
+    }
+
+    /**
+     * A booking ID alone never grants access: the session must have created it or opened its pay link.
+     *
+     * @return array<string, mixed>
+     */
+    private function guestBooking(int $id): array
+    {
+        $booking = (new BookingLinkService())->hasGuestAccess($id) ? (new BookingModel())->find($id) : null;
         if ($booking === null) {
             throw PageNotFoundException::forPageNotFound('Booking not found.');
         }

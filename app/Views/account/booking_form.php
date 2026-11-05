@@ -1,4 +1,17 @@
-<?= $this->extend('layouts/account') ?>
+<?php
+/**
+ * One booking form for both modes:
+ * - logged in ($guest false): account layout, name/email come from the account;
+ * - no account ($guest true): public site layout, name/email are typed in.
+ * Pricing, items, pickup and the shared validation are identical in both.
+ */
+$guest = $guest ?? false;
+?>
+<?= $this->extend($layout ?? 'layouts/account') ?>
+
+<?= $this->section('head') ?>
+<link rel="stylesheet" href="<?= base_url('assets/css/booking-flow.css') ?>?v=<?= (int) filemtime(FCPATH . 'assets/css/booking-flow.css') ?>">
+<?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 <?php
@@ -13,22 +26,33 @@ if (! is_array($oldItems)) {
 }
 $processingConfig = [
     'catalog' => $itemCatalog,
-    'selectedItems' => $oldItems,
+    'selectedItems' => array_values($oldItems),
     'bookingType' => $bookingType,
-    'summerSchool' => old('is_summer_school', '0') === '1',
-    'studyAbroad' => old('is_study_abroad', '0') === '1',
-    'storageBoxes' => max(0, (int) old('additional_box_quantity', '0')),
-    'advantageBoxes' => max(1, (int) old('box_quantity', '1')),
     'prices' => $pricing,
+    'availabilityUrl' => $availabilityUrl ?? site_url('book/availability'),
 ];
+$field = static function (string $name, string $label, array $errors, string $value, array $attributes = [], bool $optional = false): string {
+    $attributeHtml = '';
+    foreach ($attributes as $attribute => $attributeValue) {
+        $attributeHtml .= ' ' . $attribute . ($attributeValue === true ? '' : '="' . esc((string) $attributeValue, 'attr') . '"');
+    }
+    $html = '<label class="form-label" for="' . esc($name, 'attr') . '">' . esc($label) . ($optional ? ' <span class="text-muted-brand">(optional)</span>' : '') . '</label>';
+    $html .= '<input class="form-control' . (isset($errors[$name]) ? ' is-invalid' : '') . '" id="' . esc($name, 'attr') . '" name="' . esc($name, 'attr') . '" value="' . esc($value, 'attr') . '"' . $attributeHtml . '>';
+    if (isset($errors[$name])) {
+        $html .= '<div class="invalid-feedback">' . esc($errors[$name]) . '</div>';
+    }
+
+    return $html;
+};
 ?>
 <main class="account-main">
     <section class="py-5 py-lg-6">
         <div class="container">
             <div class="account-hero mb-4">
-                <span class="eyebrow">Customer portal</span>
-                <h1 class="h2 mt-2 mb-2">Process your service</h1>
-                <p class="mb-0 text-muted-brand">Configure your storage service and submit it now. Pickup information can be added later.</p>
+                <span class="eyebrow"><?= $guest ? 'Book online' : 'Customer portal' ?></span>
+                <h1 class="h2 mt-2 mb-2"><?= $guest ? 'Book your storage' : 'Process your service' ?></h1>
+                <p class="mb-0 text-muted-brand"><?= $guest ? 'No account needed. Choose your service, enter your details and pay securely. Pickup details can be added later.' : 'Configure your storage service and submit it now. Pickup information can be added later.' ?></p>
+                <?php if ($guest): ?><p class="small mt-2 mb-0">Already have an account? <a href="<?= site_url('login') ?>">Log in</a> to fill in your details automatically.</p><?php endif ?>
             </div>
 
             <?php if (! $bookingOpen): ?>
@@ -39,9 +63,8 @@ $processingConfig = [
                     <a class="btn btn-brand-primary" href="<?= site_url('contact') ?>">Contact our team</a>
                 </div>
             <?php else: ?>
-                <form action="<?= site_url('account/bookings') ?>" method="post" data-booking-processing-form data-confirm="Save this service request and continue to secure payment?" data-confirm-title="Continue to payment?" data-confirm-button="Yes, continue" data-loading-title="Preparing your payment" novalidate>
+                <form action="<?= esc($formAction ?? site_url('account/bookings'), 'attr') ?>" method="post" data-booking-processing-form data-loading-title="Preparing your payment" novalidate>
                     <?= csrf_field() ?>
-                <div class="form-check mb-4"><input class="form-check-input" id="order_terms" name="terms" type="checkbox" value="1" required><label class="form-check-label" for="order_terms">I agree to the <a href="<?= site_url('terms') ?>" target="_blank" rel="noopener">Terms and Conditions</a> for this order.</label></div>
                     <div class="booking-processing-grid">
                         <div class="booking-processing-main">
                             <section class="portal-card mb-4" aria-labelledby="serviceHeading">
@@ -76,23 +99,27 @@ $processingConfig = [
                                             <input class="form-control<?= isset($errors['box_quantity']) ? ' is-invalid' : '' ?>" id="additional_box_quantity" name="additional_box_quantity" type="number" min="0" max="100" step="1" value="<?= esc(old('additional_box_quantity', '0'), 'attr') ?>" inputmode="numeric" aria-label="Additional Summer Storage boxes">
                                             <button type="button" data-quantity-action="increment" aria-label="Increase additional Summer Storage boxes"><span aria-hidden="true">+</span></button>
                                         </div>
-                                        <?php if (isset($errors['box_quantity'])): ?><div class="invalid-feedback"><?= esc($errors['box_quantity']) ?></div><?php endif ?>
+                                        <?php if (isset($errors['box_quantity'])): ?><div class="invalid-feedback d-block"><?= esc($errors['box_quantity']) ?></div><?php endif ?>
                                         <p class="field-hint">$<?= esc($pricing['summer_storage_additional_box_price']) ?> for each box beyond the five included boxes—the same per-box price as Summer Advantage.</p>
                                     </div>
                                 </div>
 
                                 <div class="service-subsection mt-4">
-                                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3"><div><h3 class="h5 mb-1">Additional storage items</h3><p class="text-muted-brand small mb-0">Select an item, size, and quantity, then add it to your booking.</p></div></div>
+                                    <div class="mb-3"><h3 class="h5 mb-1">Additional storage items</h3><p class="text-muted-brand small mb-0">Search for an item, or click the search box to browse them all. Prices are per item.</p></div>
                                     <?php if ($itemCatalog === []): ?>
                                         <div class="booking-empty-state">No storage items are available. Please contact EPIC support.</div>
                                     <?php else: ?>
-                                        <div class="item-builder">
-                                            <div><label class="form-label" for="storage_item">Item</label><select class="form-select" id="storage_item"><option value="">Select an item</option><?php foreach ($itemCatalog as $item): ?><option value="<?= (int) $item['id'] ?>"><?= esc($item['name']) ?></option><?php endforeach ?></select></div>
-                                            <div><label class="form-label" for="storage_item_size">Size</label><select class="form-select" id="storage_item_size" disabled><option value="">Choose an item first</option></select></div>
-                                            <div><label class="form-label" for="storage_item_quantity">Quantity</label><div class="quantity-stepper" data-quantity-stepper><button type="button" data-quantity-action="decrement" aria-label="Decrease selected item quantity"><span aria-hidden="true">−</span></button><input class="form-control" id="storage_item_quantity" type="number" min="1" max="100" step="1" value="1" inputmode="numeric" aria-label="Selected item quantity"><button type="button" data-quantity-action="increment" aria-label="Increase selected item quantity"><span aria-hidden="true">+</span></button></div></div>
-                                            <button class="btn btn-brand-outline" type="button" data-add-storage-item>Add item</button>
+                                        <div class="item-search" data-item-search>
+                                            <label class="visually-hidden" for="item_search">Search storage items</label>
+                                            <div class="item-search-box">
+                                                <span class="item-search-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
+                                                <input class="form-control" id="item_search" type="search" placeholder="Search items, e.g. mini fridge, rug, bike" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="item_search_results">
+                                            </div>
+                                            <ul class="item-search-results" id="item_search_results" role="listbox" aria-label="Matching items" hidden></ul>
                                         </div>
-                                        <div class="booking-item-list mt-3" data-selected-items><div class="booking-empty-state">No additional items selected.</div></div>
+                                        <h4 class="item-selected-heading mt-4">Your items</h4>
+                                        <div class="booking-item-list" data-selected-list aria-live="polite"></div>
+                                        <div data-selected-items hidden></div>
                                     <?php endif ?>
                                 </div>
 
@@ -114,20 +141,45 @@ $processingConfig = [
                                 <div class="row g-3 mt-2"><div class="col-md-6"><label class="form-label" for="box_quantity">Number of boxes</label><div class="quantity-stepper" data-quantity-stepper><button type="button" data-quantity-action="decrement" aria-label="Decrease Summer Advantage boxes"><span aria-hidden="true">−</span></button><input class="form-control<?= isset($errors['box_quantity']) ? ' is-invalid' : '' ?>" id="box_quantity" name="box_quantity" type="number" min="1" max="100" step="1" value="<?= esc(old('box_quantity', '1'), 'attr') ?>" inputmode="numeric" aria-label="Summer Advantage boxes"<?= $bookingType === 'summer_advantage' ? ' required' : '' ?>><button type="button" data-quantity-action="increment" aria-label="Increase Summer Advantage boxes"><span aria-hidden="true">+</span></button></div><?php if (isset($errors['box_quantity'])): ?><div class="invalid-feedback d-block"><?= esc($errors['box_quantity']) ?></div><?php endif ?><p class="field-hint">$<?= esc($pricing['summer_advantage_box_price']) ?> per box.</p></div></div>
                             </section>
 
-                            <section class="portal-card" aria-labelledby="pickupHeading">
+                            <section class="portal-card mb-4" aria-labelledby="detailsHeading">
                                 <div class="portal-section-heading">
                                     <span class="booking-step">3</span>
-                                    <div><h2 class="h4 mb-1" id="pickupHeading">Contact and optional pickup details</h2><p class="text-muted-brand mb-0">You may leave every pickup field blank and complete it from your booking later. When scheduling now, enter both a date and time during <?= esc(date('g:i A', strtotime((string) ($booking['pickup_start_time'] ?? '09:00')))) ?>–<?= esc(date('g:i A', strtotime((string) ($booking['pickup_end_time'] ?? '17:00')))) ?> <?= esc($timezone) ?>.</p></div>
+                                    <div><h2 class="h4 mb-1" id="detailsHeading">Your details</h2><p class="text-muted-brand mb-0"><?= $guest ? 'We email your receipt and booking details to this address.' : 'Saved to your profile, so you only enter them once.' ?></p></div>
                                 </div>
                                 <div class="row g-3 mt-2">
-                                    <div class="col-md-6"><label class="form-label" for="customer_name">Customer</label><input class="form-control" id="customer_name" value="<?= esc($user['name'], 'attr') ?>" disabled></div>
-                                    <div class="col-md-6"><label class="form-label" for="customer_email">Email</label><input class="form-control" id="customer_email" value="<?= esc($user['email'], 'attr') ?>" disabled></div>
-                                    <div class="col-md-6"><label class="form-label" for="customer_phone">Phone</label><input class="form-control<?= isset($errors['customer_phone']) ? ' is-invalid' : '' ?>" id="customer_phone" name="customer_phone" type="tel" value="<?= esc(old('customer_phone', $user['phone_number'] ?? ''), 'attr') ?>" maxlength="30" autocomplete="tel" required><?php if (isset($errors['customer_phone'])): ?><div class="invalid-feedback"><?= esc($errors['customer_phone']) ?></div><?php endif ?></div>
-                                    <div class="col-md-6"><label class="form-label" for="student_id">Student ID</label><input class="form-control<?= isset($errors['student_id']) ? ' is-invalid' : '' ?>" id="student_id" name="student_id" value="<?= esc(old('student_id', $user['student_id'] ?? ''), 'attr') ?>" maxlength="50" required><?php if (isset($errors['student_id'])): ?><div class="invalid-feedback"><?= esc($errors['student_id']) ?></div><?php endif ?></div>
-                                    <div class="col-md-6"><label class="form-label" for="dorm_id">Dorm / pickup location <span class="text-muted-brand">(optional)</span></label><?php $dormId = (string) old('dorm_id', (string) ($user['dorm_id'] ?? '')); ?><select class="form-select<?= isset($errors['dorm_id']) ? ' is-invalid' : '' ?>" id="dorm_id" name="dorm_id"><option value="">Choose later</option><?php foreach ($dorms as $dorm): ?><option value="<?= (int) $dorm['id'] ?>"<?= $dormId === (string) $dorm['id'] ? ' selected' : '' ?>><?= esc($dorm['name']) ?></option><?php endforeach ?></select><?php if (isset($errors['dorm_id'])): ?><div class="invalid-feedback"><?= esc($errors['dorm_id']) ?></div><?php endif ?><div class="form-text">The selected dorm is saved as the pickup location.</div></div>
-                                    <div class="col-md-6"><label class="form-label" for="room_number">Dorm room <span class="text-muted-brand">(optional)</span></label><input class="form-control<?= isset($errors['room_number']) ? ' is-invalid' : '' ?>" id="room_number" name="room_number" value="<?= esc(old('room_number', $user['dorm_room_number'] ?? ''), 'attr') ?>" maxlength="30"><?php if (isset($errors['room_number'])): ?><div class="invalid-feedback"><?= esc($errors['room_number']) ?></div><?php endif ?></div>
-                                    <div class="col-md-6"><label class="form-label" for="pickup_date">Preferred pickup date <span class="text-muted-brand">(optional)</span></label><input class="form-control<?= isset($errors['pickup_date']) ? ' is-invalid' : '' ?>" id="pickup_date" name="pickup_date" type="date" value="<?= esc(old('pickup_date'), 'attr') ?>" min="<?= esc($minimumDate, 'attr') ?>"><?php if (isset($errors['pickup_date'])): ?><div class="invalid-feedback"><?= esc($errors['pickup_date']) ?></div><?php endif ?></div>
-                                    <div class="col-md-6"><label class="form-label" for="pickup_time">Preferred pickup time <span class="text-muted-brand">(optional)</span></label><input class="form-control<?= isset($errors['pickup_time']) ? ' is-invalid' : '' ?>" id="pickup_time" name="pickup_time" type="time" value="<?= esc(old('pickup_time'), 'attr') ?>" min="<?= esc($booking['pickup_start_time'] ?? '09:00', 'attr') ?>" max="<?= esc($lastSlot, 'attr') ?>" step="<?= $slotMinutes * 60 ?>"><?php if (isset($errors['pickup_time'])): ?><div class="invalid-feedback"><?= esc($errors['pickup_time']) ?></div><?php endif ?></div>
+                                    <?php if ($guest): ?>
+                                        <div class="col-md-6"><?= $field('customer_name', 'Student name', $errors, (string) old('customer_name'), ['autocomplete' => 'name', 'maxlength' => 100, 'minlength' => 2, 'required' => true]) ?></div>
+                                        <div class="col-md-6"><?= $field('customer_email', 'Email address', $errors, (string) old('customer_email'), ['type' => 'email', 'autocomplete' => 'email', 'maxlength' => 254, 'required' => true]) ?></div>
+                                    <?php else: ?>
+                                        <div class="col-md-6"><label class="form-label" for="customer_name">Customer</label><input class="form-control" id="customer_name" value="<?= esc($user['name'] ?? '', 'attr') ?>" disabled></div>
+                                        <div class="col-md-6"><label class="form-label" for="customer_email">Email</label><input class="form-control" id="customer_email" value="<?= esc($user['email'] ?? '', 'attr') ?>" disabled></div>
+                                    <?php endif ?>
+                                    <div class="col-md-6"><?= $field('customer_phone', 'Student phone', $errors, (string) old('customer_phone', $user['phone_number'] ?? ''), ['type' => 'tel', 'autocomplete' => 'tel', 'maxlength' => 30, 'required' => true]) ?></div>
+                                    <div class="col-md-6"><?= $field('student_id', 'Student ID', $errors, (string) old('student_id', $user['student_id'] ?? ''), ['maxlength' => 50, 'autocomplete' => 'off', 'required' => true]) ?></div>
+                                    <div class="col-md-6"><?= $field('parent_phone_number', 'Parent or guardian phone', $errors, (string) old('parent_phone_number', $user['parent_phone_number'] ?? ''), ['type' => 'tel', 'maxlength' => 30, 'autocomplete' => 'off', 'required' => true]) ?></div>
+                                    <div class="col-md-6"><?= $field('parent_email_address', 'Parent or guardian email', $errors, (string) old('parent_email_address', $user['parent_email_address'] ?? ''), ['type' => 'email', 'maxlength' => 254, 'autocomplete' => 'off', 'required' => true]) ?></div>
+                                </div>
+                            </section>
+
+                            <section class="portal-card" aria-labelledby="pickupHeading">
+                                <div class="portal-section-heading">
+                                    <span class="booking-step">4</span>
+                                    <div><h2 class="h4 mb-1" id="pickupHeading">Pickup details <span class="text-muted-brand fs-6">(optional)</span></h2><p class="text-muted-brand mb-0">Leave these blank and add them later, or pick a time now. Pickups run <?= esc(date('g:i A', strtotime((string) ($booking['pickup_start_time'] ?? '09:00')))) ?>–<?= esc(date('g:i A', strtotime((string) ($booking['pickup_end_time'] ?? '17:00')))) ?> <?= esc($timezone) ?>.</p></div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6"><label class="form-label" for="dorm_id">Dorm / pickup location</label><?php $dormId = (string) old('dorm_id', (string) ($user['dorm_id'] ?? '')); ?><select class="form-select<?= isset($errors['dorm_id']) ? ' is-invalid' : '' ?>" id="dorm_id" name="dorm_id"><option value="">Choose later</option><?php foreach ($dorms as $dorm): ?><option value="<?= (int) $dorm['id'] ?>"<?= $dormId === (string) $dorm['id'] ? ' selected' : '' ?>><?= esc($dorm['name']) ?></option><?php endforeach ?></select><?php if (isset($errors['dorm_id'])): ?><div class="invalid-feedback"><?= esc($errors['dorm_id']) ?></div><?php endif ?></div>
+                                    <div class="col-md-6"><?= $field('room_number', 'Dorm room', $errors, (string) old('room_number', $user['dorm_room_number'] ?? ''), ['maxlength' => 30]) ?></div>
+                                    <div class="col-md-6"><?= $field('pickup_date', 'Pickup date', $errors, (string) old('pickup_date'), ['type' => 'date', 'min' => $minimumDate, 'data-slot-date' => true]) ?></div>
+                                    <div class="col-12" data-slot-picker>
+                                        <div data-slot-fallback>
+                                            <?= $field('pickup_time', 'Pickup time', $errors, (string) old('pickup_time'), ['type' => 'time', 'min' => $booking['pickup_start_time'] ?? '09:00', 'max' => $lastSlot, 'step' => $slotMinutes * 60]) ?>
+                                        </div>
+                                        <div class="slot-picker" data-slot-buttons hidden>
+                                            <span class="form-label d-block">Pickup time</span>
+                                            <p class="field-hint mb-2" data-slot-message>Choose a pickup date to see available times.</p>
+                                            <div class="slot-grid" data-slot-grid role="group" aria-label="Available pickup times"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </section>
                         </div>
@@ -137,7 +189,12 @@ $processingConfig = [
                             <div class="booking-summary-lines" data-pricing-summary></div>
                             <div class="booking-summary-total"><span>Estimated total</span><strong data-estimated-total>$0.00</strong></div>
                             <p class="field-hint">Final pricing is calculated and saved securely on the server when you submit.</p>
-                            <div class="d-grid gap-2 mt-4"><button class="btn btn-brand-primary" type="submit">Continue</button><a class="btn btn-light" href="<?= site_url('account') ?>">Cancel</a></div>
+                            <div class="form-check mt-3 mb-0">
+                                <input class="form-check-input<?= isset($errors['terms']) ? ' is-invalid' : '' ?>" id="order_terms" name="terms" type="checkbox" value="1"<?= old('terms') === '1' ? ' checked' : '' ?> required>
+                                <label class="form-check-label" for="order_terms">I agree to the <a href="<?= site_url('terms') ?>" target="_blank" rel="noopener">Terms and Conditions</a> for this order.</label>
+                                <?php if (isset($errors['terms'])): ?><div class="invalid-feedback"><?= esc($errors['terms']) ?></div><?php endif ?>
+                            </div>
+                            <div class="d-grid gap-2 mt-3"><button class="btn btn-brand-primary" type="submit">Continue to payment</button><a class="btn btn-light" href="<?= site_url($guest ? 'services' : 'account') ?>">Cancel</a></div>
                         </aside>
                     </div>
                 </form>

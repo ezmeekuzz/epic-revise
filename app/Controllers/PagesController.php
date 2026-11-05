@@ -107,7 +107,7 @@ final class PagesController extends BaseController
             throw PageNotFoundException::forPageNotFound('Unknown booking type.');
         }
 
-        return redirect()->to(site_url('account/bookings/new?booking_type=' . rawurlencode($bookingType)));
+        return redirect()->to(site_url('book?booking_type=' . rawurlencode($bookingType)));
     }
 
     public function faqs(): string

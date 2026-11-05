@@ -77,6 +77,12 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
 <section class="admin-card mb-4">
     <div class="card-heading"><div><h2>Customer notifications</h2><p>Send transactional email to <?= esc($booking['customer_email']) ?> for this booking.</p></div></div>
     <div class="card-body notification-actions">
+        <?php if (empty($booking['user_id'])): ?>
+            <div class="notification-action">
+                <form action="<?= site_url('admin/bookings/' . $booking['id'] . '/notify/account-invite') ?>" method="post" data-loading-title="Sending invitation" novalidate><?= csrf_field() ?><button class="btn btn-outline-primary" type="submit">Invite to register</button></form>
+                <p class="field-hint">Not linked to an account. Emails a one-click link to add it to an existing account, or to sign up with this email.</p>
+            </div>
+        <?php endif ?>
         <div class="notification-action">
             <form action="<?= site_url('admin/bookings/' . $booking['id'] . '/notify/confirmation') ?>" method="post" data-loading-title="Sending booking confirmation" novalidate><?= csrf_field() ?><button class="btn btn-outline-primary" type="submit">Send booking confirmation</button></form>
         </div>
@@ -119,7 +125,17 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
     <div class="col-xl-6"><section class="admin-card h-100"><div class="card-heading"><div><h2>Payments</h2><p>Administrative payment records for this booking.</p></div><a href="<?= site_url('admin/payments/new?booking=' . $booking['id']) ?>">Record payment</a></div><?php if ($payments === []): ?><div class="empty-state"><strong>No payments</strong><p>No payment attempts have been recorded.</p></div><?php else: ?><div class="table-responsive"><table class="table js-datatable admin-table mb-0"><thead><tr><th>Reference</th><th>Amount</th><th>Provider</th><th>Status</th></tr></thead><tbody><?php foreach ($payments as $payment): ?><tr><td><strong><?= esc($payment['reference']) ?></strong><small><?= esc($payment['external_reference'] ?: date('M j, Y', strtotime((string) $payment['created_at']))) ?></small></td><td><?= esc($payment['currency']) ?> <?= number_format((float) $payment['amount'], 2) ?></td><td><?= esc(ucfirst($payment['provider'])) ?></td><td><span class="status-pill status-<?= esc($payment['status'], 'attr') ?>"><?= esc(ucfirst($payment['status'])) ?></span></td></tr><?php endforeach ?></tbody></table></div><?php endif ?></section></div>
     <div class="col-xl-6"><section class="admin-card h-100"><div class="card-heading"><div><h2>Transaction activity</h2><p>Immutable financial events for audit and reconciliation.</p></div><a href="<?= site_url('admin/transactions') ?>">Full ledger</a></div><?php if ($transactions === []): ?><div class="empty-state"><strong>No transactions</strong><p>Completed payments and refunds appear here.</p></div><?php else: ?><div class="table-responsive"><table class="table js-datatable admin-table mb-0"><thead><tr><th>Reference</th><th>Type</th><th>Amount</th><th>Processed</th></tr></thead><tbody><?php foreach ($transactions as $transaction): ?><tr><td><strong><?= esc($transaction['reference']) ?></strong></td><td><?= esc(ucfirst($transaction['type'])) ?></td><td class="<?= (float) $transaction['amount'] < 0 ? 'amount-negative' : 'amount-positive' ?>"><?= (float) $transaction['amount'] < 0 ? '-' : '' ?><?= esc($transaction['currency']) ?> <?= number_format(abs((float) $transaction['amount']), 2) ?></td><td><?= esc(date('M j, Y g:i a', strtotime((string) $transaction['processed_at']))) ?></td></tr><?php endforeach ?></tbody></table></div><?php endif ?></section></div>
 </div>
-<?php if ($customerProfile !== null): ?><section class="admin-card"><h2>Student, parent, and shipping details</h2><?= view('partials/customer_summary', ['user' => $customerProfile]) ?></section><?php endif ?>
+<?php if ($customerProfile !== null): ?><section class="admin-card"><h2>Student, parent, and shipping details</h2><?= view('partials/customer_summary', ['user' => $customerProfile]) ?></section>
+<?php elseif (! empty($booking['parent_phone_number']) || ! empty($booking['parent_email_address'])): ?>
+    <section class="admin-card"><h2>Student and parent details</h2><p class="field-hint">Saved with this booking. No customer account is linked yet.</p>
+        <dl class="account-details">
+            <div><dt>Student ID</dt><dd><?= esc($booking['student_id'] ?: 'Not provided') ?></dd></div>
+            <div><dt>Student phone</dt><dd><?= esc($booking['customer_phone'] ?: 'Not provided') ?></dd></div>
+            <div><dt>Parent phone</dt><dd><?= esc($booking['parent_phone_number'] ?: 'Not provided') ?></dd></div>
+            <div><dt>Parent email</dt><dd><?= esc($booking['parent_email_address'] ?: 'Not provided') ?></dd></div>
+        </dl>
+    </section>
+<?php endif ?>
 <?php if (! empty($booking['terms_snapshot'])): ?>
     <details class="portal-card mt-4"><summary>Terms accepted for this order</summary><p class="mt-3">Accepted <?= esc($booking['terms_accepted_at'] ?? '') ?></p><pre class="order-terms"><?= esc($booking['terms_snapshot']) ?></pre></details>
 <?php endif ?>

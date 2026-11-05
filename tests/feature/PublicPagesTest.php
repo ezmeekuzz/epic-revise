@@ -115,7 +115,8 @@ final class PublicPagesTest extends CIUnitTestCase
         $response = $this->get('/services');
         $response->assertStatus(200);
         $body = (string) $response->response()->getBody();
-        $this->assertStringContainsString('account/bookings/new?booking_type=summer_storage', $body);
+        $this->assertStringContainsString('book?booking_type=summer_storage', $body);
+        $this->assertStringNotContainsString('account/bookings/new?booking_type', $body, 'Book buttons open the public form, not a login wall.');
         $this->assertStringNotContainsString('Checking live availability', $body);
     }
 }

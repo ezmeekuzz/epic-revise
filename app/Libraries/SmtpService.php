@@ -242,6 +242,71 @@ final class SmtpService
         );
     }
 
+    /**
+     * Sent when a booking is made online without logging in. The website never says whether the
+     * email has an account; this email (which only the address owner receives) does.
+     *
+     * @param array<string, mixed>       $booking
+     * @param list<array<string, mixed>> $bookingItems
+     * @param array<string, mixed>|null  $dorm
+     * @param array{label: string, url: string, hasAccount: bool} $accountLink
+     */
+    public function sendGuestBookingReceived(array $booking, array $bookingItems, ?array $dorm, ?string $paymentUrl, array $accountLink): bool
+    {
+        $paragraphs = ['We received your ' . $booking['service_name'] . ' booking ' . $booking['reference_code'] . '. Your booking total is $' . number_format((float) $booking['total_amount'], 2) . '.'];
+        if ($paymentUrl !== null) {
+            $paragraphs[] = 'If you have not finished paying, use the Pay now button to complete your payment securely.';
+        }
+        $paragraphs[] = $accountLink['hasAccount']
+            ? 'This email address already has an EPIC account. Use the button below to add this booking to it in one click. No password needed.'
+            : 'Create your EPIC account to track this booking, pay balances and schedule your pickup. Your email address is already filled in, so you only need to choose a password.';
+        $paragraphs[] = 'If you did not make this booking, you can ignore this email. Nothing is added to an account unless you click the button.';
+
+        return $this->sendBookingNotice(
+            (string) $booking['customer_email'],
+            (string) $booking['customer_name'],
+            'guest_booking_received',
+            'Your Epic Storage booking ' . $booking['reference_code'],
+            'Booking received',
+            'Booking ' . $booking['reference_code'] . ' received',
+            $paragraphs,
+            $paymentUrl !== null ? 'Pay now' : $accountLink['label'],
+            $paymentUrl ?? $accountLink['url'],
+            [
+                $this->bookingInfoTable($booking, $dorm),
+                $this->bookingPricingTable($booking, $bookingItems),
+            ],
+            $paymentUrl !== null ? $accountLink['label'] : null,
+            $paymentUrl !== null ? $accountLink['url'] : null,
+        );
+    }
+
+    /**
+     * Staff "Invite to register" for a walk-in booking.
+     *
+     * @param array<string, mixed> $booking
+     * @param array{label: string, url: string, hasAccount: bool} $accountLink
+     */
+    public function sendAccountInvite(array $booking, array $accountLink): bool
+    {
+        return $this->sendBookingNotice(
+            (string) $booking['customer_email'],
+            (string) $booking['customer_name'],
+            'account_invite',
+            'Manage your Epic Storage booking ' . $booking['reference_code'] . ' online',
+            'Your booking online',
+            'Manage booking ' . $booking['reference_code'] . ' online',
+            [
+                $accountLink['hasAccount']
+                    ? 'Our team created booking ' . $booking['reference_code'] . ' for you. This email address already has an EPIC account, so you can add the booking to it in one click.'
+                    : 'Our team created booking ' . $booking['reference_code'] . ' for you. Create your EPIC account with this email address and the booking will appear in it automatically.',
+                'From your account you can pay balances, schedule pickup and drop-off, and add items.',
+            ],
+            $accountLink['label'],
+            $accountLink['url'],
+        );
+    }
+
     public function sendPasswordReset(string $recipient, string $name, string $resetUrl): bool
     {
         return $this->sendBookingNotice(
@@ -264,7 +329,7 @@ final class SmtpService
      * @param list<string> $paragraphs
      * @param list<array{title: string, rows: list<array{0: string, 1: string}>}> $tables
      */
-    private function sendBookingNotice(string $recipient, string $name, string $purpose, string $subject, string $eyebrow, string $heading, array $paragraphs, ?string $ctaLabel = null, ?string $ctaUrl = null, array $tables = []): bool
+    private function sendBookingNotice(string $recipient, string $name, string $purpose, string $subject, string $eyebrow, string $heading, array $paragraphs, ?string $ctaLabel = null, ?string $ctaUrl = null, array $tables = [], ?string $secondaryCtaLabel = null, ?string $secondaryCtaUrl = null): bool
     {
         $settings  = new SettingsService();
         $email     = $this->configuredMailer();
@@ -283,6 +348,8 @@ final class SmtpService
             'ctaUrl'     => $ctaUrl,
             'logoSource' => $logoSource,
             'tables'     => $tables,
+            'secondaryCtaLabel' => $secondaryCtaLabel,
+            'secondaryCtaUrl'   => $secondaryCtaUrl,
         ]));
 
         $sent = $email->send(false);

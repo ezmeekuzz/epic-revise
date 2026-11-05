@@ -22,19 +22,51 @@ final class CustomerReviewTest extends CIUnitTestCase
         return \Tests\Support\CustomerFixture::details();
     }
 
-    public function testRegistrationRequiresAndPersistsAllCustomerDetails(): void
+    public function testRegistrationAsksOnlyForNameEmailAndPassword(): void
     {
-        $base = ['name' => 'Review Student', 'email' => 'review@example.com', 'password' => 'review password phrase', 'password_confirm' => 'review password phrase', 'terms' => '1'];
-        $invalid = $this->post('/register', [csrf_token() => csrf_hash(), ...$base]);
-        $invalid->assertSessionHas('errors');
-        $this->assertSame(0, (new UserModel())->where('email', $base['email'])->countAllResults());
-        $valid = $this->post('/register', [csrf_token() => csrf_hash(), ...$base, ...self::details()]);
+        // Student and parent details moved to the booking form ("ask each detail once").
+        $base = ['name' => 'Review Student', 'email' => 'review@example.com', 'password' => 'review password phrase', 'terms' => '1'];
+        $valid = $this->post('/register', [csrf_token() => csrf_hash(), ...$base]);
         $valid->assertRedirectTo('/verify-email');
         $user = (new UserModel())->where('email', $base['email'])->first();
         $this->assertNotNull($user);
-        foreach (self::details() as $field => $value) {
-            $this->assertSame($value, $user[$field]);
-        }
+        $this->assertSame('pending', $user['status']);
+        $this->assertFalse(\App\Libraries\CustomerDetails::complete($user));
+
+        $page = (string) $this->get('/register?email=Invited@Example.com')->response()->getBody();
+        $this->assertStringNotContainsString('name="password_confirm"', $page);
+        $this->assertStringNotContainsString('name="parent_phone_number"', $page);
+        $this->assertStringContainsString('value="' . esc('invited@example.com', 'attr') . '"', $page, 'Invite links pre-fill the email.');
+    }
+
+    public function testBookingFormCollectsMissingDetailsOnceAndSavesThemToTheProfile(): void
+    {
+        $userId = (int) (new UserModel())->insert([
+            'name' => 'Fresh Customer', 'email' => 'fresh@example.com', 'password_hash' => password_hash('valid password 123', PASSWORD_DEFAULT),
+            'role' => 'customer', 'status' => 'active', 'email_verified_at' => date('Y-m-d H:i:s'),
+        ], true);
+        $session = ['customer_user_id' => $userId, 'customer_is_logged_in' => true];
+
+        $form = $this->withSession($session)->get('/account/bookings/new');
+        $form->assertStatus(200);
+        $this->assertStringContainsString('name="parent_email_address"', (string) $form->response()->getBody());
+
+        $missing = $this->withSession($session)->post('/account/bookings', [csrf_token() => csrf_hash(), 'booking_type' => 'summer_storage', 'additional_box_quantity' => '0', 'terms' => '1']);
+        $missing->assertSessionHas('errors');
+        $this->assertArrayHasKey('parent_phone_number', session()->getFlashdata('errors'));
+        $this->assertSame(0, (new BookingModel())->where('user_id', $userId)->countAllResults());
+
+        $this->withSession($session)->post('/account/bookings', [
+            csrf_token() => csrf_hash(), 'booking_type' => 'summer_storage', 'additional_box_quantity' => '0', 'terms' => '1',
+            'customer_phone' => '336-555-0110', 'student_id' => 'HPU-777', 'parent_phone_number' => '336-555-0111', 'parent_email_address' => 'Parent@Example.com',
+        ]);
+        $booking = (new BookingModel())->where('user_id', $userId)->first();
+        $this->assertNotNull($booking);
+        $this->assertSame('parent@example.com', $booking['parent_email_address']);
+        $user = (new UserModel())->find($userId);
+        $this->assertSame('HPU-777', $user['student_id']);
+        $this->assertSame('336-555-0111', $user['parent_phone_number']);
+        $this->assertTrue(\App\Libraries\CustomerDetails::complete($user));
     }
 
     public function testAdditionsKeepOneOrderAndAreIdempotent(): void
@@ -211,26 +243,25 @@ final class CustomerReviewTest extends CIUnitTestCase
         $balance->assertSee('Pay now');
     }
 
-    public function testRegistrationWithoutShippingCanOrderAfterVerification(): void
+    public function testRegistrationWithoutDetailsCanOrderAfterVerification(): void
     {
-        $details = array_filter(self::details(), static fn (string $field): bool => ! str_starts_with($field, 'shipping_'), ARRAY_FILTER_USE_KEY);
         $result = $this->post('/register', [
-            csrf_token() => csrf_hash(), ...$details, 'name' => 'No Shipping Student', 'email' => 'no-shipping@example.com',
-            'password' => 'a unique registration passphrase', 'password_confirm' => 'a unique registration passphrase', 'terms' => '1',
+            csrf_token() => csrf_hash(), 'name' => 'No Details Student', 'email' => 'no-details@example.com',
+            'password' => 'a unique registration passphrase', 'terms' => '1',
         ]);
         $result->assertRedirectTo('/verify-email');
-        $user = (new UserModel())->where('email', 'no-shipping@example.com')->first();
+        $user = (new UserModel())->where('email', 'no-details@example.com')->first();
         $this->assertNotNull($user);
-        $this->assertTrue(\App\Libraries\CustomerDetails::complete($user));
         $this->assertEmpty($user['shipping_street']);
         (new UserModel())->update($user['id'], ['status' => 'active', 'email_verified_at' => date('Y-m-d H:i:s')]);
+        // No detour to the profile page: the booking form itself asks for the missing details.
         $this->withSession(['customer_user_id' => $user['id'], 'customer_is_logged_in' => true])->get('/account/bookings/new')->assertStatus(200);
     }
 
     public function testRegistrationRejectsEveryMissingRequiredField(): void
     {
-        $payload = [...self::details(), 'name' => 'Required Student', 'email' => 'required@example.com', 'password' => 'a unique registration passphrase', 'password_confirm' => 'a unique registration passphrase', 'terms' => '1'];
-        foreach (['name', 'email', 'student_id', 'phone_number', 'parent_phone_number', 'parent_email_address', 'password', 'password_confirm', 'terms'] as $field) {
+        $payload = ['name' => 'Required Student', 'email' => 'required@example.com', 'password' => 'a unique registration passphrase', 'terms' => '1'];
+        foreach (['name', 'email', 'password', 'terms'] as $field) {
             foreach ([null, ''] as $empty) {
                 $invalid = $payload;
                 if ($empty === null) { unset($invalid[$field]); } else { $invalid[$field] = ''; }

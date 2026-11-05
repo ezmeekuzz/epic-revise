@@ -172,9 +172,14 @@ final class AdminOperationsTest extends CIUnitTestCase
         $form->assertStatus(200);
         $form->assertSee('Process your service');
         $formBody = (string) $form->response()->getBody();
-        $this->assertSame(3, substr_count($formBody, 'data-quantity-action="decrement"'));
-        $this->assertSame(3, substr_count($formBody, 'data-quantity-action="increment"'));
-        $this->assertStringContainsString('aria-label="Decrease selected item quantity"', $formBody);
+        // Two box steppers; items are added from a search box, so no per-item list is rendered up front.
+        $this->assertSame(2, substr_count($formBody, 'data-quantity-action="decrement"'));
+        $this->assertSame(2, substr_count($formBody, 'data-quantity-action="increment"'));
+        $this->assertStringContainsString('id="item_search"', $formBody);
+        $this->assertStringContainsString('role="combobox"', $formBody);
+        $this->assertStringContainsString('"catalog":[{', $formBody, 'The searchable catalog is sent to the page.');
+        $this->assertSame(1, preg_match('/<form[^>]*data-booking-processing-form[^>]*>/', $formBody, $formTag));
+        $this->assertStringNotContainsString('data-confirm=', $formTag[0], 'The booking form submits without a confirmation popup.');
 
         $created = $this->withSession($session)->post('/account/bookings', [
             'terms' => '1',

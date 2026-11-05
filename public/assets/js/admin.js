@@ -93,3 +93,37 @@
     window.location.href = row.dataset.href;
   });
 })();
+
+// Admin booking form: show which customer account a walk-in booking will be linked to,
+// so a mistyped email is caught before saving. Mirrors BookingsController::withAutoLinkedCustomer().
+(function () {
+  "use strict";
+
+  var emailInput = document.querySelector("[data-link-preview-source]");
+  var preview = document.querySelector("[data-link-preview]");
+  var accountSelect = document.getElementById("user_id");
+  if (!emailInput || !preview || !accountSelect) return;
+
+  var customers = {};
+  try {
+    customers = JSON.parse(emailInput.dataset.customerEmails || "{}") || {};
+  } catch (error) {
+    customers = {};
+  }
+
+  function update() {
+    var email = emailInput.value.trim().toLowerCase();
+    if (accountSelect.value !== "") {
+      preview.textContent = "";
+      return;
+    }
+    var name = Object.prototype.hasOwnProperty.call(customers, email) ? customers[email] : null;
+    preview.textContent = name
+      ? "Will be linked to: " + name + " (existing customer account with this email)."
+      : (email ? "No account uses this email yet. Use Invite to register after saving." : "");
+  }
+
+  emailInput.addEventListener("input", update);
+  accountSelect.addEventListener("change", update);
+  update();
+})();

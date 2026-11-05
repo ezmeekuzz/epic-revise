@@ -54,6 +54,10 @@ $tables     = $tables ?? [];
                         <p style="margin:0;color:#707070;font-size:13px;line-height:1.65;">If the button does not work, copy and paste this link into your browser:</p>
                         <p style="margin:7px 0 0;word-break:break-all;"><a href="<?= esc($ctaUrl, 'attr') ?>" style="color:#005aab;font-size:13px;"><?= esc($ctaUrl) ?></a></p>
                     <?php endif ?>
+                    <?php if (! empty($secondaryCtaLabel) && ! empty($secondaryCtaUrl)): ?>
+                        <p style="margin:22px 0 10px;text-align:center;"><a href="<?= esc($secondaryCtaUrl, 'attr') ?>" style="display:inline-block;background:#ffffff;border:2px solid #083150;border-radius:7px;color:#083150;font-family:Montserrat,Arial,sans-serif;font-size:14px;font-weight:800;letter-spacing:.5px;padding:13px 23px;text-decoration:none;text-transform:uppercase;"><?= esc($secondaryCtaLabel) ?></a></p>
+                        <p style="margin:7px 0 0;word-break:break-all;text-align:center;"><a href="<?= esc($secondaryCtaUrl, 'attr') ?>" style="color:#005aab;font-size:13px;"><?= esc($secondaryCtaUrl) ?></a></p>
+                    <?php endif ?>
                 </td></tr>
                 <tr><td style="background:#f0f0f0;padding:20px 36px;text-align:center;">
                     <p style="margin:0;color:#707070;font-size:12px;line-height:1.6;">Need help? Call <a href="tel:3365495216" style="color:#005aab;font-weight:700;text-decoration:none;">336.549.5216</a> or email <a href="mailto:support@epicstoragehpu.com" style="color:#005aab;font-weight:700;text-decoration:none;">Sales Support</a>.</p>

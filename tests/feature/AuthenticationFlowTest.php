@@ -174,13 +174,16 @@ final class AuthenticationFlowTest extends CIUnitTestCase
         $result->assertRedirectTo('/login');
     }
 
-    public function testSelectedServiceWaitsForLoginAndPreservesTheBookingDestination(): void
+    public function testSelectedServiceOpensThePublicBookingFormAndLoginStillHonoursTheDestination(): void
     {
+        // Booking no longer requires an account: logged-out visitors go straight to the public form.
         $result = $this->get('/account/bookings/new?booking_type=summer_storage');
+        $result->assertRedirectTo('/book?booking_type=summer_storage');
 
-        $result->assertRedirectTo('/login');
-        $result->assertSessionHas('error', 'Log in with your EPIC customer account to continue with your selected service.');
-        $result->assertSessionHas('customer_intended_url', '/account/bookings/new?booking_type=summer_storage');
+        $public = $this->get('/book?booking_type=summer_storage');
+        $public->assertStatus(200);
+        $public->assertSee('Book your storage');
+        $this->assertStringContainsString('name="customer_email"', (string) $public->response()->getBody());
 
         $this->createUser('Returning Customer', 'returning@example.com', 'customer');
         $login = $this->withSession([

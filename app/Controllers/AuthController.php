@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Libraries\AuthService;
+use App\Libraries\BookingLinkService;
 use App\Libraries\SmtpService;
 use App\Models\EmailVerificationTokenModel;
 use App\Models\MagicLoginTokenModel;
 use App\Models\PasswordResetTokenModel;
 use App\Models\UserModel;
-use App\Libraries\CustomerDetails;
 use CodeIgniter\Database\Exceptions\DatabaseException;
 use CodeIgniter\HTTP\RedirectResponse;
 use DateTimeImmutable;
@@ -49,6 +49,8 @@ final class AuthController extends BaseController
         if ($user === null) {
             return redirect()->back()->withInput()->with('error', 'The customer email or password is incorrect, or the account is inactive.');
         }
+        // Backup path: logging in proves the email, so any unlinked bookings made with it join the account.
+        (new BookingLinkService())->linkUnclaimed($user);
 
         $intended = (string) session()->get('customer_intended_url');
         session()->remove('customer_intended_url');
@@ -63,26 +65,29 @@ final class AuthController extends BaseController
 
     public function register(): string
     {
-        return $this->authView('auth/register', 'Create an Account | EPIC Storage Solutions', 'Create your customer account for EPIC Storage Solutions.');
+        // Invite and "Set up my account" emails pre-fill the address: /register?email=...
+        $prefill = mb_strtolower(trim((string) $this->request->getGet('email')));
+
+        return $this->authView('auth/register', 'Create an Account | EPIC Storage Solutions', 'Create your customer account for EPIC Storage Solutions.', [
+            'prefillEmail' => filter_var($prefill, FILTER_VALIDATE_EMAIL) !== false ? $prefill : '',
+        ]);
     }
 
     public function store(): RedirectResponse
     {
+        // Sign-up asks only for name, email and password. Student and parent details
+        // are collected once, on the booking form, and saved to the profile from there.
         $data = [
-            'name'             => trim((string) $this->request->getPost('name')),
-            'email'            => mb_strtolower(trim((string) $this->request->getPost('email'))),
-            'password'         => (string) $this->request->getPost('password'),
-            'password_confirm' => (string) $this->request->getPost('password_confirm'),
-            'terms'            => (string) $this->request->getPost('terms'),
+            'name'     => trim((string) $this->request->getPost('name')),
+            'email'    => mb_strtolower(trim((string) $this->request->getPost('email'))),
+            'password' => (string) $this->request->getPost('password'),
+            'terms'    => (string) $this->request->getPost('terms'),
         ];
-        $data = [...$data, ...CustomerDetails::input($this->request)];
         $rules = [
-            ...CustomerDetails::rules(),
-            'name'             => 'required|min_length[2]|max_length[100]',
-            'email'            => 'required|valid_email|max_length[254]|is_unique[users.email]',
-            'password'         => 'required|min_length[12]|max_length[72]',
-            'password_confirm' => 'required|matches[password]',
-            'terms'            => 'required|in_list[1]',
+            'name'     => 'required|min_length[2]|max_length[100]',
+            'email'    => 'required|valid_email|max_length[254]|is_unique[users.email]',
+            'password' => 'required|min_length[12]|max_length[72]',
+            'terms'    => 'required|in_list[1]',
         ];
         $messages = [
             'email' => ['is_unique' => 'An account already exists for this email address.'],
@@ -94,11 +99,10 @@ final class AuthController extends BaseController
         }
 
         $users = new UserModel();
-        $redirectPath = $this->safeRedirectPath((string) session()->get('customer_intended_url')) ?? '/services';
+        $redirectPath = $this->safeRedirectPath((string) session()->get('customer_intended_url')) ?? '/account';
 
         try {
             $userId = $users->insert([
-                ...CustomerDetails::input($this->request),
                 'name'          => $data['name'],
                 'email'         => $data['email'],
                 'password_hash' => password_hash($data['password'], PASSWORD_DEFAULT),
@@ -222,6 +226,8 @@ final class AuthController extends BaseController
         }
 
         (new AuthService())->startSession($user);
+        // The confirmation link proves the email, so walk-in bookings made with it join this account.
+        (new BookingLinkService())->linkUnclaimed($user);
         $redirectPath = $this->safeRedirectPath((string) ($token['redirect_path'] ?? '')) ?? '/account';
 
         return redirect()->to(site_url(ltrim($redirectPath, '/')))->with('alert', ['type' => 'success', 'title' => 'Email confirmed', 'message' => 'Your email is confirmed. Welcome to EPIC, ' . $user['name'] . '.']);
@@ -402,6 +408,7 @@ final class AuthController extends BaseController
             return redirect()->route('login')->with('alert', ['type' => 'success', 'title' => 'Password reset', 'message' => 'Your password has been reset. Please log in.']);
         }
         (new AuthService())->startSession($user);
+        (new BookingLinkService())->linkUnclaimed($user);
 
         return redirect()->to(site_url('account'))->with('alert', ['type' => 'success', 'title' => 'Password reset', 'message' => 'Your password has been reset. Welcome back, ' . $user['name'] . '.']);
     }
@@ -437,12 +444,14 @@ final class AuthController extends BaseController
         $db->transCommit();
 
         (new AuthService())->startSession($user);
+        (new BookingLinkService())->linkUnclaimed($user);
         $redirectPath = $this->safeRedirectPath((string) ($token['redirect_path'] ?? '')) ?? '/account';
 
         return redirect()->to(site_url(ltrim($redirectPath, '/')))->with('success', 'Welcome back, ' . $user['name'] . '.');
     }
 
-    private function authView(string $view, string $title, string $description): string
+    /** @param array<string, mixed> $extra */
+    private function authView(string $view, string $title, string $description, array $extra = []): string
     {
         return view($view, [
             'title'        => $title,
@@ -451,6 +460,7 @@ final class AuthController extends BaseController
             'canonicalUrl' => current_url(),
             'socialImage'  => null,
             'robots'       => 'noindex,nofollow',
+            ...$extra,
         ]);
     }
 
