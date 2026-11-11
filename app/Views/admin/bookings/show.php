@@ -9,7 +9,7 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
 ?>
 <div class="page-heading">
     <div>
-        <p class="eyebrow">Booking details &middot; <?= $isStorage ? 'Summer Storage' : 'Summer Advantage' ?></p>
+        <p class="eyebrow">Booking details &middot; <?= $isStorage ? 'Summer Storage (Existing student)' : 'Summer Advantage (New student)' ?></p>
         <h1><?= esc($booking['reference_code']) ?></h1>
         <p>Created <?= esc(date('F j, Y g:i A', strtotime((string) $booking['created_at']))) ?></p>
     </div>
@@ -28,7 +28,7 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
         </div>
         <dl class="detail-list">
             <div><dt>Customer</dt><dd><?= esc($booking['customer_name']) ?></dd></div>
-            <div><dt>Booking type</dt><dd><?= $isStorage ? 'Summer Storage' : 'Summer Advantage' ?></dd></div>
+            <div><dt>Booking type</dt><dd><?= $isStorage ? 'Summer Storage' : 'Summer Advantage' ?> <span class="student-tag <?= $isStorage ? 'is-existing' : 'is-new' ?>"><?= $isStorage ? 'Existing student' : 'New student' ?></span></dd></div>
             <div><dt>Email</dt><dd><a href="mailto:<?= esc($booking['customer_email'], 'attr') ?>"><?= esc($booking['customer_email']) ?></a></dd></div>
             <div><dt>Phone / student ID</dt><dd><?= esc($booking['customer_phone'] ?: 'Not provided') ?> &middot; <?= esc($booking['student_id'] ?: 'No student ID') ?></dd></div>
             <div><dt><?= $isStorage ? 'Additional boxes' : 'Boxes' ?></dt><dd><?= number_format((int) $booking['additional_box_quantity']) ?></dd></div>
