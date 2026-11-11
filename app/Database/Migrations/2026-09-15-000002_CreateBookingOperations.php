@@ -174,7 +174,7 @@ final class CreateBookingOperations extends Migration
     private function seedSettings(): void
     {
         $defaults = [
-            'business_name' => ['Epic Storage Solutions', 'general', 0],
+            'business_name' => ['EPIC Storage Solutions', 'general', 0],
             'support_email' => ['support@epicstoragehpu.com', 'general', 0],
             'business_phone' => ['336.549.5216', 'general', 0],
             'business_timezone' => ['America/New_York', 'general', 0],
@@ -193,7 +193,7 @@ final class CreateBookingOperations extends Migration
             'smtp_password' => ['', 'email', 1],
             'smtp_crypto' => ['tls', 'email', 0],
             'email_from_address' => ['support@epicstoragehpu.com', 'email', 0],
-            'email_from_name' => ['Epic Storage Solutions', 'email', 0],
+            'email_from_name' => ['EPIC Storage Solutions', 'email', 0],
             'payments_enabled' => ['0', 'payment', 0],
             'payment_provider' => ['square', 'payment', 0],
             'payment_mode' => ['sandbox', 'payment', 0],

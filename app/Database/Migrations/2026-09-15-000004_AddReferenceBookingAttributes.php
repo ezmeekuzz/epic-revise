@@ -7,7 +7,7 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 
 /**
- * Keeps the reference Epic booking fields available while retaining this
+ * Keeps the reference EPIC booking fields available while retaining this
  * application's normalized customer, pickup, payment, and size relationships.
  */
 final class AddReferenceBookingAttributes extends Migration

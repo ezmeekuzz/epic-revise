@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex,nofollow">
     <meta name="theme-color" content="#083150">
-    <title><?= esc($title) ?> | Epic Admin</title>
+    <title><?= esc($title) ?> | EPIC Admin</title>
     <link rel="icon" href="<?= base_url('favicon.ico') ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

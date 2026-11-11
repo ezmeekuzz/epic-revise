@@ -10,9 +10,9 @@ use CodeIgniter\CLI\CLI;
 
 final class CreateAdmin extends BaseCommand
 {
-    protected $group       = 'Epic';
+    protected $group       = 'EPIC';
     protected $name        = 'admin:create';
-    protected $description = 'Creates a new Epic administrator account.';
+    protected $description = 'Creates a new EPIC administrator account.';
     protected $usage       = 'admin:create --name "Full Name" --email admin@example.com';
     protected $options     = [
         '--name'  => 'Administrator full name. You will be prompted when omitted.',

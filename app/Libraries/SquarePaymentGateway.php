@@ -64,7 +64,7 @@ final class SquarePaymentGateway
                 'location_id' => $configuration['locationId'],
                 'autocomplete' => true,
                 'reference_id' => mb_substr($bookingReference, 0, 40),
-                'note' => mb_substr('Epic Storage booking ' . $bookingReference, 0, 100),
+                'note' => mb_substr('EPIC Storage booking ' . $bookingReference, 0, 100),
             ], JSON_THROW_ON_ERROR);
         } catch (JsonException $exception) {
             throw new RuntimeException('The Square payment request could not be prepared.', 0, $exception);

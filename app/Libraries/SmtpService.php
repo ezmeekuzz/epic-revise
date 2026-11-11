@@ -51,8 +51,8 @@ final class SmtpService
         $messageId = $this->messageId();
         $email->setHeader('X-Epic-Delivery-ID', $messageId);
         $email->setTo($recipient);
-        $email->setSubject('Epic Storage Solutions SMTP test [' . $messageId . ']');
-        $email->setMessage('<p>This test message was sent from the Epic administrator settings page.</p><p>Time: ' . esc(date('F j, Y g:i A T')) . '</p>');
+        $email->setSubject('EPIC Storage Solutions SMTP test [' . $messageId . ']');
+        $email->setMessage('<p>This test message was sent from the EPIC administrator settings page.</p><p>Time: ' . esc(date('F j, Y g:i A T')) . '</p>');
 
         $sent = $email->send(false);
         $this->logSubmission('test', $sent, $recipient, $sender, $messageId, $settings);
@@ -68,7 +68,7 @@ final class SmtpService
         $messageId = $this->messageId();
         $email->setHeader('X-Epic-Delivery-ID', $messageId);
         $email->setTo($recipient);
-        $email->setSubject('Confirm your Epic Storage Solutions account');
+        $email->setSubject('Confirm your EPIC Storage Solutions account');
         $logoSource = $this->attachInlineImage($email, 'epic-logo-white.png');
         $email->setMessage(view('emails/verify_account', [
             'name'           => $name,
@@ -95,11 +95,11 @@ final class SmtpService
             (string) $booking['customer_email'],
             (string) $booking['customer_name'],
             'balance_due',
-            'Balance due on your Epic Storage booking ' . $booking['reference_code'],
+            'Balance due on your EPIC Storage booking ' . $booking['reference_code'],
             'Payment reminder',
             'Balance due: $' . number_format($balance, 2),
             [
-                'This is a notification regarding your outstanding balance with Epic Storage Solutions. We kindly request that you settle the remaining balance for your storage order.',
+                'This is a notification regarding your outstanding balance with EPIC Storage Solutions. We kindly request that you settle the remaining balance for your storage order.',
                 'If you have already made a payment, please disregard this notice. Payments may take 2-3 business days to reflect on your account.',
                 'Need assistance? Contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.',
             ],
@@ -138,7 +138,7 @@ final class SmtpService
             (string) $booking['customer_email'],
             (string) $booking['customer_name'],
             'booking_confirmation',
-            'Your Epic Storage booking ' . $booking['reference_code'] . ' is confirmed',
+            'Your EPIC Storage booking ' . $booking['reference_code'] . ' is confirmed',
             'Booking confirmed',
             'Booking ' . $booking['reference_code'] . ' is confirmed',
             $paragraphs,
@@ -154,7 +154,7 @@ final class SmtpService
     public function sendPickupReminder(string $recipient, string $name, string $referenceCode, string $pickupDate, ?string $pickupTime, ?string $pickupLocation): bool
     {
         $when = date('F j, Y', strtotime($pickupDate)) . ($pickupTime ? ' at ' . date('g:i A', strtotime($pickupTime)) : '');
-        $paragraphs = ['Epic has you scheduled for pickup on ' . $when . '. If you need to change this time, you can do so up to 48 hours prior to your scheduled pickup.'];
+        $paragraphs = ['EPIC has you scheduled for pickup on ' . $when . '. If you need to change this time, you can do so up to 48 hours prior to your scheduled pickup.'];
         if ($pickupLocation) {
             $paragraphs[] = 'Location: ' . $pickupLocation;
         }
@@ -181,7 +181,7 @@ final class SmtpService
             'Action needed',
             'Schedule your pickup',
             [
-                'We don\'t have a pickup date on file yet for your Epic Storage booking ' . $referenceCode . '.',
+                'We don\'t have a pickup date on file yet for your EPIC Storage booking ' . $referenceCode . '.',
                 'Please schedule a pickup time so we can collect your items.',
             ],
             'Schedule pickup',
@@ -192,7 +192,7 @@ final class SmtpService
     public function sendDropoffReminder(string $recipient, string $name, string $referenceCode, string $dropoffDate, ?string $dropoffTime, ?string $dropoffLocation): bool
     {
         $when = date('F j, Y', strtotime($dropoffDate)) . ($dropoffTime ? ' at ' . date('g:i A', strtotime($dropoffTime)) : '');
-        $paragraphs = ['Epic will return your items on ' . $when . '. If you need to change this time, contact us as soon as possible.'];
+        $paragraphs = ['EPIC will return your items on ' . $when . '. If you need to change this time, contact us as soon as possible.'];
         if ($dropoffLocation) {
             $paragraphs[] = 'Location: ' . $dropoffLocation;
         }
@@ -215,7 +215,7 @@ final class SmtpService
             $recipient,
             $name,
             'contact_confirmation',
-            'Thank you for contacting Epic Storage Solutions',
+            'Thank you for contacting EPIC Storage Solutions',
             'Message received',
             'Thanks for reaching out',
             [
@@ -229,7 +229,7 @@ final class SmtpService
     {
         return $this->sendBookingNotice(
             $recipient,
-            'Epic Team',
+            'EPIC Team',
             'contact_notification',
             'New contact message from ' . $name,
             'New contact message',
@@ -266,7 +266,7 @@ final class SmtpService
             (string) $booking['customer_email'],
             (string) $booking['customer_name'],
             'guest_booking_received',
-            'Your Epic Storage booking ' . $booking['reference_code'],
+            'Your EPIC Storage booking ' . $booking['reference_code'],
             'Booking received',
             'Booking ' . $booking['reference_code'] . ' received',
             $paragraphs,
@@ -293,7 +293,7 @@ final class SmtpService
             (string) $booking['customer_email'],
             (string) $booking['customer_name'],
             'account_invite',
-            'Manage your Epic Storage booking ' . $booking['reference_code'] . ' online',
+            'Manage your EPIC Storage booking ' . $booking['reference_code'] . ' online',
             'Your booking online',
             'Manage booking ' . $booking['reference_code'] . ' online',
             [
@@ -313,11 +313,11 @@ final class SmtpService
             $recipient,
             $name,
             'password_reset',
-            'Reset your Epic Storage Solutions password',
+            'Reset your EPIC Storage Solutions password',
             'Password reset',
             'Reset your password',
             [
-                'We received a request to reset your Epic Storage Solutions password. Use the button below to choose a new one.',
+                'We received a request to reset your EPIC Storage Solutions password. Use the button below to choose a new one.',
                 'This link expires in 1 hour and can be used once. If you did not request this, you can safely ignore this email.',
             ],
             'Reset password',
@@ -430,7 +430,7 @@ final class SmtpService
             log_message('warning', 'SMTP sender domain differs from authenticated mailbox; using the authenticated mailbox as From.');
         }
 
-        $email->setFrom($sender, $settings->get('email_from_name', 'Epic Storage Solutions'));
+        $email->setFrom($sender, $settings->get('email_from_name', 'EPIC Storage Solutions'));
 
         return $sender;
     }

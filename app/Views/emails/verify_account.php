@@ -10,7 +10,7 @@ $logoSource = (string) ($logoSource ?? base_url('assets/images/epic-logo-white.p
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Confirm your Epic account</title>
+    <title>Confirm your EPIC account</title>
 </head>
 <body style="margin:0;background:#f6f6f6;color:#141414;font-family:Montserrat,Arial,sans-serif;">
     <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#f6f6f6;padding:32px 12px;">
@@ -20,10 +20,10 @@ $logoSource = (string) ($logoSource ?? base_url('assets/images/epic-logo-white.p
                     <img src="<?= esc($logoSource, 'attr') ?>" width="170" alt="<?= esc($brandName, 'attr') ?>" style="display:inline-block;max-width:170px;height:auto;">
                 </td></tr>
                 <tr><td style="padding:38px 36px 30px;">
-                    <p style="margin:0 0 10px;color:#005aab;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;">Welcome to Epic</p>
+                    <p style="margin:0 0 10px;color:#005aab;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;">Welcome to EPIC</p>
                     <h1 style="margin:0 0 18px;color:#083150;font-family:Poppins,Arial,sans-serif;font-size:30px;line-height:1.2;">Confirm your account</h1>
                     <p style="margin:0 0 16px;font-size:16px;line-height:1.7;">Hi <?= esc($name) ?>,</p>
-                    <p style="margin:0 0 16px;font-size:16px;line-height:1.7;">Thanks for choosing Epic Storage Solutions. Please confirm your email address so we can finish setting up your customer account and continue with <strong><?= esc($serviceLabel) ?></strong>.</p>
+                    <p style="margin:0 0 16px;font-size:16px;line-height:1.7;">Thanks for choosing EPIC Storage Solutions. Please confirm your email address so we can finish setting up your customer account and continue with <strong><?= esc($serviceLabel) ?></strong>.</p>
                     <p style="margin:0 0 26px;font-size:16px;line-height:1.7;">This confirmation link expires in <?= (int) $expiresHours ?> hours and can be used only once.</p>
                     <p style="margin:0 0 28px;text-align:center;"><a href="<?= esc($verificationUrl, 'attr') ?>" style="display:inline-block;background:#89c4f2;border:1px solid #89c4f2;border-radius:7px;color:#0b2036;font-family:Montserrat,Arial,sans-serif;font-size:14px;font-weight:800;letter-spacing:.5px;padding:15px 25px;text-decoration:none;text-transform:uppercase;">Confirm my email</a></p>
                     <p style="margin:0;color:#707070;font-size:13px;line-height:1.65;">If the button does not work, copy and paste this link into your browser:</p>

@@ -3,8 +3,8 @@
 <?= $this->section('content') ?>
 <main class="admin-login-shell">
     <section class="admin-login-panel" aria-labelledby="adminLoginHeading">
-        <a class="admin-login-brand" href="<?= site_url('/') ?>" aria-label="Return to Epic Storage Solutions">
-            <img src="<?= base_url('assets/images/epic-logo.png') ?>" alt="Epic Storage Solutions">
+        <a class="admin-login-brand" href="<?= site_url('/') ?>" aria-label="Return to EPIC Storage Solutions">
+            <img src="<?= base_url('assets/images/epic-logo.png') ?>" alt="EPIC Storage Solutions">
             <span>Administration</span>
         </a>
 
@@ -15,7 +15,7 @@
         </div>
 
         <?php $errors = session()->getFlashdata('errors') ?? []; ?>
-        <form action="<?= site_url('admin/login') ?>" method="post" data-loading-title="Signing in to Epic Admin" novalidate>
+        <form action="<?= site_url('admin/login') ?>" method="post" data-loading-title="Signing in to EPIC Admin" novalidate>
             <?= csrf_field() ?>
             <div class="mb-3">
                 <label class="form-label" for="admin_email">Administrator email</label>

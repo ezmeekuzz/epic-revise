@@ -462,7 +462,7 @@ final class AdminOperationsTest extends CIUnitTestCase
             'smtp_password'       => 'super-secret-password',
             'smtp_crypto'         => 'tls',
             'email_from_address'  => 'mailer@example.com',
-            'email_from_name'     => 'Epic Storage',
+            'email_from_name'     => 'EPIC Storage',
         ]);
         $emailSave->assertRedirect();
         $emailSave->assertSessionHas('success');
@@ -483,7 +483,7 @@ final class AdminOperationsTest extends CIUnitTestCase
             'clear_smtp_password' => '1',
             'smtp_crypto'         => 'tls',
             'email_from_address'  => 'mailer@example.com',
-            'email_from_name'     => 'Epic Storage',
+            'email_from_name'     => 'EPIC Storage',
         ]);
         $unsafeClear->assertSessionHas('error');
         $this->assertSame('super-secret-password', (new SettingsService())->get('smtp_password'));
