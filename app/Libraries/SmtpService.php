@@ -151,6 +151,102 @@ final class SmtpService
         );
     }
 
+    /**
+     * Customer copy for a booking made from a logged-in account.
+     *
+     * @param array<string, mixed>       $booking
+     * @param list<array<string, mixed>> $bookingItems
+     * @param array<string, mixed>|null  $dorm
+     */
+    public function sendBookingCreated(array $booking, array $bookingItems, ?array $dorm, string $viewUrl): bool
+    {
+        return $this->sendBookingNotice(
+            (string) $booking['customer_email'],
+            (string) $booking['customer_name'],
+            'booking_created',
+            'Your EPIC Storage booking ' . $booking['reference_code'],
+            'Booking received',
+            'Booking ' . $booking['reference_code'] . ' received',
+            [
+                'We received your ' . $booking['service_name'] . ' booking at High Point University. Your booking total is $' . number_format((float) $booking['total_amount'], 2) . '.',
+                'You can change your pickup and drop-off date and time from your account. You will receive an email whenever they change.',
+                'If you have any questions, contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.',
+            ],
+            'View my booking',
+            $viewUrl,
+            [
+                $this->bookingInfoTable($booking, $dorm),
+                $this->bookingScheduleTable($booking),
+                $this->bookingPricingTable($booking, $bookingItems),
+            ],
+        );
+    }
+
+    /**
+     * Admin alert for a newly created booking.
+     *
+     * @param array<string, mixed>       $booking
+     * @param list<array<string, mixed>> $bookingItems
+     * @param array<string, mixed>|null  $dorm
+     */
+    public function sendAdminBookingCreated(string $recipient, array $booking, array $bookingItems, ?array $dorm, string $adminUrl): bool
+    {
+        return $this->sendBookingNotice(
+            $recipient,
+            'EPIC Team',
+            'admin_booking_created',
+            'New booking ' . $booking['reference_code'] . ' from ' . $booking['customer_name'],
+            'New booking',
+            'Booking ' . $booking['reference_code'] . ' was created',
+            [
+                $booking['customer_name'] . ' created a ' . $booking['service_name'] . ' booking. The booking total is $' . number_format((float) $booking['total_amount'], 2) . '.',
+            ],
+            'Open booking in admin',
+            $adminUrl,
+            [
+                $this->bookingInfoTable($booking, $dorm),
+                $this->bookingScheduleTable($booking),
+                $this->bookingPricingTable($booking, $bookingItems),
+            ],
+        );
+    }
+
+    /**
+     * Sent to the customer and to the admin when a pickup or drop-off date/time changes.
+     *
+     * @param array<string, mixed>      $booking  Booking after the change.
+     * @param array<string, mixed>      $before   Booking before the change.
+     * @param array<string, mixed>|null $dorm
+     * @param list<string>              $changes  Which legs changed: 'pickup' and/or 'dropoff'.
+     */
+    public function sendScheduleUpdated(string $recipient, string $name, bool $forAdmin, array $booking, array $before, ?array $dorm, array $changes, ?string $ctaUrl, ?string $ctaLabel): bool
+    {
+        $legs = implode(' and ', array_map(static fn (string $leg): string => $leg === 'pickup' ? 'pickup' : 'drop-off', $changes));
+        $paragraphs = $forAdmin
+            ? [$booking['customer_name'] . ' changed the ' . $legs . ' date or time for booking ' . $booking['reference_code'] . '. The previous schedule is shown for reference.']
+            : ['The ' . $legs . ' date or time for your EPIC Storage booking ' . $booking['reference_code'] . ' was updated. Your new schedule is below.'];
+        if (! $forAdmin) {
+            $paragraphs[] = 'If this change was not made by you, or you need to change it again, contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.';
+        }
+
+        return $this->sendBookingNotice(
+            $recipient,
+            $name,
+            $forAdmin ? 'admin_schedule_updated' : 'schedule_updated',
+            ($forAdmin ? 'Schedule changed' : 'Your schedule was updated') . ' for booking ' . $booking['reference_code'],
+            'Schedule updated',
+            ucfirst($legs) . ' schedule updated',
+            $paragraphs,
+            $ctaLabel,
+            $ctaUrl,
+            [
+                $this->bookingScheduleTable($booking, 'New schedule'),
+                ...($forAdmin ? [$this->bookingScheduleTable($before, 'Previous schedule')] : []),
+                $this->bookingInfoTable($booking, $dorm),
+            ],
+        );
+    }
+
     public function sendPickupReminder(string $recipient, string $name, string $referenceCode, string $pickupDate, ?string $pickupTime, ?string $pickupLocation): bool
     {
         $when = date('F j, Y', strtotime($pickupDate)) . ($pickupTime ? ' at ' . date('g:i A', strtotime($pickupTime)) : '');
@@ -274,6 +370,7 @@ final class SmtpService
             $paymentUrl ?? $accountLink['url'],
             [
                 $this->bookingInfoTable($booking, $dorm),
+                $this->bookingScheduleTable($booking),
                 $this->bookingPricingTable($booking, $bookingItems),
             ],
             $paymentUrl !== null ? $accountLink['label'] : null,
@@ -375,6 +472,36 @@ final class SmtpService
                 ['Student email', (string) $booking['customer_email']],
                 ['Student phone', $booking['customer_phone'] ? (string) $booking['customer_phone'] : 'Not provided'],
                 ['Dorm and room', $dormLine !== '' ? $dormLine : 'Not provided'],
+            ],
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $booking
+     * @return array{title: string, rows: list<array{0: string, 1: string}>}
+     */
+    private function bookingScheduleTable(array $booking, string $title = 'Pickup and drop-off'): array
+    {
+        $when = static function (?string $date, ?string $time): string {
+            if (empty($date)) {
+                return 'Not scheduled';
+            }
+
+            return date('F j, Y', strtotime($date)) . (! empty($time) ? ' at ' . date('g:i A', strtotime($time)) : '');
+        };
+        $where = static function (?string $location, ?string $room): string {
+            $line = trim((string) $location . ($room ? ' - Room ' . $room : ''));
+
+            return $line !== '' ? $line : 'Not provided';
+        };
+
+        return [
+            'title' => $title,
+            'rows' => [
+                ['Pickup', $when($booking['pickup_date'] ?? null, $booking['pickup_time'] ?? null)],
+                ['Pickup location', $where($booking['pickup_location'] ?? null, $booking['room_number'] ?? null)],
+                ['Drop-off', $when($booking['dropoff_date'] ?? null, $booking['dropoff_time'] ?? null)],
+                ['Drop-off location', $where($booking['dropoff_location'] ?? null, $booking['dropoff_room_number'] ?? null)],
             ],
         ];
     }

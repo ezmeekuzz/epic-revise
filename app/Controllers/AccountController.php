@@ -8,6 +8,7 @@ use App\Controllers\Concerns\SubmitsBookings;
 use App\Libraries\BookingAvailabilityService;
 use App\Libraries\BookingPricingService;
 use App\Libraries\AuthService;
+use App\Libraries\BookingNotifier;
 use App\Libraries\SettingsService;
 use App\Models\BookingItemModel;
 use App\Models\BookingModel;
@@ -132,6 +133,10 @@ final class AccountController extends BaseController
         if ($result['status'] === 'existing') {
             return redirect()->to(site_url('account/bookings/' . $result['id'] . '/items'))->with('success', 'Your existing order is ready. Add additional items here.');
         }
+
+        $notifier = new BookingNotifier();
+        $notifier->customerBookingCreated($result['id']);
+        $notifier->adminBookingCreated($result['id']);
 
         return redirect()->route('account.bookings.payment', [$result['id']])->with('success', 'Your service request was saved. Continue with secure payment.');
     }
@@ -345,6 +350,8 @@ final class AccountController extends BaseController
 
             return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Pickup details not saved', 'message' => 'Pickup details could not be saved. Please try again.']);
         }
+
+        (new BookingNotifier())->scheduleChanged($booking, $id);
 
         return redirect()->route('account.bookings.show', [$id])->with('success', 'Pickup and drop-off details updated.');
     }

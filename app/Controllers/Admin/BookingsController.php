@@ -6,6 +6,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Libraries\BookingLinkService;
+use App\Libraries\BookingNotifier;
 use App\Libraries\BookingService;
 use App\Libraries\SmtpService;
 use App\Models\BookingItemModel;
@@ -243,6 +244,8 @@ final class BookingsController extends BaseController
 
             return redirect()->back()->withInput()->with('error', 'The booking could not be updated. Please review the details.');
         }
+
+        (new BookingNotifier())->scheduleChanged($existing, $id);
 
         return redirect()->route('admin.bookings.show', [$id])->with('success', 'Booking details updated.');
     }

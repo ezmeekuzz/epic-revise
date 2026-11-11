@@ -8,6 +8,7 @@ use App\Controllers\Concerns\SubmitsBookings;
 use App\Libraries\AuthService;
 use App\Libraries\BookingAvailabilityService;
 use App\Libraries\BookingLinkService;
+use App\Libraries\BookingNotifier;
 use App\Libraries\SmtpService;
 use App\Models\BookingItemModel;
 use App\Models\BookingModel;
@@ -61,6 +62,7 @@ final class PublicBookingController extends BaseController
         $links = new BookingLinkService();
         $links->grantGuestAccess($result['id']);
         $this->sendBookingReceivedEmail($result['id']);
+        (new BookingNotifier())->adminBookingCreated($result['id']);
 
         return redirect()->to(site_url('book/' . $result['id'] . '/pay'))->with('success', 'Your booking was saved. Complete your payment below.');
     }
