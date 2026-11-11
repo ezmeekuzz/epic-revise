@@ -7,16 +7,16 @@
             <div class="account-hero mb-4">
                 <span class="eyebrow">Customer portal</span>
                 <h1 class="h2 mt-2 mb-2">Date leaving campus</h1>
-                <p class="mb-0 text-muted-brand">Pickup windows run <?= esc(date('g:i A', strtotime((string) ($booking['pickup_start_time'] ?? '09:00')))) ?>&ndash;<?= esc(date('g:i A', strtotime((string) ($booking['pickup_end_time'] ?? '17:00')))) ?> in <?= (int) ($booking['slot_duration_minutes'] ?? 30) ?>-minute windows, at least <?= (int) ($booking['minimum_advance_hours'] ?? 24) ?> hours in advance.</p>
+                <p class="mb-0 text-muted-brand">Date Leaving windows run <?= esc(date('g:i A', strtotime((string) ($booking['pickup_start_time'] ?? '09:00')))) ?>&ndash;<?= esc(date('g:i A', strtotime((string) ($booking['pickup_end_time'] ?? '17:00')))) ?> in <?= (int) ($booking['slot_duration_minutes'] ?? 30) ?>-minute windows, at least <?= (int) ($booking['minimum_advance_hours'] ?? 24) ?> hours in advance.</p>
             </div>
 
             <div class="portal-card">
                 <?php if ($bookings === []): ?>
-                    <div class="py-4 text-center"><strong class="d-block">No bookings yet</strong><p class="text-muted-brand mt-2 mb-0">Once you request a service, you can schedule its pickup here.</p></div>
+                    <div class="py-4 text-center"><strong class="d-block">No bookings yet</strong><p class="text-muted-brand mt-2 mb-0">Once you request a service, you can schedule its date leaving here.</p></div>
                 <?php else: ?>
                     <div class="table-responsive">
                         <table class="table admin-table js-datatable align-middle mb-0">
-                            <thead><tr><th>Booking</th><th>Service</th><th>Pickup date</th><th>Pickup time</th><th>Dorm / location</th><th>Status</th><th></th></tr></thead>
+                            <thead><tr><th>Booking</th><th>Service</th><th>Date Leaving</th><th>Date Leaving time</th><th>Dorm / location</th><th>Status</th><th></th></tr></thead>
                             <tbody>
                             <?php foreach ($bookings as $booking_row): ?>
                                 <tr>

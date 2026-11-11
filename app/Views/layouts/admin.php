@@ -30,7 +30,7 @@
                 <span class="admin-nav-label">Operations</span>
                 <a class="<?= $activeAdminPage === 'bookings' ? 'active' : '' ?>" href="<?= site_url('admin/bookings') ?>"><span class="nav-icon" aria-hidden="true">▣</span><span>Bookings</span></a>
                 <a class="<?= $activeAdminPage === 'schedule' ? 'active' : '' ?>" href="<?= site_url('admin/schedule') ?>"><span class="nav-icon" aria-hidden="true">◷</span><span>Calendar schedule</span></a>
-                <a class="<?= $activeAdminPage === 'logistics' ? 'active' : '' ?>" href="<?= site_url('admin/logistics') ?>"><span class="nav-icon" aria-hidden="true">↔</span><span>Pickup &amp; drop-off</span></a>
+                <a class="<?= $activeAdminPage === 'logistics' ? 'active' : '' ?>" href="<?= site_url('admin/logistics') ?>"><span class="nav-icon" aria-hidden="true">↔</span><span>Date Leaving &amp; date returning</span></a>
                 <a class="<?= $activeAdminPage === 'dorms' ? 'active' : '' ?>" href="<?= site_url('admin/dorms') ?>"><span class="nav-icon" aria-hidden="true">◫</span><span>Dorms</span></a>
                 <a class="<?= $activeAdminPage === 'items' ? 'active' : '' ?>" href="<?= site_url('admin/items') ?>"><span class="nav-icon" aria-hidden="true">◇</span><span>Items &amp; sizes</span></a>
                 <span class="admin-nav-label">Finance</span>

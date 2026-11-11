@@ -106,15 +106,10 @@ final class AccountController extends BaseController
         return redirect()->route('account.profile')->with('success', 'Your personal details were updated.');
     }
 
-    public function newBooking(): string|RedirectResponse
+    public function newBooking(): string
     {
-        $active = (new CustomerOrderService())->activeOrder((int) session()->get('customer_user_id'));
-        if ($active !== null) {
-            return redirect()->to(site_url('account/bookings/' . $active['id'] . '/items'))->with('success', 'You already have an open order. Add additional items here.');
-        }
-
         return view('account/booking_form', [
-            ...$this->pageData('Request a Pickup | EPIC Storage Solutions', 'Request an EPIC Storage pickup window.', 'account'),
+            ...$this->pageData('Request a Date Leaving | EPIC Storage Solutions', 'Request an EPIC Storage date leaving window.', 'account'),
             ...$this->bookingFormData($this->currentCustomer()),
         ]);
     }
@@ -139,6 +134,26 @@ final class AccountController extends BaseController
         $notifier->adminBookingCreated($result['id']);
 
         return redirect()->route('account.bookings.payment', [$result['id']])->with('success', 'Your service request was saved. Continue with secure payment.');
+    }
+
+    /** Nav entry: jump straight to the only open booking, or let the customer pick one. */
+    public function additionalItemsIndex(): string|RedirectResponse
+    {
+        $open = array_values(array_filter(
+            $this->bookingsWithFinancials(),
+            static fn (array $booking): bool => ! in_array($booking['status'], ['completed', 'cancelled'], true),
+        ));
+        if ($open === []) {
+            return redirect()->route('account.bookings')->with('error', 'You have no open booking to add items to. Request a service first.');
+        }
+        if (count($open) === 1) {
+            return redirect()->route('account.bookings.items', [$open[0]['id']]);
+        }
+
+        return view('account/additional_items_list', [
+            ...$this->pageData('Additional Items | EPIC Storage Solutions', 'Choose a booking to add items to.', 'account'),
+            'bookings' => $open,
+        ]);
     }
 
     public function additionalItems(int $id): string|RedirectResponse
@@ -226,7 +241,7 @@ final class AccountController extends BaseController
     public function pickupDates(): string
     {
         return view('account/pickup_dates', [
-            ...$this->pageData('Date Leaving Campus | EPIC Storage Solutions', 'Review and manage the pickup date for every booking.', 'account'),
+            ...$this->pageData('Date Leaving Campus | EPIC Storage Solutions', 'Review and manage the date leaving for every booking.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
             'booking' => (new SettingsService())->displayGroup('booking'),
         ]);
@@ -235,7 +250,7 @@ final class AccountController extends BaseController
     public function dropoffDates(): string
     {
         return view('account/dropoff_dates', [
-            ...$this->pageData('Manage Drop-off Dates | EPIC Storage Solutions', 'Review and manage the drop-off date for every booking.', 'account'),
+            ...$this->pageData('Manage Date Returning Dates | EPIC Storage Solutions', 'Review and manage the date returning for every booking.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
             'booking' => (new SettingsService())->displayGroup('booking'),
         ]);
@@ -268,7 +283,7 @@ final class AccountController extends BaseController
     public function editPickup(int $id): string
     {
         return view('account/pickup_form', [
-            ...$this->pageData('Pickup Details | EPIC Storage Solutions', 'Add or update the pickup details for your booking.', 'account'),
+            ...$this->pageData('Date Leaving Details | EPIC Storage Solutions', 'Add or update the date leaving details for your booking.', 'account'),
             'booking' => $this->ownedBooking($id),
             'user' => $this->currentCustomer(),
             'dorms' => $this->activeDorms(),
@@ -316,11 +331,11 @@ final class AccountController extends BaseController
         }
         $dorm = $data['dorm_id'] !== null ? $this->findActiveDorm((int) $data['dorm_id']) : null;
         if ($data['dorm_id'] !== null && $dorm === null) {
-            return redirect()->back()->withInput()->with('error', 'Please choose an active pickup dorm.');
+            return redirect()->back()->withInput()->with('error', 'Please choose an active date leaving dorm.');
         }
         $dropoffDorm = $data['dropoff_dorm_id'] !== null ? $this->findActiveDorm((int) $data['dropoff_dorm_id']) : null;
         if ($data['dropoff_dorm_id'] !== null && $dropoffDorm === null) {
-            return redirect()->back()->withInput()->with('error', 'Please choose an active drop-off dorm.');
+            return redirect()->back()->withInput()->with('error', 'Please choose an active date returning dorm.');
         }
 
         $pickupScheduled = $data['pickup_date'] !== '' && $data['pickup_time'] !== '';
@@ -343,17 +358,17 @@ final class AccountController extends BaseController
                 'dropoff_room_number' => $data['dropoff_room_number'] ?: null,
                 'dropoff_status' => $dropoffStatus,
             ])) {
-                throw new RuntimeException('Pickup details update failed.');
+                throw new RuntimeException('Date Leaving details update failed.');
             }
         } catch (Throwable $exception) {
-            log_message('error', 'Customer pickup update failed: {type}', ['type' => $exception::class]);
+            log_message('error', 'Customer date leaving update failed: {type}', ['type' => $exception::class]);
 
-            return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Pickup details not saved', 'message' => 'Pickup details could not be saved. Please try again.']);
+            return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Date Leaving details not saved', 'message' => 'Date Leaving details could not be saved. Please try again.']);
         }
 
         (new BookingNotifier())->scheduleChanged($booking, $id);
 
-        return redirect()->route('account.bookings.show', [$id])->with('success', 'Pickup and drop-off details updated.');
+        return redirect()->route('account.bookings.show', [$id])->with('success', 'Date Leaving and date returning details updated.');
     }
 
     /** @return array<string, mixed> */

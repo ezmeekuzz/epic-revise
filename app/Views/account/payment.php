@@ -49,7 +49,7 @@
                         <div><dt>Booking total</dt><dd>$<?= number_format((float) $booking['total_amount'], 2) ?></dd></div>
                     </dl>
                     <div class="payment-balance"><span>Amount due</span><strong><?= esc($square['currency']) ?> $<?= number_format($balance, 2) ?></strong></div>
-                    <p class="field-hint mb-0">Pickup details remain optional and can be completed after payment.</p>
+                    <p class="field-hint mb-0">Date Leaving details remain optional and can be completed after payment.</p>
                 </aside>
             </div>
         </div>

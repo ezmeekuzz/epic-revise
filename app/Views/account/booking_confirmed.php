@@ -27,7 +27,7 @@
 
                 <div class="notice-panel text-start mt-4">
                     <strong class="d-block mb-1">Already have an EPIC account?</strong>
-                    <span>The email has a button to add this booking to it in one click. New to EPIC? The email also lets you set up an account to track this booking, pay balances and schedule pickup.</span>
+                    <span>The email has a button to add this booking to it in one click. New to EPIC? The email also lets you set up an account to track this booking, pay balances and schedule date leaving.</span>
                 </div>
 
                 <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">

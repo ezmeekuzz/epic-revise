@@ -27,17 +27,6 @@ final class BookingCheckout
         $db->transBegin();
 
         try {
-            if ($userId !== null) {
-                $orders = new CustomerOrderService();
-                $orders->lockCustomer($userId);
-                $active = $orders->activeOrder($userId);
-                if ($active !== null) {
-                    $db->transRollback();
-
-                    return ['status' => 'existing', 'id' => (int) $active['id']];
-                }
-            }
-
             $bookingService = new BookingService();
             $bookingId = (int) (new BookingModel())->insert([
                 ...$data,

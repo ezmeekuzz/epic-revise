@@ -26,8 +26,8 @@ $boxTotal = (float) ($booking['addtl_box_total_amount'] ?? 0);
                 <div class="col-lg-7">
                     <div class="portal-card h-100">
                         <div class="d-flex justify-content-between align-items-start gap-3">
-                            <h2 class="h4">Pickup, drop-off &amp; service</h2>
-                            <div class="d-flex flex-column align-items-end gap-2"><span class="status-pill status-<?= esc($booking['status'], 'attr') ?>"><?= esc(ucwords(str_replace('_', ' ', $booking['status']))) ?></span><a class="btn btn-sm btn-brand-outline" href="<?= site_url('account/bookings/' . $booking['id'] . '/pickup') ?>">Manage pickup &amp; drop-off</a></div>
+                            <h2 class="h4">Date Leaving, date returning &amp; service</h2>
+                            <div class="d-flex flex-column align-items-end gap-2"><span class="status-pill status-<?= esc($booking['status'], 'attr') ?>"><?= esc(ucwords(str_replace('_', ' ', $booking['status']))) ?></span><a class="btn btn-sm btn-brand-outline" href="<?= site_url('account/bookings/' . $booking['id'] . '/pickup') ?>">Manage date leaving &amp; date returning</a></div>
                         </div>
                         <dl class="account-details mb-0">
                             <div><dt>Service</dt><dd><?= esc($booking['service_name']) ?></dd></div>
@@ -39,7 +39,7 @@ $boxTotal = (float) ($booking['addtl_box_total_amount'] ?? 0);
                             <div><dt>Phone</dt><dd><?= esc($booking['customer_phone'] ?: 'Not provided') ?></dd></div>
                         </dl>
 
-                        <p class="account-details-heading">Pickup <span class="status-pill status-<?= esc($booking['pickup_status'] ?? 'unscheduled', 'attr') ?>"><?= esc(ucfirst($booking['pickup_status'] ?? 'unscheduled')) ?></span></p>
+                        <p class="account-details-heading">Date Leaving <span class="status-pill status-<?= esc($booking['pickup_status'] ?? 'unscheduled', 'attr') ?>"><?= esc(ucfirst($booking['pickup_status'] ?? 'unscheduled')) ?></span></p>
                         <dl class="account-details mb-0">
                             <div><dt>Date</dt><dd><?= $booking['pickup_date'] ? esc(date('F j, Y', strtotime((string) $booking['pickup_date']))) : 'Awaiting schedule' ?></dd></div>
                             <div><dt>Time</dt><dd><?= $booking['pickup_time'] ? esc(date('g:i A', strtotime((string) $booking['pickup_time']))) : 'Awaiting schedule' ?></dd></div>
@@ -47,7 +47,7 @@ $boxTotal = (float) ($booking['addtl_box_total_amount'] ?? 0);
                             <div><dt>Room</dt><dd><?= esc($booking['room_number'] ?: 'Not provided') ?></dd></div>
                         </dl>
 
-                        <p class="account-details-heading">Drop-off / redelivery <span class="status-pill status-<?= esc($booking['dropoff_status'] ?? 'unscheduled', 'attr') ?>"><?= esc(ucfirst($booking['dropoff_status'] ?? 'unscheduled')) ?></span></p>
+                        <p class="account-details-heading">Date Returning / redelivery <span class="status-pill status-<?= esc($booking['dropoff_status'] ?? 'unscheduled', 'attr') ?>"><?= esc(ucfirst($booking['dropoff_status'] ?? 'unscheduled')) ?></span></p>
                         <dl class="account-details mb-0">
                             <div><dt>Date</dt><dd><?= $booking['dropoff_date'] ? esc(date('F j, Y', strtotime((string) $booking['dropoff_date']))) : 'Awaiting schedule' ?></dd></div>
                             <div><dt>Time</dt><dd><?= $booking['dropoff_time'] ? esc(date('g:i A', strtotime((string) $booking['dropoff_time']))) : 'Awaiting schedule' ?></dd></div>

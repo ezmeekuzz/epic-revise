@@ -130,7 +130,7 @@ final class SmtpService
     {
         $paragraphs = ['We processed your ' . $booking['service_name'] . ' order at High Point University.'];
         if ($scheduleUrl !== null) {
-            $paragraphs[] = 'You will receive a follow-up email for box delivery and a reminder to schedule your pickup. If you know your pickup time now, choose it using the link below to secure your spot.';
+            $paragraphs[] = 'You will receive a follow-up email for box delivery and a reminder to schedule your date leaving. If you know your date leaving time now, choose it using the link below to secure your spot.';
         }
         $paragraphs[] = 'If you have additional items to add to your order or any questions, contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.';
 
@@ -142,7 +142,7 @@ final class SmtpService
             'Booking confirmed',
             'Booking ' . $booking['reference_code'] . ' is confirmed',
             $paragraphs,
-            $scheduleUrl !== null ? 'Choose your pickup schedule' : null,
+            $scheduleUrl !== null ? 'Choose your date leaving schedule' : null,
             $scheduleUrl,
             [
                 $this->bookingInfoTable($booking, $dorm),
@@ -169,7 +169,7 @@ final class SmtpService
             'Booking ' . $booking['reference_code'] . ' received',
             [
                 'We received your ' . $booking['service_name'] . ' booking at High Point University. Your booking total is $' . number_format((float) $booking['total_amount'], 2) . '.',
-                'You can change your pickup and drop-off date and time from your account. You will receive an email whenever they change.',
+                'You can change your date leaving and date returning and time from your account. You will receive an email whenever they change.',
                 'If you have any questions, contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.',
             ],
             'View my booking',
@@ -212,7 +212,7 @@ final class SmtpService
     }
 
     /**
-     * Sent to the customer and to the admin when a pickup or drop-off date/time changes.
+     * Sent to the customer and to the admin when a date leaving or date returning/time changes.
      *
      * @param array<string, mixed>      $booking  Booking after the change.
      * @param array<string, mixed>      $before   Booking before the change.
@@ -221,7 +221,7 @@ final class SmtpService
      */
     public function sendScheduleUpdated(string $recipient, string $name, bool $forAdmin, array $booking, array $before, ?array $dorm, array $changes, ?string $ctaUrl, ?string $ctaLabel): bool
     {
-        $legs = implode(' and ', array_map(static fn (string $leg): string => $leg === 'pickup' ? 'pickup' : 'drop-off', $changes));
+        $legs = implode(' and ', array_map(static fn (string $leg): string => $leg === 'pickup' ? 'pickup' : 'date returning', $changes));
         $paragraphs = $forAdmin
             ? [$booking['customer_name'] . ' changed the ' . $legs . ' date or time for booking ' . $booking['reference_code'] . '. The previous schedule is shown for reference.']
             : ['The ' . $legs . ' date or time for your EPIC Storage booking ' . $booking['reference_code'] . ' was updated. Your new schedule is below.'];
@@ -250,7 +250,7 @@ final class SmtpService
     public function sendPickupReminder(string $recipient, string $name, string $referenceCode, string $pickupDate, ?string $pickupTime, ?string $pickupLocation): bool
     {
         $when = date('F j, Y', strtotime($pickupDate)) . ($pickupTime ? ' at ' . date('g:i A', strtotime($pickupTime)) : '');
-        $paragraphs = ['EPIC has you scheduled for pickup on ' . $when . '. If you need to change this time, you can do so up to 48 hours prior to your scheduled pickup.'];
+        $paragraphs = ['EPIC has you scheduled for date leaving on ' . $when . '. If you need to change this time, you can do so up to 48 hours prior to your scheduled date leaving.'];
         if ($pickupLocation) {
             $paragraphs[] = 'Location: ' . $pickupLocation;
         }
@@ -260,9 +260,9 @@ final class SmtpService
             $recipient,
             $name,
             'pickup_reminder',
-            'Pickup reminder for booking ' . $referenceCode,
-            'Pickup reminder',
-            'Pickup scheduled: ' . $when,
+            'Date Leaving reminder for booking ' . $referenceCode,
+            'Date Leaving reminder',
+            'Date Leaving scheduled: ' . $when,
             $paragraphs,
         );
     }
@@ -273,12 +273,12 @@ final class SmtpService
             $recipient,
             $name,
             'pickup_needed',
-            'Schedule your pickup for booking ' . $referenceCode,
+            'Schedule your date leaving for booking ' . $referenceCode,
             'Action needed',
             'Schedule your pickup',
             [
-                'We don\'t have a pickup date on file yet for your EPIC Storage booking ' . $referenceCode . '.',
-                'Please schedule a pickup time so we can collect your items.',
+                'We don\'t have a date leaving on file yet for your EPIC Storage booking ' . $referenceCode . '.',
+                'Please schedule a date leaving time so we can collect your items.',
             ],
             'Schedule pickup',
             $scheduleUrl,
@@ -298,9 +298,9 @@ final class SmtpService
             $recipient,
             $name,
             'dropoff_reminder',
-            'Drop-off reminder for booking ' . $referenceCode,
-            'Drop-off reminder',
-            'Drop-off scheduled: ' . $when,
+            'Date Returning reminder for booking ' . $referenceCode,
+            'Date Returning reminder',
+            'Date Returning scheduled: ' . $when,
             $paragraphs,
         );
     }
@@ -355,7 +355,7 @@ final class SmtpService
         }
         $paragraphs[] = $accountLink['hasAccount']
             ? 'This email address already has an EPIC account. Use the button below to add this booking to it in one click. No password needed.'
-            : 'Create your EPIC account to track this booking, pay balances and schedule your pickup. Your email address is already filled in, so you only need to choose a password.';
+            : 'Create your EPIC account to track this booking, pay balances and schedule your date leaving. Your email address is already filled in, so you only need to choose a password.';
         $paragraphs[] = 'If you did not make this booking, you can ignore this email. Nothing is added to an account unless you click the button.';
 
         return $this->sendBookingNotice(
@@ -397,7 +397,7 @@ final class SmtpService
                 $accountLink['hasAccount']
                     ? 'Our team created booking ' . $booking['reference_code'] . ' for you. This email address already has an EPIC account, so you can add the booking to it in one click.'
                     : 'Our team created booking ' . $booking['reference_code'] . ' for you. Create your EPIC account with this email address and the booking will appear in it automatically.',
-                'From your account you can pay balances, schedule pickup and drop-off, and add items.',
+                'From your account you can pay balances, schedule date leaving and date returning, and add items.',
             ],
             $accountLink['label'],
             $accountLink['url'],
@@ -480,7 +480,7 @@ final class SmtpService
      * @param array<string, mixed> $booking
      * @return array{title: string, rows: list<array{0: string, 1: string}>}
      */
-    private function bookingScheduleTable(array $booking, string $title = 'Pickup and drop-off'): array
+    private function bookingScheduleTable(array $booking, string $title = 'Date Leaving and date returning'): array
     {
         $when = static function (?string $date, ?string $time): string {
             if (empty($date)) {
@@ -498,10 +498,10 @@ final class SmtpService
         return [
             'title' => $title,
             'rows' => [
-                ['Pickup', $when($booking['pickup_date'] ?? null, $booking['pickup_time'] ?? null)],
-                ['Pickup location', $where($booking['pickup_location'] ?? null, $booking['room_number'] ?? null)],
-                ['Drop-off', $when($booking['dropoff_date'] ?? null, $booking['dropoff_time'] ?? null)],
-                ['Drop-off location', $where($booking['dropoff_location'] ?? null, $booking['dropoff_room_number'] ?? null)],
+                ['Date Leaving', $when($booking['pickup_date'] ?? null, $booking['pickup_time'] ?? null)],
+                ['Date Leaving location', $where($booking['pickup_location'] ?? null, $booking['room_number'] ?? null)],
+                ['Date Returning', $when($booking['dropoff_date'] ?? null, $booking['dropoff_time'] ?? null)],
+                ['Date Returning location', $where($booking['dropoff_location'] ?? null, $booking['dropoff_room_number'] ?? null)],
             ],
         ];
     }

@@ -22,7 +22,7 @@ final class PagesController extends BaseController
     private const PAGES = [
         'home' => [
             'title'       => 'HPU Dorm Storage & Moving | EPIC Storage Solutions',
-            'description' => 'Dorm-to-dorm summer storage for High Point University students, including boxes, pickup, secure storage, and redelivery in High Point, NC.',
+            'description' => 'Dorm-to-dorm summer storage for High Point University students, including boxes, date leaving, secure storage, and redelivery in High Point, NC.',
             'path'        => '',
             'image'       => 'assets/images/Two_women_high_five_2K_202609071746.png',
         ],
@@ -39,12 +39,12 @@ final class PagesController extends BaseController
         ],
         'scheduling' => [
             'title'       => 'Scheduling | EPIC Storage Solutions',
-            'description' => 'Our booking policy: schedule your EPIC Storage pick-up, get confirmation and reminder emails, and change your time up to 48 hours in advance.',
+            'description' => 'Our booking policy: schedule your EPIC Storage date leaving, get confirmation and reminder emails, and change your time up to 48 hours in advance.',
             'path'        => 'scheduling',
         ],
         'faqs' => [
             'title'       => 'FAQs | EPIC Storage Solutions',
-            'description' => 'Frequently asked questions about EPIC Storage Solutions: packages, sign-up timing, pickup and delivery, packing suggestions, and shipping.',
+            'description' => 'Frequently asked questions about EPIC Storage Solutions: packages, sign-up timing, date leaving and delivery, packing suggestions, and shipping.',
             'path'        => 'faqs',
         ],
         'testimonials' => [

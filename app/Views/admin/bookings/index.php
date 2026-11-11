@@ -14,7 +14,7 @@
         <input type="hidden" name="q" value="<?= esc($filters['q'], 'attr') ?>">
         <input type="hidden" name="status" value="<?= esc($filters['status'], 'attr') ?>">
         <input type="hidden" name="type" value="<?= esc((string) $bookingType, 'attr') ?>">
-        <button class="btn btn-outline-primary" type="submit" name="notification_type" value="pickup-needed">Notify: no pickup scheduled</button>
+        <button class="btn btn-outline-primary" type="submit" name="notification_type" value="pickup-needed">Notify: no date leaving scheduled</button>
         <button class="btn btn-outline-primary" type="submit" name="notification_type" value="balance-due">Notify: balance due</button>
     </form>
 </div>
@@ -31,7 +31,7 @@
 </form>
 <div class="table-responsive">
     <table class="table js-datatable admin-table align-middle mb-0">
-        <thead><tr><th></th><th>Reference</th><th>Type</th><th>Customer</th><th>Pickup</th><th>Drop-off</th><th>Total</th><th>Payment</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
+        <thead><tr><th></th><th>Reference</th><th>Type</th><th>Customer</th><th>Date Leaving</th><th>Date Returning</th><th>Total</th><th>Payment</th><th>Status</th><th class="text-end">Actions</th></tr></thead>
         <tbody>
         <?php foreach ($bookings as $booking): ?>
             <?php $paid = $paidByBooking[(int) $booking['id']] ?? 0.0; $balance = max(0, round((float) $booking['total_amount'] - $paid, 2)); ?>

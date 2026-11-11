@@ -1,6 +1,7 @@
 <?php
 $currentPath        = uri_string();
-$isBookingDetail    = (bool) preg_match('#^account/bookings/\d+#', $currentPath);
+$isAddItems         = $currentPath === 'account/additional-items' || (bool) preg_match('#^account/bookings/\d+/items#', $currentPath);
+$isBookingDetail    = ! $isAddItems && (bool) preg_match('#^account/bookings/\d+#', $currentPath);
 $activeDashboard    = $currentPath === 'account';
 $activeMyBookings   = $currentPath === 'account/bookings' || $isBookingDetail;
 $activeNewBooking   = str_starts_with($currentPath, 'account/bookings/new');
@@ -46,11 +47,12 @@ $activeProfile      = $currentPath === 'account/profile';
                 <span class="admin-nav-label">Bookings</span>
                 <a class="<?= $activeMyBookings ? 'active' : '' ?>" href="<?= site_url('account/bookings') ?>"><span class="nav-icon" aria-hidden="true">&#9635;</span><span>My Bookings</span></a>
                 <a class="<?= $activeNewBooking ? 'active' : '' ?>" href="<?= site_url('account/bookings/new') ?>"><span class="nav-icon" aria-hidden="true">&#8853;</span><span>Request a service</span></a>
+                <a class="<?= $isAddItems ? 'active' : '' ?>" href="<?= site_url('account/additional-items') ?>"><span class="nav-icon" aria-hidden="true">&#43;</span><span>Additional Item</span></a>
                 <a class="<?= $activePayments ? 'active' : '' ?>" href="<?= site_url('account/payments') ?>"><span class="nav-icon" aria-hidden="true">$</span><span>Online Payments</span></a>
 
                 <span class="admin-nav-label">Manage dates &amp; balance</span>
                 <a class="<?= $activePickupDates ? 'active' : '' ?>" href="<?= site_url('account/pickup-dates') ?>"><span class="nav-icon" aria-hidden="true">&#9783;</span><span>Date Leaving Campus</span></a>
-                <a class="<?= $activeDropoffDates ? 'active' : '' ?>" href="<?= site_url('account/dropoff-dates') ?>"><span class="nav-icon" aria-hidden="true">&#8596;</span><span>Manage Drop-off Dates</span></a>
+                <a class="<?= $activeDropoffDates ? 'active' : '' ?>" href="<?= site_url('account/dropoff-dates') ?>"><span class="nav-icon" aria-hidden="true">&#8596;</span><span>Manage Date Returning Dates</span></a>
                 <a class="<?= $activePayHistory ? 'active' : '' ?>" href="<?= site_url('account/payment-history') ?>"><span class="nav-icon" aria-hidden="true">&#8644;</span><span>Payment History Logs</span></a>
                 <a class="<?= $activeBalance ? 'active' : '' ?>" href="<?= site_url('account/balance') ?>"><span class="nav-icon" aria-hidden="true">&#9878;</span><span>Balance Management</span></a>
 

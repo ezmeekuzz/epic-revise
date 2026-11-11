@@ -55,11 +55,11 @@ $brandName = 'EPIC Storage Solutions';
         </table>
 
         <table>
-            <tr><th class="section-title" colspan="2">Pickup &amp; drop-off</th></tr>
-            <tr><td>Pickup</td><td><?= $booking['pickup_date'] ? esc(date('F j, Y', strtotime((string) $booking['pickup_date']))) : 'Not scheduled' ?><?= $booking['pickup_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['pickup_time']))) : '' ?></td></tr>
-            <tr><td>Pickup location</td><td><?= esc($dorm['name'] ?? ($booking['pickup_location'] ?: 'Not provided')) ?><?= $booking['room_number'] ? ' - Room ' . esc($booking['room_number']) : '' ?></td></tr>
-            <tr><td>Drop-off</td><td><?= $booking['dropoff_date'] ? esc(date('F j, Y', strtotime((string) $booking['dropoff_date']))) : 'Not scheduled' ?><?= $booking['dropoff_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['dropoff_time']))) : '' ?></td></tr>
-            <tr><td>Drop-off location</td><td><?= esc($booking['dropoff_location'] ?: 'Not provided') ?><?= $booking['dropoff_room_number'] ? ' - Room ' . esc($booking['dropoff_room_number']) : '' ?></td></tr>
+            <tr><th class="section-title" colspan="2">Date Leaving &amp; date returning</th></tr>
+            <tr><td>Date Leaving</td><td><?= $booking['pickup_date'] ? esc(date('F j, Y', strtotime((string) $booking['pickup_date']))) : 'Not scheduled' ?><?= $booking['pickup_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['pickup_time']))) : '' ?></td></tr>
+            <tr><td>Date Leaving location</td><td><?= esc($dorm['name'] ?? ($booking['pickup_location'] ?: 'Not provided')) ?><?= $booking['room_number'] ? ' - Room ' . esc($booking['room_number']) : '' ?></td></tr>
+            <tr><td>Date Returning</td><td><?= $booking['dropoff_date'] ? esc(date('F j, Y', strtotime((string) $booking['dropoff_date']))) : 'Not scheduled' ?><?= $booking['dropoff_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['dropoff_time']))) : '' ?></td></tr>
+            <tr><td>Date Returning location</td><td><?= esc($booking['dropoff_location'] ?: 'Not provided') ?><?= $booking['dropoff_room_number'] ? ' - Room ' . esc($booking['dropoff_room_number']) : '' ?></td></tr>
             <tr><td>Warehouse row</td><td><?= $booking['row_in_warehouse'] !== null ? esc((string) $booking['row_in_warehouse']) : 'Not assigned' ?></td></tr>
         </table>
 

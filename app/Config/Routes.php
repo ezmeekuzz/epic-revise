@@ -57,6 +57,7 @@ $routes->group('account', ['filter' => 'customer'], static function ($routes): v
     $routes->get('dropoff-dates', 'AccountController::dropoffDates', ['as' => 'account.dropoff-dates']);
     $routes->get('payment-history', 'AccountController::paymentHistory', ['as' => 'account.payment-history']);
     $routes->get('balance', 'AccountController::balance', ['as' => 'account.balance']);
+    $routes->get('additional-items', 'AccountController::additionalItemsIndex', ['as' => 'account.additional-items']);
     $routes->get('bookings/new', 'AccountController::newBooking', ['as' => 'account.bookings.new']);
     $routes->post('bookings', 'AccountController::createBooking', ['as' => 'account.bookings.create']);
     $routes->get('bookings/(:num)', 'AccountController::showBooking/$1', ['as' => 'account.bookings.show']);

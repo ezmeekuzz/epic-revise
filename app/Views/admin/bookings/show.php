@@ -23,7 +23,7 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
 <div class="detail-grid mb-4">
     <section class="admin-card form-card wide detail-card">
         <div class="card-heading">
-            <div><h2>Customer and service</h2><p>Booking-owned contact, processing, pickup, and drop-off details.</p></div>
+            <div><h2>Customer and service</h2><p>Booking-owned contact, processing, date leaving, and date returning details.</p></div>
             <span class="status-pill status-<?= esc($booking['status'], 'attr') ?>"><?= esc(ucwords(str_replace('_', ' ', $booking['status']))) ?></span>
         </div>
         <dl class="detail-list">
@@ -36,10 +36,10 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
                 <div><dt>Summer school</dt><dd><?= (int) ($booking['is_summer_school'] ?? 0) === 1 ? 'Yes' : 'No' ?></dd></div>
                 <div><dt>Study abroad</dt><dd><?= (int) ($booking['is_study_abroad'] ?? 0) === 1 ? 'Yes - subtotal doubled' : 'No' ?></dd></div>
             <?php endif ?>
-            <div><dt>Pickup</dt><dd><?= $booking['pickup_date'] ? esc(date('F j, Y', strtotime((string) $booking['pickup_date']))) : 'Not scheduled' ?><?= $booking['pickup_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['pickup_time']))) : '' ?><small class="detail-sub">Status: <?= esc(ucfirst($booking['pickup_status'] ?? 'unscheduled')) ?></small></dd></div>
-            <div><dt>Pickup dorm / room</dt><dd><?= esc($dorm['name'] ?? ($booking['pickup_location'] ?: 'Not provided')) ?><?= $booking['room_number'] ? ' - Room ' . esc($booking['room_number']) : '' ?></dd></div>
-            <div><dt>Drop-off</dt><dd><?= $booking['dropoff_date'] ? esc(date('F j, Y', strtotime((string) $booking['dropoff_date']))) : 'Not scheduled' ?><?= $booking['dropoff_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['dropoff_time']))) : '' ?><small class="detail-sub">Status: <?= esc(ucfirst($booking['dropoff_status'] ?? 'unscheduled')) ?></small></dd></div>
-            <div><dt>Drop-off location / room</dt><dd><?= esc($booking['dropoff_location'] ?: 'Not provided') ?><?= $booking['dropoff_room_number'] ? ' - Room ' . esc($booking['dropoff_room_number']) : '' ?></dd></div>
+            <div><dt>Date Leaving</dt><dd><?= $booking['pickup_date'] ? esc(date('F j, Y', strtotime((string) $booking['pickup_date']))) : 'Not scheduled' ?><?= $booking['pickup_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['pickup_time']))) : '' ?><small class="detail-sub">Status: <?= esc(ucfirst($booking['pickup_status'] ?? 'unscheduled')) ?></small></dd></div>
+            <div><dt>Date Leaving dorm / room</dt><dd><?= esc($dorm['name'] ?? ($booking['pickup_location'] ?: 'Not provided')) ?><?= $booking['room_number'] ? ' - Room ' . esc($booking['room_number']) : '' ?></dd></div>
+            <div><dt>Date Returning</dt><dd><?= $booking['dropoff_date'] ? esc(date('F j, Y', strtotime((string) $booking['dropoff_date']))) : 'Not scheduled' ?><?= $booking['dropoff_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['dropoff_time']))) : '' ?><small class="detail-sub">Status: <?= esc(ucfirst($booking['dropoff_status'] ?? 'unscheduled')) ?></small></dd></div>
+            <div><dt>Date Returning location / room</dt><dd><?= esc($booking['dropoff_location'] ?: 'Not provided') ?><?= $booking['dropoff_room_number'] ? ' - Room ' . esc($booking['dropoff_room_number']) : '' ?></dd></div>
             <div><dt>Warehouse row</dt><dd>
                 <form class="inline-form" action="<?= site_url('admin/bookings/' . $booking['id'] . '/warehouse') ?>" method="post" data-loading-title="Updating warehouse row" novalidate>
                     <?= csrf_field() ?>
@@ -91,12 +91,12 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
             <?php if ($balance < 0.01): ?><p class="field-hint">No outstanding balance.</p><?php endif ?>
         </div>
         <div class="notification-action">
-            <form action="<?= site_url('admin/bookings/' . $booking['id'] . '/notify/pickup-reminder') ?>" method="post" data-loading-title="Sending pickup reminder" novalidate><?= csrf_field() ?><button class="btn btn-outline-primary" type="submit"<?= $booking['pickup_date'] ? '' : ' disabled' ?>>Send pickup reminder</button></form>
-            <?php if (! $booking['pickup_date']): ?><p class="field-hint">No pickup date scheduled.</p><?php endif ?>
+            <form action="<?= site_url('admin/bookings/' . $booking['id'] . '/notify/pickup-reminder') ?>" method="post" data-loading-title="Sending date leaving reminder" novalidate><?= csrf_field() ?><button class="btn btn-outline-primary" type="submit"<?= $booking['pickup_date'] ? '' : ' disabled' ?>>Send date leaving reminder</button></form>
+            <?php if (! $booking['pickup_date']): ?><p class="field-hint">No date leaving scheduled.</p><?php endif ?>
         </div>
         <div class="notification-action">
-            <form action="<?= site_url('admin/bookings/' . $booking['id'] . '/notify/dropoff-reminder') ?>" method="post" data-loading-title="Sending drop-off reminder" novalidate><?= csrf_field() ?><button class="btn btn-outline-primary" type="submit"<?= $booking['dropoff_date'] ? '' : ' disabled' ?>>Send drop-off reminder</button></form>
-            <?php if (! $booking['dropoff_date']): ?><p class="field-hint">No drop-off date scheduled.</p><?php endif ?>
+            <form action="<?= site_url('admin/bookings/' . $booking['id'] . '/notify/dropoff-reminder') ?>" method="post" data-loading-title="Sending date returning reminder" novalidate><?= csrf_field() ?><button class="btn btn-outline-primary" type="submit"<?= $booking['dropoff_date'] ? '' : ' disabled' ?>>Send date returning reminder</button></form>
+            <?php if (! $booking['dropoff_date']): ?><p class="field-hint">No date returning scheduled.</p><?php endif ?>
         </div>
     </div>
 </section>

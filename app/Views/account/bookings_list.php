@@ -15,7 +15,7 @@
                 <?php else: ?>
                     <div class="table-responsive">
                         <table class="table admin-table js-datatable align-middle mb-0">
-                            <thead><tr><th>Booking</th><th>Type</th><th>Pickup</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th></th></tr></thead>
+                            <thead><tr><th>Booking</th><th>Type</th><th>Date Leaving</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th></th></tr></thead>
                             <tbody>
                             <?php foreach ($bookings as $booking): ?>
                                 <tr>

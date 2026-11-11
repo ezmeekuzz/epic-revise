@@ -40,12 +40,12 @@ final class SettingsController extends BaseController
         }
 
         if ($group === 'booking' && $payload['values']['pickup_start_time'] >= $payload['values']['pickup_end_time']) {
-            return redirect()->to(site_url('admin/settings#booking'))->withInput()->with('error', 'Pickup end time must be later than the start time.');
+            return redirect()->to(site_url('admin/settings#booking'))->withInput()->with('error', 'Date Leaving end time must be later than the start time.');
         }
 
         if ($group === 'booking'
             && strtotime($payload['values']['pickup_end_time']) - strtotime($payload['values']['pickup_start_time']) < ((int) $payload['values']['slot_duration_minutes'] * 60)) {
-            return redirect()->to(site_url('admin/settings#booking'))->withInput()->with('error', 'The pickup window must contain at least one complete booking slot.');
+            return redirect()->to(site_url('admin/settings#booking'))->withInput()->with('error', 'The date leaving window must contain at least one complete booking slot.');
         }
 
         if ($group === 'booking' && ! $this->blackoutDatesAreValid($payload['values']['blackout_dates'])) {

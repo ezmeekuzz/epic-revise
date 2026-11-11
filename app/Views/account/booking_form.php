@@ -3,7 +3,7 @@
  * One booking form for both modes:
  * - logged in ($guest false): account layout, name/email come from the account;
  * - no account ($guest true): public site layout, name/email are typed in.
- * Pricing, items, pickup and the shared validation are identical in both.
+ * Pricing, items, date leaving and the shared validation are identical in both.
  */
 $guest = $guest ?? false;
 ?>
@@ -51,7 +51,7 @@ $field = static function (string $name, string $label, array $errors, string $va
             <div class="account-hero mb-4">
                 <span class="eyebrow"><?= $guest ? 'Book online' : 'Customer portal' ?></span>
                 <h1 class="h2 mt-2 mb-2"><?= $guest ? 'Book your storage' : 'Process your service' ?></h1>
-                <p class="mb-0 text-muted-brand"><?= $guest ? 'No account needed. Choose your service, enter your details and pay securely. Pickup details can be added later.' : 'Configure your storage service and submit it now. Pickup information can be added later.' ?></p>
+                <p class="mb-0 text-muted-brand"><?= $guest ? 'No account needed. Choose your service, enter your details and pay securely. Date Leaving details can be added later.' : 'Configure your storage service and submit it now. Date Leaving information can be added later.' ?></p>
                 <?php if ($guest): ?><p class="small mt-2 mb-0">Already have an account? <a href="<?= site_url('login') ?>">Log in</a> to fill in your details automatically.</p><?php endif ?>
             </div>
 
@@ -88,7 +88,7 @@ $field = static function (string $name, string $label, array $errors, string $va
                             <section class="portal-card mb-4" data-service-panel="summer_storage"<?= $bookingType === 'summer_storage' ? '' : ' hidden' ?> aria-labelledby="storageHeading">
                                 <div class="portal-section-heading">
                                     <span class="booking-step">2</span>
-                                    <div><h2 class="h4 mb-1" id="storageHeading">Summer Storage options</h2><p class="text-muted-brand mb-0">Your base package includes five 18 × 18 × 24-inch boxes, packing tape, pickup, storage, and redelivery.</p></div>
+                                    <div><h2 class="h4 mb-1" id="storageHeading">Summer Storage options</h2><p class="text-muted-brand mb-0">Your base package includes five 18 × 18 × 24-inch boxes, packing tape, date leaving, storage, and redelivery.</p></div>
                                 </div>
 
                                 <div class="row g-3 mt-2">
@@ -164,20 +164,20 @@ $field = static function (string $name, string $label, array $errors, string $va
                             <section class="portal-card" aria-labelledby="pickupHeading">
                                 <div class="portal-section-heading">
                                     <span class="booking-step">4</span>
-                                    <div><h2 class="h4 mb-1" id="pickupHeading">Pickup details <span class="text-muted-brand fs-6">(optional)</span></h2><p class="text-muted-brand mb-0">Leave these blank and add them later, or pick a time now. Pickups run <?= esc(date('g:i A', strtotime((string) ($booking['pickup_start_time'] ?? '09:00')))) ?>–<?= esc(date('g:i A', strtotime((string) ($booking['pickup_end_time'] ?? '17:00')))) ?> <?= esc($timezone) ?>.</p></div>
+                                    <div><h2 class="h4 mb-1" id="pickupHeading">Date Leaving details <span class="text-muted-brand fs-6">(optional)</span></h2><p class="text-muted-brand mb-0">Leave these blank and add them later, or pick a time now. Pickups run <?= esc(date('g:i A', strtotime((string) ($booking['pickup_start_time'] ?? '09:00')))) ?>–<?= esc(date('g:i A', strtotime((string) ($booking['pickup_end_time'] ?? '17:00')))) ?> <?= esc($timezone) ?>.</p></div>
                                 </div>
                                 <div class="row g-3 mt-2">
-                                    <div class="col-md-6"><label class="form-label" for="dorm_id">Dorm / pickup location</label><?php $dormId = (string) old('dorm_id', (string) ($user['dorm_id'] ?? '')); ?><select class="form-select<?= isset($errors['dorm_id']) ? ' is-invalid' : '' ?>" id="dorm_id" name="dorm_id"><option value="">Choose later</option><?php foreach ($dorms as $dorm): ?><option value="<?= (int) $dorm['id'] ?>"<?= $dormId === (string) $dorm['id'] ? ' selected' : '' ?>><?= esc($dorm['name']) ?></option><?php endforeach ?></select><?php if (isset($errors['dorm_id'])): ?><div class="invalid-feedback"><?= esc($errors['dorm_id']) ?></div><?php endif ?></div>
+                                    <div class="col-md-6"><label class="form-label" for="dorm_id">Dorm / date leaving location</label><?php $dormId = (string) old('dorm_id', (string) ($user['dorm_id'] ?? '')); ?><select class="form-select<?= isset($errors['dorm_id']) ? ' is-invalid' : '' ?>" id="dorm_id" name="dorm_id"><option value="">Choose later</option><?php foreach ($dorms as $dorm): ?><option value="<?= (int) $dorm['id'] ?>"<?= $dormId === (string) $dorm['id'] ? ' selected' : '' ?>><?= esc($dorm['name']) ?></option><?php endforeach ?></select><?php if (isset($errors['dorm_id'])): ?><div class="invalid-feedback"><?= esc($errors['dorm_id']) ?></div><?php endif ?></div>
                                     <div class="col-md-6"><?= $field('room_number', 'Dorm room', $errors, (string) old('room_number', $user['dorm_room_number'] ?? ''), ['maxlength' => 30]) ?></div>
-                                    <div class="col-md-6"><?= $field('pickup_date', 'Pickup date', $errors, (string) old('pickup_date'), ['type' => 'date', 'min' => $minimumDate, 'data-slot-date' => true]) ?></div>
+                                    <div class="col-md-6"><?= $field('pickup_date', 'Date Leaving', $errors, (string) old('pickup_date'), ['type' => 'date', 'min' => $minimumDate, 'data-slot-date' => true]) ?></div>
                                     <div class="col-12" data-slot-picker>
                                         <div data-slot-fallback>
-                                            <?= $field('pickup_time', 'Pickup time', $errors, (string) old('pickup_time'), ['type' => 'time', 'min' => $booking['pickup_start_time'] ?? '09:00', 'max' => $lastSlot, 'step' => $slotMinutes * 60]) ?>
+                                            <?= $field('pickup_time', 'Date Leaving time', $errors, (string) old('pickup_time'), ['type' => 'time', 'min' => $booking['pickup_start_time'] ?? '09:00', 'max' => $lastSlot, 'step' => $slotMinutes * 60]) ?>
                                         </div>
                                         <div class="slot-picker" data-slot-buttons hidden>
-                                            <span class="form-label d-block">Pickup time</span>
-                                            <p class="field-hint mb-2" data-slot-message>Choose a pickup date to see available times.</p>
-                                            <div class="slot-grid" data-slot-grid role="group" aria-label="Available pickup times"></div>
+                                            <span class="form-label d-block">Date Leaving time</span>
+                                            <p class="field-hint mb-2" data-slot-message>Choose a date leaving to see available times.</p>
+                                            <div class="slot-grid" data-slot-grid role="group" aria-label="Available date leaving times"></div>
                                         </div>
                                     </div>
                                 </div>

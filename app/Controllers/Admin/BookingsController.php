@@ -343,7 +343,7 @@ final class BookingsController extends BaseController
     {
         $booking = $this->find($id);
         if (! $booking['pickup_date']) {
-            return redirect()->route('admin.bookings.show', [$id])->with('error', 'Set a pickup date before sending a pickup reminder.');
+            return redirect()->route('admin.bookings.show', [$id])->with('error', 'Set a date leaving before sending a date leaving reminder.');
         }
         if (! $this->throttleNotification($id, 'pickup-reminder')) {
             return redirect()->route('admin.bookings.show', [$id])->with('error', 'Please wait a minute before resending this notice.');
@@ -355,19 +355,19 @@ final class BookingsController extends BaseController
                 throw new RuntimeException('The mail server rejected the message.');
             }
         } catch (Throwable $exception) {
-            log_message('error', 'Pickup reminder failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
+            log_message('error', 'Date Leaving reminder failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
 
-            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The pickup reminder could not be sent. Check the email settings.']);
+            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The date leaving reminder could not be sent. Check the email settings.']);
         }
 
-        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Pickup reminder sent to ' . $booking['customer_email'] . '.');
+        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Date Leaving reminder sent to ' . $booking['customer_email'] . '.');
     }
 
     public function notifyDropoffReminder(int $id): RedirectResponse
     {
         $booking = $this->find($id);
         if (! $booking['dropoff_date']) {
-            return redirect()->route('admin.bookings.show', [$id])->with('error', 'Set a drop-off date before sending a drop-off reminder.');
+            return redirect()->route('admin.bookings.show', [$id])->with('error', 'Set a date returning before sending a date returning reminder.');
         }
         if (! $this->throttleNotification($id, 'dropoff-reminder')) {
             return redirect()->route('admin.bookings.show', [$id])->with('error', 'Please wait a minute before resending this notice.');
@@ -379,12 +379,12 @@ final class BookingsController extends BaseController
                 throw new RuntimeException('The mail server rejected the message.');
             }
         } catch (Throwable $exception) {
-            log_message('error', 'Drop-off reminder failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
+            log_message('error', 'Date Returning reminder failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
 
-            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The drop-off reminder could not be sent. Check the email settings.']);
+            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The date returning reminder could not be sent. Check the email settings.']);
         }
 
-        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Drop-off reminder sent to ' . $booking['customer_email'] . '.');
+        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Date Returning reminder sent to ' . $booking['customer_email'] . '.');
     }
 
     public function notifyBulk(): RedirectResponse
@@ -605,7 +605,7 @@ final class BookingsController extends BaseController
         $bookings = $this->filteredBookings($type, $search, $status)->orderBy('created_at', 'DESC')->findAll();
         $paidByBooking = $this->paidAmountsByBooking(array_column($bookings, 'id'));
 
-        $headers = ['Reference', 'Type', 'Customer', 'Email', 'Phone', 'Student ID', 'Pickup date', 'Pickup location', 'Drop-off date', 'Drop-off location', 'Warehouse row', 'Total', 'Paid', 'Balance', 'Payment status', 'Status', 'Created'];
+        $headers = ['Reference', 'Type', 'Customer', 'Email', 'Phone', 'Student ID', 'Date Leaving', 'Date Leaving location', 'Date Returning', 'Date Returning location', 'Warehouse row', 'Total', 'Paid', 'Balance', 'Payment status', 'Status', 'Created'];
         $rows = [];
         foreach ($bookings as $booking) {
             $paid = $paidByBooking[(int) $booking['id']] ?? 0.0;
@@ -728,9 +728,9 @@ final class BookingsController extends BaseController
         return [
             'confirmation' => 'Booking confirmation',
             'balance-due' => 'Balance due reminder',
-            'pickup-reminder' => 'Pickup reminder (already scheduled)',
-            'pickup-needed' => 'Schedule pickup reminder (not yet scheduled)',
-            'dropoff-reminder' => 'Drop-off reminder (already scheduled)',
+            'pickup-reminder' => 'Date Leaving reminder (already scheduled)',
+            'pickup-needed' => 'Schedule date leaving reminder (not yet scheduled)',
+            'dropoff-reminder' => 'Date Returning reminder (already scheduled)',
         ];
     }
 

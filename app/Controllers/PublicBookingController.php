@@ -38,7 +38,7 @@ final class PublicBookingController extends BaseController
         }
 
         return view('account/booking_form', [
-            ...$this->pageData('Book Storage | EPIC Storage Solutions', 'Book EPIC Storage pickup, storage and redelivery online.'),
+            ...$this->pageData('Book Storage | EPIC Storage Solutions', 'Book EPIC Storage date leaving, storage and redelivery online.'),
             ...$this->bookingFormData(null),
         ]);
     }
@@ -67,7 +67,7 @@ final class PublicBookingController extends BaseController
         return redirect()->to(site_url('book/' . $result['id'] . '/pay'))->with('success', 'Your booking was saved. Complete your payment below.');
     }
 
-    /** JSON list of pickup slots for the booking form's slot buttons. */
+    /** JSON list of date leaving slots for the booking form's slot buttons. */
     public function availability(): ResponseInterface
     {
         $date = trim((string) $this->request->getGet('date'));

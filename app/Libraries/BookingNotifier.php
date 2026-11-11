@@ -10,7 +10,7 @@ use App\Models\DormModel;
 use Throwable;
 
 /**
- * Sends the customer and admin emails for booking creation and for pickup/drop-off
+ * Sends the customer and admin emails for booking creation and for pickup/date returning
  * schedule changes. Booking saves never fail because an email could not be sent.
  */
 final class BookingNotifier
@@ -60,7 +60,7 @@ final class BookingNotifier
     }
 
     /**
-     * Emails the customer and the admin when a pickup or drop-off date/time differs from
+     * Emails the customer and the admin when a date leaving or date returning/time differs from
      * $before. Does nothing when neither changed.
      *
      * @param array<string, mixed> $before Booking row as it was before the update.
