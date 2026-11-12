@@ -50,6 +50,8 @@ final class BookingService
         $subtotal = $serviceSubtotal + $studyAbroadPrice;
         $discount = max((float) $booking['discount_amount'], 0);
         $appliedDiscount = min($discount, $subtotal);
+        // The fee percentage is snapshotted on each booking so later admin changes only affect new orders.
+        $serviceFee = round(($subtotal - $appliedDiscount) * max((float) ($booking['service_fee_percent'] ?? 0), 0) / 100, 2);
 
         $bookings->update($bookingId, [
             'base_price' => number_format($basePrice, 2, '.', ''),
@@ -58,7 +60,8 @@ final class BookingService
             'study_abroad_additional_storage_price' => number_format($studyAbroadPrice, 2, '.', ''),
             'subtotal' => number_format($subtotal, 2, '.', ''),
             'discount_amount' => number_format($discount, 2, '.', ''),
-            'total_amount' => number_format($subtotal - $appliedDiscount, 2, '.', ''),
+            'service_fee_amount' => number_format($serviceFee, 2, '.', ''),
+            'total_amount' => number_format($subtotal - $appliedDiscount + $serviceFee, 2, '.', ''),
         ]);
 
         $this->refreshPaymentStatus($bookingId);

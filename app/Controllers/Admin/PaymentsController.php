@@ -9,6 +9,7 @@ use App\Libraries\PaymentService;
 use App\Libraries\SettingsService;
 use App\Models\BookingModel;
 use App\Models\PaymentModel;
+use App\Models\TransactionModel;
 use CodeIgniter\HTTP\RedirectResponse;
 use RuntimeException;
 use Throwable;
@@ -39,9 +40,32 @@ final class PaymentsController extends BaseController
 
     public function new(): string
     {
+        $bookings = (new BookingModel())->whereNotIn('status', ['cancelled'])->orderBy('created_at', 'DESC')->findAll(100);
+        $selected = (int) $this->request->getGet('booking');
+        if ($selected > 0 && ! in_array($selected, array_map('intval', array_column($bookings, 'id')), true)) {
+            $extra = (new BookingModel())->find($selected);
+            if ($extra !== null && $extra['status'] !== 'cancelled') {
+                array_unshift($bookings, $extra);
+            }
+        }
+
+        // Balance owed per booking (total less completed payments), used to pre-fill the amount.
+        $paid = [];
+        if ($bookings !== []) {
+            $rows = (new TransactionModel())->select('booking_id, SUM(amount) AS paid')
+                ->whereIn('booking_id', array_column($bookings, 'id'))->where('status', 'completed')->groupBy('booking_id')->findAll();
+            foreach ($rows as $row) {
+                $paid[(int) $row['booking_id']] = (float) $row['paid'];
+            }
+        }
+        $balances = [];
+        foreach ($bookings as $booking) {
+            $balances[(int) $booking['id']] = number_format(max(0, round((float) $booking['total_amount'] - ($paid[(int) $booking['id']] ?? 0.0), 2)), 2, '.', '');
+        }
+
         return view('admin/payments/form', [
-            'title' => 'Record Payment', 'activeAdminPage' => 'payments',
-            'bookings' => (new BookingModel())->whereNotIn('status', ['cancelled'])->orderBy('created_at', 'DESC')->findAll(100),
+            'title' => 'Record Payment', 'activeAdminPage' => 'payments', 'balances' => $balances,
+            'bookings' => $bookings,
             'defaultCurrency' => (new SettingsService())->get('payment_currency', 'USD'),
             'selectedBookingId' => (int) $this->request->getGet('booking'),
         ]);

@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Libraries\ActivityLog;
 use App\Libraries\AuthService;
+use App\Libraries\Totp;
+use App\Models\UserModel;
 use CodeIgniter\HTTP\RedirectResponse;
 
 final class AuthController extends BaseController
@@ -39,11 +42,65 @@ final class AuthController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $admin = (new AuthService())->attempt($email, $password, 'admin');
+        $auth  = new AuthService();
+        $admin = $auth->attempt($email, $password, 'admin', false);
         if ($admin === null) {
-            return redirect()->back()->withInput()->with('error', 'The administrator email or password is incorrect, or the account is inactive.');
+            ActivityLog::record('login.failed', $email, null, null, 'Unknown');
+
+            return redirect()->back()->withInput()->with('error', 'The administrator email or password is incorrect, the account is inactive, or it is temporarily locked after too many failed attempts.');
         }
 
+        if ((int) ($admin['totp_enabled'] ?? 0) === 1) {
+            session()->set(['admin_2fa_user_id' => (int) $admin['id'], 'admin_2fa_at' => time()]);
+
+            return redirect()->route('admin.login.verify');
+        }
+
+        $auth->completeLogin($admin);
+        ActivityLog::record('login.success', $admin['email'], null, (int) $admin['id'], (string) $admin['name']);
+
+        return $this->finishLogin($admin);
+    }
+
+    public function codeForm(): string|RedirectResponse
+    {
+        if ($this->pendingTwoFactorUser() === null) {
+            return redirect()->route('admin.login');
+        }
+
+        return view('admin/auth/verify_code', ['title' => 'Two-factor login']);
+    }
+
+    public function verifyCode(): RedirectResponse
+    {
+        $user = $this->pendingTwoFactorUser();
+        if ($user === null) {
+            return redirect()->route('admin.login')->with('error', 'Your sign-in expired. Please start again.');
+        }
+
+        $key = 'admin_2fa_' . (int) $user['id'];
+        if (! service('throttler')->check($key, 5, MINUTE * 15)) {
+            session()->remove(['admin_2fa_user_id', 'admin_2fa_at']);
+
+            return redirect()->route('admin.login')->with('alert', ['type' => 'warning', 'title' => 'Too many attempts', 'message' => 'Too many incorrect codes. Please wait 15 minutes and sign in again.']);
+        }
+
+        if (! (new Totp())->verify(Totp::decryptSecret((string) $user['totp_secret']), (string) $this->request->getPost('code'))) {
+            ActivityLog::record('login.2fa_failed', $user['email'], null, (int) $user['id'], (string) $user['name']);
+
+            return redirect()->back()->with('error', 'That code was not correct. Please try again.');
+        }
+
+        session()->remove(['admin_2fa_user_id', 'admin_2fa_at']);
+        (new AuthService())->completeLogin($user);
+        ActivityLog::record('login.success', $user['email'], 'two-factor', (int) $user['id'], (string) $user['name']);
+
+        return $this->finishLogin($user);
+    }
+
+    /** @param array<string, mixed> $admin */
+    private function finishLogin(array $admin): RedirectResponse
+    {
         $intended = (string) session()->get('admin_intended_url');
         session()->remove('admin_intended_url');
         $destination = $this->isAdminPath($intended)
@@ -53,8 +110,21 @@ final class AuthController extends BaseController
         return redirect()->to($destination)->with('success', 'Welcome back, ' . $admin['name'] . '.');
     }
 
+    /** @return array<string, mixed>|null */
+    private function pendingTwoFactorUser(): ?array
+    {
+        $id = (int) session()->get('admin_2fa_user_id');
+        if ($id < 1 || (int) session()->get('admin_2fa_at') < time() - 300) {
+            return null;
+        }
+        $user = (new UserModel())->find($id);
+
+        return $user !== null && $user['role'] === 'admin' && $user['status'] === 'active' && (int) $user['totp_enabled'] === 1 ? $user : null;
+    }
+
     public function logout(): RedirectResponse
     {
+        ActivityLog::record('logout');
         (new AuthService())->logout('admin');
 
         return redirect()->route('admin.login')->with('success', 'You have been logged out of the admin portal securely.');

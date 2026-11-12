@@ -31,7 +31,7 @@ final class LogisticsController extends BaseController
         }
         $model->orderBy($leg . '_date', 'ASC')->orderBy($leg . '_time', 'ASC')->orderBy('created_at', 'DESC');
 
-        return view('admin/logistics/index', ['title' => 'Date Leaving & Date Returning', 'activeAdminPage' => 'logistics', 'leg' => $leg, 'status' => $status, 'date' => $date, 'bookings' => $model->findAll(), 'statuses' => $this->statuses]);
+        return view('admin/logistics/index', ['title' => 'Leaving Campus & Returning to Campus', 'activeAdminPage' => 'logistics', 'leg' => $leg, 'status' => $status, 'date' => $date, 'bookings' => $model->findAll(), 'statuses' => $this->statuses]);
     }
 
     public function update(int $id, string $leg): RedirectResponse

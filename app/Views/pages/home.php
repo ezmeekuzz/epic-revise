@@ -310,6 +310,5 @@
   </section>
 
 <section class="py-5"><div class="container"><h2>Frequently asked questions</h2><details class="mb-3"><summary>Can I add more items later?</summary><p>Yes. Open your existing order in your account and select Add additional items.</p></details><details class="mb-3"><summary>Do I need to schedule when ordering?</summary><p>You can provide pickup details later from your account.</p></details><a href="<?= site_url('faqs') ?>">View all FAQs</a></div></section>
-<?= view('partials/scheduling_info') ?>
 </main>
 <?= $this->endSection() ?>

@@ -30,7 +30,7 @@
                 <span class="admin-nav-label">Operations</span>
                 <a class="<?= $activeAdminPage === 'bookings' ? 'active' : '' ?>" href="<?= site_url('admin/bookings') ?>"><span class="nav-icon" aria-hidden="true">▣</span><span>Bookings</span></a>
                 <a class="<?= $activeAdminPage === 'schedule' ? 'active' : '' ?>" href="<?= site_url('admin/schedule') ?>"><span class="nav-icon" aria-hidden="true">◷</span><span>Calendar schedule</span></a>
-                <a class="<?= $activeAdminPage === 'logistics' ? 'active' : '' ?>" href="<?= site_url('admin/logistics') ?>"><span class="nav-icon" aria-hidden="true">↔</span><span>Date Leaving &amp; date returning</span></a>
+                <a class="<?= $activeAdminPage === 'logistics' ? 'active' : '' ?>" href="<?= site_url('admin/logistics') ?>"><span class="nav-icon" aria-hidden="true">↔</span><span>Leaving Campus &amp; returning to campus</span></a>
                 <a class="<?= $activeAdminPage === 'dorms' ? 'active' : '' ?>" href="<?= site_url('admin/dorms') ?>"><span class="nav-icon" aria-hidden="true">◫</span><span>Dorms</span></a>
                 <a class="<?= $activeAdminPage === 'items' ? 'active' : '' ?>" href="<?= site_url('admin/items') ?>"><span class="nav-icon" aria-hidden="true">◇</span><span>Items &amp; sizes</span></a>
                 <span class="admin-nav-label">Finance</span>
@@ -38,6 +38,7 @@
                 <a class="<?= $activeAdminPage === 'transactions' ? 'active' : '' ?>" href="<?= site_url('admin/transactions') ?>"><span class="nav-icon" aria-hidden="true">⇄</span><span>Transactions</span></a>
                 <span class="admin-nav-label">Administration</span>
                 <a class="<?= $activeAdminPage === 'users' ? 'active' : '' ?>" href="<?= site_url('admin/users') ?>"><span class="nav-icon" aria-hidden="true">◎</span><span>Users</span></a>
+                <a class="<?= $activeAdminPage === 'activity-log' ? 'active' : '' ?>" href="<?= site_url('admin/activity-log') ?>"><span class="nav-icon" aria-hidden="true">&#9776;</span><span>Activity log</span></a>
                 <a class="<?= $activeAdminPage === 'settings' ? 'active' : '' ?>" href="<?= site_url('admin/settings') ?>"><span class="nav-icon" aria-hidden="true">⚙</span><span>Settings</span></a>
                 <a class="<?= $activeAdminPage === 'account' ? 'active' : '' ?>" href="<?= site_url('admin/account') ?>"><span class="nav-icon" aria-hidden="true">○</span><span>Admin account</span></a>
             </nav>

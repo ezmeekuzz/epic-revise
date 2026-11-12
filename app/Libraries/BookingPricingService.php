@@ -86,7 +86,10 @@ final class BookingPricingService
             : 0;
         $serviceSubtotalCents = $baseCents + $boxTotalCents + $itemsCents + $summerSchoolCents;
         $studyAbroadCents = $studyAbroad ? $serviceSubtotalCents : 0;
-        $totalCents = $serviceSubtotalCents + $studyAbroadCents;
+        $totalBeforeFeeCents = $serviceSubtotalCents + $studyAbroadCents;
+        $feePercent = $this->feePercent($settings->get('service_fee_percent', '0'));
+        $feeCents = (int) round($totalBeforeFeeCents * $feePercent / 100);
+        $totalCents = $totalBeforeFeeCents + $feeCents;
 
         return [
             'booking_type' => $bookingType,
@@ -100,7 +103,9 @@ final class BookingPricingService
             'summer_school_fee' => $this->format($summerSchoolCents),
             'service_subtotal' => $this->format($serviceSubtotalCents),
             'study_abroad_surcharge' => $this->format($studyAbroadCents),
-            'subtotal' => $this->format($totalCents),
+            'subtotal' => $this->format($totalBeforeFeeCents),
+            'service_fee_percent' => number_format($feePercent, 2, '.', ''),
+            'service_fee' => $this->format($feeCents),
             'total' => $this->format($totalCents),
             'items' => array_map(static function (array $line): array {
                 unset($line['line_total_cents']);
@@ -122,7 +127,13 @@ final class BookingPricingService
             'summer_storage_additional_box_price' => $sharedBoxPrice,
             'summer_advantage_box_price' => $sharedBoxPrice,
             'summer_school_fee' => $this->format($this->moneyToCents($settings->get('summer_school_fee', '75.00'))),
+            'service_fee_percent' => number_format($this->feePercent($settings->get('service_fee_percent', '0')), 2, '.', ''),
         ];
+    }
+
+    private function feePercent(string $raw): float
+    {
+        return max(0.0, min(20.0, (float) $raw));
     }
 
     /**

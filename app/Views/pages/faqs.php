@@ -53,8 +53,8 @@
         </div>
 
         <div class="accordion-item">
-          <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q6">Do I need to be present when you pick up or drop off?</button></h2>
-          <div id="q6" class="accordion-collapse collapse" data-bs-parent="#fullFaq"><div class="accordion-body">Whatever is convenient for you — as a certified partner of HPU, we have access to the rooms.</div></div>
+          <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q6">Do I need to be present for pick-up or drop-off?</button></h2>
+          <div id="q6" class="accordion-collapse collapse" data-bs-parent="#fullFaq"><div class="accordion-body">We will pick up all your items starting the Sunday after graduation. You will have an order sheet that will be dropped off with your packing supplies. We ask that you place it on your boxes. Anything you are adding to your order will need to be written down on that sheet, and all your items need to be placed together in one room. We have coordinated with the school to gain access to the rooms.</div></div>
         </div>
 
         <div class="accordion-item">
@@ -65,11 +65,6 @@
         <div class="accordion-item">
           <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q8">What if we need additional boxes or need to store non‑boxed items?</button></h2>
           <div id="q8" class="accordion-collapse collapse" data-bs-parent="#fullFaq"><div class="accordion-body">Please call our office at 336.549.5216 and we will arrange to have extra boxes and supplies delivered to your room. For non‑boxed items we will supply labels for you upon pick‑up.</div></div>
-        </div>
-
-        <div class="accordion-item">
-          <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#q9">What if I need to change my pickup or delivery date for storage?</button></h2>
-          <div id="q9" class="accordion-collapse collapse" data-bs-parent="#fullFaq"><div class="accordion-body">You'll find a link in your order confirmation email that directs you to your profile. Search your email for your student ID to find your order confirmation. You can change the date up to 48 hours before the original scheduled date.</div></div>
         </div>
 
         <div class="accordion-item">
@@ -115,6 +110,5 @@
     </div>
   </section>
 
-<?= view('partials/scheduling_info') ?>
 </main>
 <?= $this->endSection() ?>

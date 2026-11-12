@@ -31,19 +31,19 @@ $errors  = session()->getFlashdata('errors') ?? [];
                 <?php if (isset($errors['status'])): ?><div class="invalid-feedback"><?= esc($errors['status']) ?></div><?php endif ?>
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="password">Password<?= $editing ? ' (optional)' : '' ?></label>
-                <input class="form-control<?= isset($errors['password']) ? ' is-invalid' : '' ?>" id="password" name="password" type="password" minlength="12" maxlength="72" autocomplete="new-password"<?= $editing ? '' : ' required' ?>>
+                <label class="form-label" for="password">Password (optional)</label>
+                <input class="form-control<?= isset($errors['password']) ? ' is-invalid' : '' ?>" id="password" name="password" type="password" minlength="12" maxlength="72" autocomplete="new-password">
                 <?php if (isset($errors['password'])): ?><div class="invalid-feedback"><?= esc($errors['password']) ?></div><?php endif ?>
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="password_confirm">Confirm password</label>
-                <input class="form-control<?= isset($errors['password_confirm']) ? ' is-invalid' : '' ?>" id="password_confirm" name="password_confirm" type="password" minlength="12" maxlength="72" autocomplete="new-password"<?= $editing ? '' : ' required' ?>>
+                <input class="form-control<?= isset($errors['password_confirm']) ? ' is-invalid' : '' ?>" id="password_confirm" name="password_confirm" type="password" minlength="12" maxlength="72" autocomplete="new-password">
                 <?php if (isset($errors['password_confirm'])): ?><div class="invalid-feedback"><?= esc($errors['password_confirm']) ?></div><?php endif ?>
             </div>
         </div>
         <?= view('partials/customer_details', ['errors' => $errors, 'user' => $user ?? []]) ?>
-        <p class="form-hint"><?= $editing ? 'Leave password fields blank to keep the current password.' : 'Passwords must be at least 12 characters.' ?></p>
-        <div class="form-actions"><a class="btn btn-light" href="<?= site_url('admin/users') ?>">Cancel</a><button class="btn btn-primary" type="submit"><?= $editing ? 'Save changes' : 'Create user' ?></button></div>
+        <p class="form-hint"><?= $editing ? 'Leave password fields blank to keep the current password.' : 'Customers created here are active right away, so no email confirmation is needed. Leave the password blank to let the customer set one later with Forgot password, or enter one of at least 12 characters.' ?></p>
+        <div class="form-actions"><a class="btn btn-light" href="<?= site_url('admin/users') ?>">Cancel</a><?php if ($editing): ?><a class="btn btn-outline-primary" href="<?= site_url('admin/bookings/new?user=' . (int) $user['id']) ?>">Create order</a><button class="btn btn-primary" type="submit">Save changes</button><?php else: ?><button class="btn btn-outline-primary" type="submit" name="next" value="list">Create user</button><button class="btn btn-primary" type="submit" name="next" value="order">Create user &amp; start order</button><?php endif ?></div>
     </form>
 </section>
 <?= $this->endSection() ?>

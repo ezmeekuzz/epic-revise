@@ -51,8 +51,8 @@ $activeProfile      = $currentPath === 'account/profile';
                 <a class="<?= $activePayments ? 'active' : '' ?>" href="<?= site_url('account/payments') ?>"><span class="nav-icon" aria-hidden="true">$</span><span>Online Payments</span></a>
 
                 <span class="admin-nav-label">Manage dates &amp; balance</span>
-                <a class="<?= $activePickupDates ? 'active' : '' ?>" href="<?= site_url('account/pickup-dates') ?>"><span class="nav-icon" aria-hidden="true">&#9783;</span><span>Date Leaving Campus</span></a>
-                <a class="<?= $activeDropoffDates ? 'active' : '' ?>" href="<?= site_url('account/dropoff-dates') ?>"><span class="nav-icon" aria-hidden="true">&#8596;</span><span>Manage Date Returning Dates</span></a>
+                <a class="<?= $activePickupDates ? 'active' : '' ?>" href="<?= site_url('account/pickup-dates') ?>"><span class="nav-icon" aria-hidden="true">&#9783;</span><span>Leaving Campus</span></a>
+                <a class="<?= $activeDropoffDates ? 'active' : '' ?>" href="<?= site_url('account/dropoff-dates') ?>"><span class="nav-icon" aria-hidden="true">&#8596;</span><span>Manage Returning to Campus Dates</span></a>
                 <a class="<?= $activePayHistory ? 'active' : '' ?>" href="<?= site_url('account/payment-history') ?>"><span class="nav-icon" aria-hidden="true">&#8644;</span><span>Payment History Logs</span></a>
                 <a class="<?= $activeBalance ? 'active' : '' ?>" href="<?= site_url('account/balance') ?>"><span class="nav-icon" aria-hidden="true">&#9878;</span><span>Balance Management</span></a>
 

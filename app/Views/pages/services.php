@@ -89,6 +89,5 @@
     </div>
   </section>
 
-<?= view('partials/scheduling_info') ?>
 </main>
 <?= $this->endSection() ?>

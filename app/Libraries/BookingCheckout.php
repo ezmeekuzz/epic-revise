@@ -48,6 +48,8 @@ final class BookingCheckout
                 'payment_status' => 'unpaid',
                 'subtotal' => $quote['subtotal'],
                 'discount_amount' => '0.00',
+                'service_fee_percent' => $quote['service_fee_percent'],
+                'service_fee_amount' => $quote['service_fee'],
                 'total_amount' => $quote['total'],
             ], true);
             if ($bookingId < 1) {

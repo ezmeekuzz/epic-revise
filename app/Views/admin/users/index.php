@@ -32,7 +32,7 @@
                             <?php if ((int) $user['id'] === $currentUserId): ?>
                                 <a class="btn btn-sm btn-outline-primary" href="<?= site_url('admin/account') ?>">My account</a>
                             <?php else: ?>
-                                <a class="btn btn-sm btn-outline-primary" href="<?= site_url('admin/users/' . $user['id'] . '/edit') ?>">Edit</a>
+                                <a class="btn btn-sm btn-outline-primary" href="<?= site_url('admin/users/' . $user['id'] . '/edit') ?>">Edit</a> <a class="btn btn-sm btn-primary" href="<?= site_url('admin/bookings/new?user=' . $user['id']) ?>">Create order</a>
                                 <form action="<?= site_url('admin/users/' . $user['id'] . '/delete') ?>" method="post" data-confirm="Remove <?= esc($user['name'], 'attr') ?>? This account will no longer be able to sign in." data-confirm-title="Remove this user?" data-confirm-button="Yes, remove user" data-confirm-danger="true" data-loading-title="Removing user">
                                     <?= csrf_field() ?>
                                     <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>

@@ -26,8 +26,8 @@ $boxTotal = (float) ($booking['addtl_box_total_amount'] ?? 0);
                 <div class="col-lg-7">
                     <div class="portal-card h-100">
                         <div class="d-flex justify-content-between align-items-start gap-3">
-                            <h2 class="h4">Date Leaving, date returning &amp; service</h2>
-                            <div class="d-flex flex-column align-items-end gap-2"><span class="status-pill status-<?= esc($booking['status'], 'attr') ?>"><?= esc(ucwords(str_replace('_', ' ', $booking['status']))) ?></span><a class="btn btn-sm btn-brand-outline" href="<?= site_url('account/bookings/' . $booking['id'] . '/pickup') ?>">Manage date leaving &amp; date returning</a></div>
+                            <h2 class="h4">Leaving Campus, returning to campus &amp; service</h2>
+                            <div class="d-flex flex-column align-items-end gap-2"><span class="status-pill status-<?= esc($booking['status'], 'attr') ?>"><?= esc(ucwords(str_replace('_', ' ', $booking['status']))) ?></span><a class="btn btn-sm btn-brand-outline" href="<?= site_url('account/bookings/' . $booking['id'] . '/pickup') ?>">Manage leaving campus &amp; returning to campus</a></div>
                         </div>
                         <dl class="account-details mb-0">
                             <div><dt>Service</dt><dd><?= esc($booking['service_name']) ?></dd></div>
@@ -39,7 +39,7 @@ $boxTotal = (float) ($booking['addtl_box_total_amount'] ?? 0);
                             <div><dt>Phone</dt><dd><?= esc($booking['customer_phone'] ?: 'Not provided') ?></dd></div>
                         </dl>
 
-                        <p class="account-details-heading">Date Leaving <span class="status-pill status-<?= esc($booking['pickup_status'] ?? 'unscheduled', 'attr') ?>"><?= esc(ucfirst($booking['pickup_status'] ?? 'unscheduled')) ?></span></p>
+                        <p class="account-details-heading">Leaving Campus <span class="status-pill status-<?= esc($booking['pickup_status'] ?? 'unscheduled', 'attr') ?>"><?= esc(ucfirst($booking['pickup_status'] ?? 'unscheduled')) ?></span></p>
                         <dl class="account-details mb-0">
                             <div><dt>Date</dt><dd><?= $booking['pickup_date'] ? esc(date('F j, Y', strtotime((string) $booking['pickup_date']))) : 'Awaiting schedule' ?></dd></div>
                             <div><dt>Time</dt><dd><?= $booking['pickup_time'] ? esc(date('g:i A', strtotime((string) $booking['pickup_time']))) : 'Awaiting schedule' ?></dd></div>
@@ -47,7 +47,7 @@ $boxTotal = (float) ($booking['addtl_box_total_amount'] ?? 0);
                             <div><dt>Room</dt><dd><?= esc($booking['room_number'] ?: 'Not provided') ?></dd></div>
                         </dl>
 
-                        <p class="account-details-heading">Date Returning / redelivery <span class="status-pill status-<?= esc($booking['dropoff_status'] ?? 'unscheduled', 'attr') ?>"><?= esc(ucfirst($booking['dropoff_status'] ?? 'unscheduled')) ?></span></p>
+                        <p class="account-details-heading">Returning to Campus / redelivery <span class="status-pill status-<?= esc($booking['dropoff_status'] ?? 'unscheduled', 'attr') ?>"><?= esc(ucfirst($booking['dropoff_status'] ?? 'unscheduled')) ?></span></p>
                         <dl class="account-details mb-0">
                             <div><dt>Date</dt><dd><?= $booking['dropoff_date'] ? esc(date('F j, Y', strtotime((string) $booking['dropoff_date']))) : 'Awaiting schedule' ?></dd></div>
                             <div><dt>Time</dt><dd><?= $booking['dropoff_time'] ? esc(date('g:i A', strtotime((string) $booking['dropoff_time']))) : 'Awaiting schedule' ?></dd></div>
@@ -60,23 +60,16 @@ $boxTotal = (float) ($booking['addtl_box_total_amount'] ?? 0);
                     <div class="portal-card h-100">
                         <h2 class="h4">Price summary</h2>
                         <dl class="account-details mb-0">
-                            <?php if ($isStorage): ?>
-                                <div><dt>Storage base</dt><dd>$<?= number_format((float) $booking['base_price'], 2) ?></dd></div>
-                                <div><dt>Selected items</dt><dd>$<?= number_format($itemTotal, 2) ?></dd></div>
-                            <?php endif ?>
-                            <div><dt><?= $isStorage ? 'Additional boxes' : 'Boxes' ?></dt><dd>$<?= number_format($boxTotal, 2) ?></dd></div>
-                            <?php if ($isStorage && (int) ($booking['is_summer_school'] ?? 0) === 1): ?>
-                                <div><dt>Summer school</dt><dd>$<?= number_format((float) $booking['summer_school_fee'], 2) ?></dd></div>
-                            <?php endif ?>
-                            <?php if ($isStorage && (int) ($booking['is_study_abroad'] ?? 0) === 1): ?>
-                                <div><dt>Study abroad adjustment</dt><dd>$<?= number_format((float) $booking['study_abroad_additional_storage_price'], 2) ?></dd></div>
-                            <?php endif ?>
+                            <?php foreach (\App\Libraries\OrderLines::build($booking, $items) as $line): ?>
+                                <div><dt><?= esc($line['label']) ?></dt><dd><?= esc(\App\Libraries\OrderLines::money($line['amount'])) ?></dd></div>
+                            <?php endforeach ?>
                             <div><dt>Total</dt><dd><strong>$<?= number_format((float) $booking['total_amount'], 2) ?></strong></dd></div>
                             <div><dt>Net paid</dt><dd>$<?= number_format($netPaid, 2) ?></dd></div>
                             <div><dt>Balance</dt><dd>$<?= number_format(max(0, (float) $booking['total_amount'] - $netPaid), 2) ?></dd></div>
                             <div><dt>Status</dt><dd><span class="status-pill status-<?= esc($booking['payment_status'], 'attr') ?>"><?= esc(ucfirst($booking['payment_status'])) ?></span></dd></div>
                         </dl>
                         <?php if ($booking['payment_status'] !== 'paid'): ?><a class="btn btn-brand-primary w-100 mt-4" href="<?= site_url('account/bookings/' . $booking['id'] . '/payment') ?>">Continue to payment</a><?php endif ?>
+                        <?php if (! in_array($booking['status'], ['completed', 'cancelled'], true)): ?><a class="btn btn-brand-outline w-100 mt-3" href="<?= site_url('account/bookings/' . $booking['id'] . '/items') ?>">Add to Current Order</a><?php endif ?>
                     </div>
                 </div>
             </div>

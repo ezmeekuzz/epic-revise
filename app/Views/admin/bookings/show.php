@@ -23,7 +23,7 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
 <div class="detail-grid mb-4">
     <section class="admin-card form-card wide detail-card">
         <div class="card-heading">
-            <div><h2>Customer and service</h2><p>Booking-owned contact, processing, date leaving, and date returning details.</p></div>
+            <div><h2>Customer and service</h2><p>Booking-owned contact, processing, leaving campus, and returning to campus details.</p></div>
             <span class="status-pill status-<?= esc($booking['status'], 'attr') ?>"><?= esc(ucwords(str_replace('_', ' ', $booking['status']))) ?></span>
         </div>
         <dl class="detail-list">
@@ -36,10 +36,10 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
                 <div><dt>Summer school</dt><dd><?= (int) ($booking['is_summer_school'] ?? 0) === 1 ? 'Yes' : 'No' ?></dd></div>
                 <div><dt>Study abroad</dt><dd><?= (int) ($booking['is_study_abroad'] ?? 0) === 1 ? 'Yes - subtotal doubled' : 'No' ?></dd></div>
             <?php endif ?>
-            <div><dt>Date Leaving</dt><dd><?= $booking['pickup_date'] ? esc(date('F j, Y', strtotime((string) $booking['pickup_date']))) : 'Not scheduled' ?><?= $booking['pickup_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['pickup_time']))) : '' ?><small class="detail-sub">Status: <?= esc(ucfirst($booking['pickup_status'] ?? 'unscheduled')) ?></small></dd></div>
-            <div><dt>Date Leaving dorm / room</dt><dd><?= esc($dorm['name'] ?? ($booking['pickup_location'] ?: 'Not provided')) ?><?= $booking['room_number'] ? ' - Room ' . esc($booking['room_number']) : '' ?></dd></div>
-            <div><dt>Date Returning</dt><dd><?= $booking['dropoff_date'] ? esc(date('F j, Y', strtotime((string) $booking['dropoff_date']))) : 'Not scheduled' ?><?= $booking['dropoff_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['dropoff_time']))) : '' ?><small class="detail-sub">Status: <?= esc(ucfirst($booking['dropoff_status'] ?? 'unscheduled')) ?></small></dd></div>
-            <div><dt>Date Returning location / room</dt><dd><?= esc($booking['dropoff_location'] ?: 'Not provided') ?><?= $booking['dropoff_room_number'] ? ' - Room ' . esc($booking['dropoff_room_number']) : '' ?></dd></div>
+            <div><dt>Leaving Campus</dt><dd><?= $booking['pickup_date'] ? esc(date('F j, Y', strtotime((string) $booking['pickup_date']))) : 'Not scheduled' ?><?= $booking['pickup_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['pickup_time']))) : '' ?><small class="detail-sub">Status: <?= esc(ucfirst($booking['pickup_status'] ?? 'unscheduled')) ?></small></dd></div>
+            <div><dt>Leaving Campus dorm / room</dt><dd><?= esc($dorm['name'] ?? ($booking['pickup_location'] ?: 'Not provided')) ?><?= $booking['room_number'] ? ' - Room ' . esc($booking['room_number']) : '' ?></dd></div>
+            <div><dt>Returning to Campus</dt><dd><?= $booking['dropoff_date'] ? esc(date('F j, Y', strtotime((string) $booking['dropoff_date']))) : 'Not scheduled' ?><?= $booking['dropoff_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['dropoff_time']))) : '' ?><small class="detail-sub">Status: <?= esc(ucfirst($booking['dropoff_status'] ?? 'unscheduled')) ?></small></dd></div>
+            <div><dt>Returning to Campus location / room</dt><dd><?= esc($booking['dropoff_location'] ?: 'Not provided') ?><?= $booking['dropoff_room_number'] ? ' - Room ' . esc($booking['dropoff_room_number']) : '' ?></dd></div>
             <div><dt>Warehouse row</dt><dd>
                 <form class="inline-form" action="<?= site_url('admin/bookings/' . $booking['id'] . '/warehouse') ?>" method="post" data-loading-title="Updating warehouse row" novalidate>
                     <?= csrf_field() ?>
@@ -53,19 +53,9 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
 
     <aside class="admin-card form-card summary-card">
         <div class="card-heading"><div><h2>Financial summary</h2><p>Snapshotted booking prices and ledger totals.</p></div></div>
-        <?php if ($isStorage): ?>
-            <div class="summary-row"><span>Base price</span><strong>$<?= number_format((float) $booking['base_price'], 2) ?></strong></div>
-            <div class="summary-row"><span>Selected items</span><strong>$<?= number_format($itemTotal, 2) ?></strong></div>
-        <?php endif ?>
-        <div class="summary-row"><span><?= $isStorage ? 'Additional boxes' : 'Boxes' ?></span><strong>$<?= number_format((float) $booking['addtl_box_total_amount'], 2) ?></strong></div>
-        <?php if ($isStorage && (int) ($booking['is_summer_school'] ?? 0) === 1): ?>
-            <div class="summary-row"><span>Summer school</span><strong>$<?= number_format((float) $booking['summer_school_fee'], 2) ?></strong></div>
-        <?php endif ?>
-        <?php if ($isStorage && (int) ($booking['is_study_abroad'] ?? 0) === 1): ?>
-            <div class="summary-row"><span>Study abroad adjustment</span><strong>$<?= number_format((float) $booking['study_abroad_additional_storage_price'], 2) ?></strong></div>
-        <?php endif ?>
-        <div class="summary-row"><span>Subtotal</span><strong>$<?= number_format((float) $booking['subtotal'], 2) ?></strong></div>
-        <div class="summary-row"><span>Discount</span><strong>-$<?= number_format((float) $booking['discount_amount'], 2) ?></strong></div>
+        <?php foreach (\App\Libraries\OrderLines::build($booking, $bookingItems) as $line): ?>
+            <div class="summary-row"><span><?= esc($line['label']) ?></span><strong><?= esc(\App\Libraries\OrderLines::money($line['amount'])) ?></strong></div>
+        <?php endforeach ?>
         <div class="summary-row total"><span>Total</span><strong>$<?= number_format((float) $booking['total_amount'], 2) ?></strong></div>
         <div class="summary-row"><span>Net paid</span><strong>$<?= number_format($paid, 2) ?></strong></div>
         <div class="summary-row"><span>Balance</span><strong>$<?= number_format($balance, 2) ?></strong></div>
@@ -91,12 +81,12 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
             <?php if ($balance < 0.01): ?><p class="field-hint">No outstanding balance.</p><?php endif ?>
         </div>
         <div class="notification-action">
-            <form action="<?= site_url('admin/bookings/' . $booking['id'] . '/notify/pickup-reminder') ?>" method="post" data-loading-title="Sending date leaving reminder" novalidate><?= csrf_field() ?><button class="btn btn-outline-primary" type="submit"<?= $booking['pickup_date'] ? '' : ' disabled' ?>>Send date leaving reminder</button></form>
-            <?php if (! $booking['pickup_date']): ?><p class="field-hint">No date leaving scheduled.</p><?php endif ?>
+            <form action="<?= site_url('admin/bookings/' . $booking['id'] . '/notify/pickup-reminder') ?>" method="post" data-loading-title="Sending leaving campus reminder" novalidate><?= csrf_field() ?><button class="btn btn-outline-primary" type="submit"<?= $booking['pickup_date'] ? '' : ' disabled' ?>>Send leaving campus reminder</button></form>
+            <?php if (! $booking['pickup_date']): ?><p class="field-hint">No leaving campus scheduled.</p><?php endif ?>
         </div>
         <div class="notification-action">
-            <form action="<?= site_url('admin/bookings/' . $booking['id'] . '/notify/dropoff-reminder') ?>" method="post" data-loading-title="Sending date returning reminder" novalidate><?= csrf_field() ?><button class="btn btn-outline-primary" type="submit"<?= $booking['dropoff_date'] ? '' : ' disabled' ?>>Send date returning reminder</button></form>
-            <?php if (! $booking['dropoff_date']): ?><p class="field-hint">No date returning scheduled.</p><?php endif ?>
+            <form action="<?= site_url('admin/bookings/' . $booking['id'] . '/notify/dropoff-reminder') ?>" method="post" data-loading-title="Sending returning to campus reminder" novalidate><?= csrf_field() ?><button class="btn btn-outline-primary" type="submit"<?= $booking['dropoff_date'] ? '' : ' disabled' ?>>Send returning to campus reminder</button></form>
+            <?php if (! $booking['dropoff_date']): ?><p class="field-hint">No returning to campus scheduled.</p><?php endif ?>
         </div>
     </div>
 </section>

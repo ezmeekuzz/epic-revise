@@ -130,7 +130,7 @@ final class SmtpService
     {
         $paragraphs = ['We processed your ' . $booking['service_name'] . ' order at High Point University.'];
         if ($scheduleUrl !== null) {
-            $paragraphs[] = 'You will receive a follow-up email for box delivery and a reminder to schedule your date leaving. If you know your date leaving time now, choose it using the link below to secure your spot.';
+            $paragraphs[] = 'You will receive a follow-up email for box delivery and a reminder to schedule your leaving campus. If you know your leaving campus time now, choose it using the link below to secure your spot.';
         }
         $paragraphs[] = 'If you have additional items to add to your order or any questions, contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.';
 
@@ -142,7 +142,7 @@ final class SmtpService
             'Booking confirmed',
             'Booking ' . $booking['reference_code'] . ' is confirmed',
             $paragraphs,
-            $scheduleUrl !== null ? 'Choose your date leaving schedule' : null,
+            $scheduleUrl !== null ? 'Choose your leaving campus schedule' : null,
             $scheduleUrl,
             [
                 $this->bookingInfoTable($booking, $dorm),
@@ -169,7 +169,7 @@ final class SmtpService
             'Booking ' . $booking['reference_code'] . ' received',
             [
                 'We received your ' . $booking['service_name'] . ' booking at High Point University. Your booking total is $' . number_format((float) $booking['total_amount'], 2) . '.',
-                'You can change your date leaving and date returning and time from your account. You will receive an email whenever they change.',
+                'You can change your leaving campus and returning to campus and time from your account. You will receive an email whenever they change.',
                 'If you have any questions, contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.',
             ],
             'View my booking',
@@ -179,6 +179,7 @@ final class SmtpService
                 $this->bookingScheduleTable($booking),
                 $this->bookingPricingTable($booking, $bookingItems),
             ],
+            cc: $this->copyRecipients($booking),
         );
     }
 
@@ -212,7 +213,7 @@ final class SmtpService
     }
 
     /**
-     * Sent to the customer and to the admin when a date leaving or date returning/time changes.
+     * Sent to the customer and to the admin when a leaving campus or returning to campus/time changes.
      *
      * @param array<string, mixed>      $booking  Booking after the change.
      * @param array<string, mixed>      $before   Booking before the change.
@@ -221,7 +222,7 @@ final class SmtpService
      */
     public function sendScheduleUpdated(string $recipient, string $name, bool $forAdmin, array $booking, array $before, ?array $dorm, array $changes, ?string $ctaUrl, ?string $ctaLabel): bool
     {
-        $legs = implode(' and ', array_map(static fn (string $leg): string => $leg === 'pickup' ? 'pickup' : 'date returning', $changes));
+        $legs = implode(' and ', array_map(static fn (string $leg): string => $leg === 'pickup' ? 'leaving campus' : 'returning to campus', $changes));
         $paragraphs = $forAdmin
             ? [$booking['customer_name'] . ' changed the ' . $legs . ' date or time for booking ' . $booking['reference_code'] . '. The previous schedule is shown for reference.']
             : ['The ' . $legs . ' date or time for your EPIC Storage booking ' . $booking['reference_code'] . ' was updated. Your new schedule is below.'];
@@ -244,13 +245,47 @@ final class SmtpService
                 ...($forAdmin ? [$this->bookingScheduleTable($before, 'Previous schedule')] : []),
                 $this->bookingInfoTable($booking, $dorm),
             ],
+            cc: $forAdmin ? [] : $this->copyRecipients($booking),
+        );
+    }
+
+    /**
+     * Sent to the student (copying the parent and EPIC support) after items or boxes are added to an existing order.
+     *
+     * @param array<string, mixed>              $booking
+     * @param list<array<string, mixed>>        $bookingItems
+     * @param array<string, mixed>|null         $dorm
+     * @param list<array{0: string, 1: string}> $addedRows  Label / amount for what was just added.
+     */
+    public function sendOrderItemsAdded(array $booking, array $bookingItems, ?array $dorm, array $addedRows, float $balance, string $viewUrl, ?string $payUrl = null): bool
+    {
+        return $this->sendBookingNotice(
+            (string) $booking['customer_email'],
+            (string) $booking['customer_name'],
+            'order_items_added',
+            'Items added to your EPIC Storage order ' . $booking['reference_code'],
+            'Order updated',
+            'Items were added to order ' . $booking['reference_code'],
+            [
+                'We added the items below to your existing EPIC Storage order. Your updated order total is $' . number_format((float) $booking['total_amount'], 2) . ($balance > 0.004 ? ' and the balance due is $' . number_format($balance, 2) . '.' : '. Nothing further is due.'),
+                'Please remember to write anything you add on the order sheet that comes with your packing supplies, and keep all of your items together in one room.',
+                'Questions? Contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.',
+            ],
+            $balance > 0.004 && $payUrl !== null ? 'Pay balance now' : 'View my order',
+            $balance > 0.004 && $payUrl !== null ? $payUrl : $viewUrl,
+            [
+                ['title' => 'Items added', 'rows' => $addedRows],
+                $this->bookingPricingTable($booking, $bookingItems),
+                $this->bookingScheduleTable($booking),
+            ],
+            cc: $this->copyRecipients($booking),
         );
     }
 
     public function sendPickupReminder(string $recipient, string $name, string $referenceCode, string $pickupDate, ?string $pickupTime, ?string $pickupLocation): bool
     {
         $when = date('F j, Y', strtotime($pickupDate)) . ($pickupTime ? ' at ' . date('g:i A', strtotime($pickupTime)) : '');
-        $paragraphs = ['EPIC has you scheduled for date leaving on ' . $when . '. If you need to change this time, you can do so up to 48 hours prior to your scheduled date leaving.'];
+        $paragraphs = ['EPIC has you scheduled for leaving campus on ' . $when . '. If you need to change this time, you can do so up to 48 hours prior to your scheduled leaving campus.'];
         if ($pickupLocation) {
             $paragraphs[] = 'Location: ' . $pickupLocation;
         }
@@ -260,9 +295,9 @@ final class SmtpService
             $recipient,
             $name,
             'pickup_reminder',
-            'Date Leaving reminder for booking ' . $referenceCode,
-            'Date Leaving reminder',
-            'Date Leaving scheduled: ' . $when,
+            'Leaving Campus reminder for booking ' . $referenceCode,
+            'Leaving Campus reminder',
+            'Leaving Campus scheduled: ' . $when,
             $paragraphs,
         );
     }
@@ -273,12 +308,12 @@ final class SmtpService
             $recipient,
             $name,
             'pickup_needed',
-            'Schedule your date leaving for booking ' . $referenceCode,
+            'Schedule your leaving campus for booking ' . $referenceCode,
             'Action needed',
             'Schedule your pickup',
             [
-                'We don\'t have a date leaving on file yet for your EPIC Storage booking ' . $referenceCode . '.',
-                'Please schedule a date leaving time so we can collect your items.',
+                'We don\'t have a leaving campus on file yet for your EPIC Storage booking ' . $referenceCode . '.',
+                'Please schedule a leaving campus time so we can collect your items.',
             ],
             'Schedule pickup',
             $scheduleUrl,
@@ -298,9 +333,9 @@ final class SmtpService
             $recipient,
             $name,
             'dropoff_reminder',
-            'Date Returning reminder for booking ' . $referenceCode,
-            'Date Returning reminder',
-            'Date Returning scheduled: ' . $when,
+            'Returning to Campus reminder for booking ' . $referenceCode,
+            'Returning to Campus reminder',
+            'Returning to Campus scheduled: ' . $when,
             $paragraphs,
         );
     }
@@ -355,7 +390,7 @@ final class SmtpService
         }
         $paragraphs[] = $accountLink['hasAccount']
             ? 'This email address already has an EPIC account. Use the button below to add this booking to it in one click. No password needed.'
-            : 'Create your EPIC account to track this booking, pay balances and schedule your date leaving. Your email address is already filled in, so you only need to choose a password.';
+            : 'Create your EPIC account to track this booking, pay balances and schedule your leaving campus. Your email address is already filled in, so you only need to choose a password.';
         $paragraphs[] = 'If you did not make this booking, you can ignore this email. Nothing is added to an account unless you click the button.';
 
         return $this->sendBookingNotice(
@@ -375,6 +410,7 @@ final class SmtpService
             ],
             $paymentUrl !== null ? $accountLink['label'] : null,
             $paymentUrl !== null ? $accountLink['url'] : null,
+            cc: $this->copyRecipients($booking),
         );
     }
 
@@ -397,7 +433,7 @@ final class SmtpService
                 $accountLink['hasAccount']
                     ? 'Our team created booking ' . $booking['reference_code'] . ' for you. This email address already has an EPIC account, so you can add the booking to it in one click.'
                     : 'Our team created booking ' . $booking['reference_code'] . ' for you. Create your EPIC account with this email address and the booking will appear in it automatically.',
-                'From your account you can pay balances, schedule date leaving and date returning, and add items.',
+                'From your account you can pay balances, schedule leaving campus and returning to campus, and add items.',
             ],
             $accountLink['label'],
             $accountLink['url'],
@@ -426,7 +462,7 @@ final class SmtpService
      * @param list<string> $paragraphs
      * @param list<array{title: string, rows: list<array{0: string, 1: string}>}> $tables
      */
-    private function sendBookingNotice(string $recipient, string $name, string $purpose, string $subject, string $eyebrow, string $heading, array $paragraphs, ?string $ctaLabel = null, ?string $ctaUrl = null, array $tables = [], ?string $secondaryCtaLabel = null, ?string $secondaryCtaUrl = null): bool
+    private function sendBookingNotice(string $recipient, string $name, string $purpose, string $subject, string $eyebrow, string $heading, array $paragraphs, ?string $ctaLabel = null, ?string $ctaUrl = null, array $tables = [], ?string $secondaryCtaLabel = null, ?string $secondaryCtaUrl = null, array $cc = []): bool
     {
         $settings  = new SettingsService();
         $email     = $this->configuredMailer();
@@ -434,6 +470,10 @@ final class SmtpService
         $messageId = $this->messageId();
         $email->setHeader('X-Epic-Delivery-ID', $messageId);
         $email->setTo($recipient);
+        $cc = array_values(array_filter($cc, static fn (string $address): bool => strcasecmp($address, $recipient) !== 0));
+        if ($cc !== []) {
+            $email->setCC($cc);
+        }
         $email->setSubject($subject);
         $logoSource = $this->attachInlineImage($email, 'epic-logo-white.png');
         $email->setMessage(view('emails/booking_notice', [
@@ -480,7 +520,7 @@ final class SmtpService
      * @param array<string, mixed> $booking
      * @return array{title: string, rows: list<array{0: string, 1: string}>}
      */
-    private function bookingScheduleTable(array $booking, string $title = 'Date Leaving and date returning'): array
+    private function bookingScheduleTable(array $booking, string $title = 'Leaving Campus and returning to campus'): array
     {
         $when = static function (?string $date, ?string $time): string {
             if (empty($date)) {
@@ -498,10 +538,10 @@ final class SmtpService
         return [
             'title' => $title,
             'rows' => [
-                ['Date Leaving', $when($booking['pickup_date'] ?? null, $booking['pickup_time'] ?? null)],
-                ['Date Leaving location', $where($booking['pickup_location'] ?? null, $booking['room_number'] ?? null)],
-                ['Date Returning', $when($booking['dropoff_date'] ?? null, $booking['dropoff_time'] ?? null)],
-                ['Date Returning location', $where($booking['dropoff_location'] ?? null, $booking['dropoff_room_number'] ?? null)],
+                ['Leaving Campus', $when($booking['pickup_date'] ?? null, $booking['pickup_time'] ?? null)],
+                ['Leaving Campus location', $where($booking['pickup_location'] ?? null, $booking['room_number'] ?? null)],
+                ['Returning to Campus', $when($booking['dropoff_date'] ?? null, $booking['dropoff_time'] ?? null)],
+                ['Returning to Campus location', $where($booking['dropoff_location'] ?? null, $booking['dropoff_room_number'] ?? null)],
             ],
         ];
     }
@@ -513,27 +553,33 @@ final class SmtpService
      */
     private function bookingPricingTable(array $booking, array $bookingItems): array
     {
-        $isStorage = $booking['booking_type'] === 'summer_storage';
         $rows = [];
-
-        if ($isStorage) {
-            $rows[] = ['Base amount', '$' . number_format((float) $booking['base_price'], 2)];
-            foreach ($bookingItems as $item) {
-                $rows[] = [$item['item_name'] . ' (x' . $item['quantity'] . ')', '$' . number_format((float) $item['line_total'], 2)];
-            }
-        }
-        if ((float) $booking['addtl_box_total_amount'] > 0) {
-            $rows[] = [$isStorage ? 'Additional boxes' : 'Boxes', '$' . number_format((float) $booking['addtl_box_total_amount'], 2)];
-        }
-        if ($isStorage && (int) ($booking['is_summer_school'] ?? 0) === 1) {
-            $rows[] = ['Summer school fee', '$' . number_format((float) $booking['summer_school_fee'], 2)];
-        }
-        if ($isStorage && (int) ($booking['is_study_abroad'] ?? 0) === 1) {
-            $rows[] = ['Study abroad adjustment', '$' . number_format((float) $booking['study_abroad_additional_storage_price'], 2)];
+        foreach (\App\Libraries\OrderLines::build($booking, $bookingItems) as $line) {
+            $rows[] = [$line['label'], \App\Libraries\OrderLines::money($line['amount'])];
         }
         $rows[] = ['Total', '$' . number_format((float) $booking['total_amount'], 2)];
 
         return ['title' => 'Pricing breakdown', 'rows' => $rows];
+    }
+
+    /**
+     * Order confirmations go to the student (primary), the parent and EPIC support.
+     *
+     * @param array<string, mixed> $booking
+     * @return list<string>
+     */
+    private function copyRecipients(array $booking): array
+    {
+        $addresses = [(string) ($booking['parent_email_address'] ?? ''), (new SettingsService())->get('support_email')];
+        $unique = [];
+        foreach ($addresses as $address) {
+            $address = trim($address);
+            if ($address !== '' && filter_var($address, FILTER_VALIDATE_EMAIL) && ! isset($unique[strtolower($address)])) {
+                $unique[strtolower($address)] = $address;
+            }
+        }
+
+        return array_values($unique);
     }
 
     private function configureSender(Email $email, SettingsService $settings): string

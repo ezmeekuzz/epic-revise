@@ -15,7 +15,7 @@
                 <?php else: ?>
                     <div class="table-responsive">
                         <table class="table admin-table js-datatable align-middle mb-0">
-                            <thead><tr><th>Booking</th><th>Type</th><th>Date Leaving</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th></th></tr></thead>
+                            <thead><tr><th>Booking</th><th>Type</th><th>Leaving Campus</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th><th></th></tr></thead>
                             <tbody>
                             <?php foreach ($bookings as $booking): ?>
                                 <tr>
@@ -26,7 +26,7 @@
                                     <td>$<?= number_format((float) $booking['paid'], 2) ?></td>
                                     <td>$<?= number_format((float) $booking['balance'], 2) ?></td>
                                     <td><span class="status-pill status-<?= esc($booking['status'], 'attr') ?>"><?= esc(ucwords(str_replace('_', ' ', $booking['status']))) ?></span></td>
-                                    <td><a class="btn btn-sm btn-brand-outline" href="<?= site_url('account/bookings/' . $booking['id']) ?>">View</a></td>
+                                    <td><a class="btn btn-sm btn-brand-outline" href="<?= site_url('account/bookings/' . $booking['id']) ?>">View</a><?php if (! in_array($booking['status'], ['completed', 'cancelled'], true)): ?> <a class="btn btn-sm btn-brand-primary" href="<?= site_url('account/bookings/' . $booking['id'] . '/items') ?>">Add to Current Order</a><?php endif ?></td>
                                 </tr>
                             <?php endforeach ?>
                             </tbody>

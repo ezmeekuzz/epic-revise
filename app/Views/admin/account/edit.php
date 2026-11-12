@@ -49,4 +49,5 @@
         </form>
     </section>
 </div>
+<div class="admin-card form-card mt-4"><div class="card-heading"><div><h2>Two-factor login</h2><p>Protect this account with a one-time code from an authenticator app.</p></div></div><a class="btn btn-outline-primary" href="<?= site_url('admin/account/two-factor') ?>">Manage two-factor login</a></div>
 <?= $this->endSection() ?>

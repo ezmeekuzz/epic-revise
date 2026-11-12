@@ -55,11 +55,11 @@ $brandName = 'EPIC Storage Solutions';
         </table>
 
         <table>
-            <tr><th class="section-title" colspan="2">Date Leaving &amp; date returning</th></tr>
-            <tr><td>Date Leaving</td><td><?= $booking['pickup_date'] ? esc(date('F j, Y', strtotime((string) $booking['pickup_date']))) : 'Not scheduled' ?><?= $booking['pickup_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['pickup_time']))) : '' ?></td></tr>
-            <tr><td>Date Leaving location</td><td><?= esc($dorm['name'] ?? ($booking['pickup_location'] ?: 'Not provided')) ?><?= $booking['room_number'] ? ' - Room ' . esc($booking['room_number']) : '' ?></td></tr>
-            <tr><td>Date Returning</td><td><?= $booking['dropoff_date'] ? esc(date('F j, Y', strtotime((string) $booking['dropoff_date']))) : 'Not scheduled' ?><?= $booking['dropoff_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['dropoff_time']))) : '' ?></td></tr>
-            <tr><td>Date Returning location</td><td><?= esc($booking['dropoff_location'] ?: 'Not provided') ?><?= $booking['dropoff_room_number'] ? ' - Room ' . esc($booking['dropoff_room_number']) : '' ?></td></tr>
+            <tr><th class="section-title" colspan="2">Leaving Campus &amp; returning to campus</th></tr>
+            <tr><td>Leaving Campus</td><td><?= $booking['pickup_date'] ? esc(date('F j, Y', strtotime((string) $booking['pickup_date']))) : 'Not scheduled' ?><?= $booking['pickup_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['pickup_time']))) : '' ?></td></tr>
+            <tr><td>Leaving Campus location</td><td><?= esc($dorm['name'] ?? ($booking['pickup_location'] ?: 'Not provided')) ?><?= $booking['room_number'] ? ' - Room ' . esc($booking['room_number']) : '' ?></td></tr>
+            <tr><td>Returning to Campus</td><td><?= $booking['dropoff_date'] ? esc(date('F j, Y', strtotime((string) $booking['dropoff_date']))) : 'Not scheduled' ?><?= $booking['dropoff_time'] ? ' at ' . esc(date('g:i A', strtotime((string) $booking['dropoff_time']))) : '' ?></td></tr>
+            <tr><td>Returning to Campus location</td><td><?= esc($booking['dropoff_location'] ?: 'Not provided') ?><?= $booking['dropoff_room_number'] ? ' - Room ' . esc($booking['dropoff_room_number']) : '' ?></td></tr>
             <tr><td>Warehouse row</td><td><?= $booking['row_in_warehouse'] !== null ? esc((string) $booking['row_in_warehouse']) : 'Not assigned' ?></td></tr>
         </table>
 
@@ -74,13 +74,9 @@ $brandName = 'EPIC Storage Solutions';
         <?php endif ?>
 
         <table class="totals">
-            <?php if ($isStorage): ?>
-            <tr><td class="label">Base price</td><td>$<?= number_format((float) $booking['base_price'], 2) ?></td></tr>
-            <tr><td class="label">Selected items</td><td>$<?= number_format($itemTotal, 2) ?></td></tr>
-            <?php endif ?>
-            <tr><td class="label"><?= $isStorage ? 'Additional boxes' : 'Boxes' ?></td><td>$<?= number_format((float) $booking['addtl_box_total_amount'], 2) ?></td></tr>
-            <tr><td class="label">Subtotal</td><td>$<?= number_format((float) $booking['subtotal'], 2) ?></td></tr>
-            <tr><td class="label">Discount</td><td>-$<?= number_format((float) $booking['discount_amount'], 2) ?></td></tr>
+            <?php foreach (\App\Libraries\OrderLines::build($booking, $bookingItems) as $line): ?>
+            <tr><td class="label"><?= esc($line['label']) ?></td><td><?= esc(\App\Libraries\OrderLines::money($line['amount'])) ?></td></tr>
+            <?php endforeach ?>
             <tr class="final"><td class="label">Total</td><td>$<?= number_format((float) $booking['total_amount'], 2) ?></td></tr>
             <tr><td class="label">Paid</td><td>$<?= number_format($paid, 2) ?></td></tr>
             <tr><td class="label">Balance due</td><td>$<?= number_format($balance, 2) ?></td></tr>

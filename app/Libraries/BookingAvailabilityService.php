@@ -53,7 +53,7 @@ final class BookingAvailabilityService
     public function validationError(string $date, string $time, string $leg = 'pickup'): ?string
     {
         $leg   = $leg === 'dropoff' ? 'dropoff' : 'pickup';
-        $label = $leg === 'dropoff' ? 'date returning' : 'pickup';
+        $label = $leg === 'dropoff' ? 'returning to campus' : 'pickup';
 
         $settings = new SettingsService();
         if ($settings->get('bookings_enabled', '0') !== '1') {

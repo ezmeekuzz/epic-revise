@@ -40,6 +40,8 @@ $routes->group('', ['filter' => 'guest'], static function ($routes): void {
 $routes->group('admin', ['filter' => 'guest'], static function ($routes): void {
     $routes->get('login', 'Admin\AuthController::login', ['as' => 'admin.login']);
     $routes->post('login', 'Admin\AuthController::authenticate', ['as' => 'admin.login.authenticate']);
+    $routes->get('login/verify', 'Admin\AuthController::codeForm', ['as' => 'admin.login.verify']);
+    $routes->post('login/verify', 'Admin\AuthController::verifyCode', ['as' => 'admin.login.verify.submit']);
 });
 
 $routes->post('logout', 'AuthController::logout', ['as' => 'logout', 'filter' => 'customer']);
@@ -123,6 +125,7 @@ $routes->group('admin', ['filter' => 'admin'], static function ($routes): void {
     $routes->post('payments', 'Admin\\PaymentsController::create', ['as' => 'admin.payments.create']);
     $routes->post('payments/(:num)/complete', 'Admin\\PaymentsController::complete/$1', ['as' => 'admin.payments.complete']);
     $routes->post('payments/(:num)/refund', 'Admin\\PaymentsController::refund/$1', ['as' => 'admin.payments.refund']);
+    $routes->get('activity-log', 'Admin\\ActivityLogController::index', ['as' => 'admin.activity-log']);
     $routes->get('transactions', 'Admin\\TransactionsController::index', ['as' => 'admin.transactions']);
     $routes->get('settings', 'Admin\\SettingsController::index', ['as' => 'admin.settings']);
     $routes->post('settings/(:alpha)', 'Admin\\SettingsController::update/$1', ['as' => 'admin.settings.update']);
@@ -130,6 +133,9 @@ $routes->group('admin', ['filter' => 'admin'], static function ($routes): void {
     $routes->get('account', 'Admin\\AccountController::edit', ['as' => 'admin.account']);
     $routes->get('account/verify', 'Admin\\AccountController::verify', ['as' => 'admin.account.verify']);
     $routes->post('account/verify', 'Admin\\AccountController::verifyPassword', ['as' => 'admin.account.verify.submit']);
+    $routes->get('account/two-factor', 'Admin\\TwoFactorController::index', ['as' => 'admin.account.two-factor']);
+    $routes->post('account/two-factor/enable', 'Admin\\TwoFactorController::enable', ['as' => 'admin.account.two-factor.enable']);
+    $routes->post('account/two-factor/disable', 'Admin\\TwoFactorController::disable', ['as' => 'admin.account.two-factor.disable']);
     $routes->post('account/profile', 'Admin\\AccountController::updateProfile', ['as' => 'admin.account.profile']);
     $routes->post('account/password', 'Admin\\AccountController::updatePassword', ['as' => 'admin.account.password']);
 });

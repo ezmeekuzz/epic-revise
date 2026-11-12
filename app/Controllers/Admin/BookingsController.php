@@ -7,6 +7,7 @@ namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Libraries\BookingLinkService;
 use App\Libraries\BookingNotifier;
+use App\Libraries\BookingPricingService;
 use App\Libraries\BookingService;
 use App\Libraries\SmtpService;
 use App\Models\BookingItemModel;
@@ -343,7 +344,7 @@ final class BookingsController extends BaseController
     {
         $booking = $this->find($id);
         if (! $booking['pickup_date']) {
-            return redirect()->route('admin.bookings.show', [$id])->with('error', 'Set a date leaving before sending a date leaving reminder.');
+            return redirect()->route('admin.bookings.show', [$id])->with('error', 'Set a leaving campus before sending a leaving campus reminder.');
         }
         if (! $this->throttleNotification($id, 'pickup-reminder')) {
             return redirect()->route('admin.bookings.show', [$id])->with('error', 'Please wait a minute before resending this notice.');
@@ -355,19 +356,19 @@ final class BookingsController extends BaseController
                 throw new RuntimeException('The mail server rejected the message.');
             }
         } catch (Throwable $exception) {
-            log_message('error', 'Date Leaving reminder failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
+            log_message('error', 'Leaving Campus reminder failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
 
-            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The date leaving reminder could not be sent. Check the email settings.']);
+            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The leaving campus reminder could not be sent. Check the email settings.']);
         }
 
-        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Date Leaving reminder sent to ' . $booking['customer_email'] . '.');
+        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Leaving Campus reminder sent to ' . $booking['customer_email'] . '.');
     }
 
     public function notifyDropoffReminder(int $id): RedirectResponse
     {
         $booking = $this->find($id);
         if (! $booking['dropoff_date']) {
-            return redirect()->route('admin.bookings.show', [$id])->with('error', 'Set a date returning before sending a date returning reminder.');
+            return redirect()->route('admin.bookings.show', [$id])->with('error', 'Set a returning to campus before sending a returning to campus reminder.');
         }
         if (! $this->throttleNotification($id, 'dropoff-reminder')) {
             return redirect()->route('admin.bookings.show', [$id])->with('error', 'Please wait a minute before resending this notice.');
@@ -379,12 +380,12 @@ final class BookingsController extends BaseController
                 throw new RuntimeException('The mail server rejected the message.');
             }
         } catch (Throwable $exception) {
-            log_message('error', 'Date Returning reminder failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
+            log_message('error', 'Returning to Campus reminder failed for booking {id}: {type}', ['id' => $id, 'type' => $exception::class]);
 
-            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The date returning reminder could not be sent. Check the email settings.']);
+            return redirect()->route('admin.bookings.show', [$id])->with('alert', ['type' => 'error', 'title' => 'Email not sent', 'message' => 'The returning to campus reminder could not be sent. Check the email settings.']);
         }
 
-        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Date Returning reminder sent to ' . $booking['customer_email'] . '.');
+        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Returning to Campus reminder sent to ' . $booking['customer_email'] . '.');
     }
 
     public function notifyBulk(): RedirectResponse
@@ -550,6 +551,7 @@ final class BookingsController extends BaseController
             'pickup_status' => (string) $this->request->getPost('pickup_status') ?: 'unscheduled', 'dropoff_status' => (string) $this->request->getPost('dropoff_status') ?: 'unscheduled',
             'status' => (string) $this->request->getPost('status'), 'discount_amount' => number_format(max(0, (float) $this->request->getPost('discount_amount')), 2, '.', ''),
             'admin_notes' => trim((string) $this->request->getPost('admin_notes')),
+            'service_fee_percent' => number_format(max(0, min(20, (float) $this->request->getPost('service_fee_percent'))), 2, '.', ''),
         ];
     }
 
@@ -572,6 +574,7 @@ final class BookingsController extends BaseController
             'dropoff_room_number' => 'permit_empty|max_length[30]', 'pickup_status' => 'required|in_list[unscheduled,scheduled,completed,cancelled]',
             'dropoff_status' => 'required|in_list[unscheduled,scheduled,completed,cancelled]', 'status' => 'required|in_list[' . implode(',', $this->statuses()) . ']',
             'discount_amount' => 'required|decimal|greater_than_equal_to[0]', 'admin_notes' => 'permit_empty|max_length[5000]',
+            'service_fee_percent' => 'required|decimal|greater_than_equal_to[0]|less_than_equal_to[20]',
         ];
     }
 
@@ -605,7 +608,7 @@ final class BookingsController extends BaseController
         $bookings = $this->filteredBookings($type, $search, $status)->orderBy('created_at', 'DESC')->findAll();
         $paidByBooking = $this->paidAmountsByBooking(array_column($bookings, 'id'));
 
-        $headers = ['Reference', 'Type', 'Customer', 'Email', 'Phone', 'Student ID', 'Date Leaving', 'Date Leaving location', 'Date Returning', 'Date Returning location', 'Warehouse row', 'Total', 'Paid', 'Balance', 'Payment status', 'Status', 'Created'];
+        $headers = ['Reference', 'Type', 'Customer', 'Email', 'Phone', 'Student ID', 'Leaving Campus', 'Leaving Campus location', 'Returning to Campus', 'Returning to Campus location', 'Warehouse row', 'Total', 'Paid', 'Balance', 'Payment status', 'Status', 'Created'];
         $rows = [];
         foreach ($bookings as $booking) {
             $paid = $paidByBooking[(int) $booking['id']] ?? 0.0;
@@ -728,9 +731,9 @@ final class BookingsController extends BaseController
         return [
             'confirmation' => 'Booking confirmation',
             'balance-due' => 'Balance due reminder',
-            'pickup-reminder' => 'Date Leaving reminder (already scheduled)',
-            'pickup-needed' => 'Schedule date leaving reminder (not yet scheduled)',
-            'dropoff-reminder' => 'Date Returning reminder (already scheduled)',
+            'pickup-reminder' => 'Leaving Campus reminder (already scheduled)',
+            'pickup-needed' => 'Schedule leaving campus reminder (not yet scheduled)',
+            'dropoff-reminder' => 'Returning to Campus reminder (already scheduled)',
         ];
     }
 
@@ -787,8 +790,29 @@ final class BookingsController extends BaseController
     /** @param array<string, mixed>|null $booking */
     private function formView(?array $booking): string
     {
+        $prices  = (new BookingPricingService())->displayPrices();
+        $prefill = [];
+        if ($booking === null) {
+            // New order: start from the current price list; "Create order" from a customer pre-fills their details.
+            $prefill = [
+                'booking_type' => 'summer_storage', 'base_price' => $prices['summer_storage_base_price'],
+                'additional_box_amount' => $prices['summer_storage_additional_box_price'], 'summer_school_fee' => $prices['summer_school_fee'],
+                'service_fee_percent' => $prices['service_fee_percent'],
+            ];
+            $customer = (new UserModel())->where('role', 'customer')->find((int) $this->request->getGet('user'));
+            if ($customer !== null) {
+                $prefill = [
+                    ...$prefill, 'user_id' => (int) $customer['id'], 'customer_name' => $customer['name'], 'customer_email' => $customer['email'],
+                    'customer_phone' => $customer['phone_number'] ?? '', 'student_id' => $customer['student_id'] ?? '',
+                    'parent_phone_number' => $customer['parent_phone_number'] ?? '', 'parent_email_address' => $customer['parent_email_address'] ?? '',
+                    'dorm_id' => $customer['dorm_id'] ?? '', 'room_number' => $customer['dorm_room_number'] ?? '',
+                ];
+            }
+        }
+
         return view('admin/bookings/form', [
-            'title' => $booking === null ? 'Add Booking' : 'Edit Booking', 'activeAdminPage' => 'bookings', 'booking' => $booking,
+            'prefill' => $prefill,
+            'title' => $booking === null ? 'Add Order' : 'Edit Booking', 'activeAdminPage' => 'bookings', 'booking' => $booking,
             'customers' => (new UserModel())->where('role', 'customer')->where('status', 'active')->orderBy('name', 'ASC')->findAll(),
             'dorms' => (new DormModel())->where('is_active', 1)->orderBy('name', 'ASC')->findAll(), 'bookingTypes' => $this->serviceLabels(),
             'statuses' => $this->statuses(), 'logisticsStatuses' => ['unscheduled', 'scheduled', 'completed', 'cancelled'],

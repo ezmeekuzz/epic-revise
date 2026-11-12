@@ -109,7 +109,7 @@ final class AccountController extends BaseController
     public function newBooking(): string
     {
         return view('account/booking_form', [
-            ...$this->pageData('Request a Date Leaving | EPIC Storage Solutions', 'Request an EPIC Storage date leaving window.', 'account'),
+            ...$this->pageData('Request a Leaving Campus | EPIC Storage Solutions', 'Request an EPIC Storage leaving campus window.', 'account'),
             ...$this->bookingFormData($this->currentCustomer()),
         ]);
     }
@@ -204,6 +204,8 @@ final class AccountController extends BaseController
             ]);
             return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Items not saved', 'message' => 'Your items could not be saved. Please try again.']);
         }
+        (new BookingNotifier())->itemsAdded($id, (int) $boxes, $items);
+
         return redirect()->route('account.bookings.show', [$id])->with('success', 'Additional items saved to your existing order. Review the updated balance and continue to payment.');
     }
 
@@ -241,7 +243,7 @@ final class AccountController extends BaseController
     public function pickupDates(): string
     {
         return view('account/pickup_dates', [
-            ...$this->pageData('Date Leaving Campus | EPIC Storage Solutions', 'Review and manage the date leaving for every booking.', 'account'),
+            ...$this->pageData('Leaving Campus | EPIC Storage Solutions', 'Review and manage the leaving campus for every booking.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
             'booking' => (new SettingsService())->displayGroup('booking'),
         ]);
@@ -250,7 +252,7 @@ final class AccountController extends BaseController
     public function dropoffDates(): string
     {
         return view('account/dropoff_dates', [
-            ...$this->pageData('Manage Date Returning Dates | EPIC Storage Solutions', 'Review and manage the date returning for every booking.', 'account'),
+            ...$this->pageData('Manage Returning to Campus Dates | EPIC Storage Solutions', 'Review and manage the returning to campus for every booking.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
             'booking' => (new SettingsService())->displayGroup('booking'),
         ]);
@@ -283,7 +285,7 @@ final class AccountController extends BaseController
     public function editPickup(int $id): string
     {
         return view('account/pickup_form', [
-            ...$this->pageData('Date Leaving Details | EPIC Storage Solutions', 'Add or update the date leaving details for your booking.', 'account'),
+            ...$this->pageData('Leaving Campus Details | EPIC Storage Solutions', 'Add or update the leaving campus details for your booking.', 'account'),
             'booking' => $this->ownedBooking($id),
             'user' => $this->currentCustomer(),
             'dorms' => $this->activeDorms(),
@@ -331,11 +333,11 @@ final class AccountController extends BaseController
         }
         $dorm = $data['dorm_id'] !== null ? $this->findActiveDorm((int) $data['dorm_id']) : null;
         if ($data['dorm_id'] !== null && $dorm === null) {
-            return redirect()->back()->withInput()->with('error', 'Please choose an active date leaving dorm.');
+            return redirect()->back()->withInput()->with('error', 'Please choose an active leaving campus dorm.');
         }
         $dropoffDorm = $data['dropoff_dorm_id'] !== null ? $this->findActiveDorm((int) $data['dropoff_dorm_id']) : null;
         if ($data['dropoff_dorm_id'] !== null && $dropoffDorm === null) {
-            return redirect()->back()->withInput()->with('error', 'Please choose an active date returning dorm.');
+            return redirect()->back()->withInput()->with('error', 'Please choose an active returning to campus dorm.');
         }
 
         $pickupScheduled = $data['pickup_date'] !== '' && $data['pickup_time'] !== '';
@@ -358,17 +360,17 @@ final class AccountController extends BaseController
                 'dropoff_room_number' => $data['dropoff_room_number'] ?: null,
                 'dropoff_status' => $dropoffStatus,
             ])) {
-                throw new RuntimeException('Date Leaving details update failed.');
+                throw new RuntimeException('Leaving Campus details update failed.');
             }
         } catch (Throwable $exception) {
-            log_message('error', 'Customer date leaving update failed: {type}', ['type' => $exception::class]);
+            log_message('error', 'Customer leaving campus update failed: {type}', ['type' => $exception::class]);
 
-            return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Date Leaving details not saved', 'message' => 'Date Leaving details could not be saved. Please try again.']);
+            return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Leaving Campus details not saved', 'message' => 'Leaving Campus details could not be saved. Please try again.']);
         }
 
         (new BookingNotifier())->scheduleChanged($booking, $id);
 
-        return redirect()->route('account.bookings.show', [$id])->with('success', 'Date Leaving and date returning details updated.');
+        return redirect()->route('account.bookings.show', [$id])->with('success', 'Leaving Campus and returning to campus details updated.');
     }
 
     /** @return array<string, mixed> */

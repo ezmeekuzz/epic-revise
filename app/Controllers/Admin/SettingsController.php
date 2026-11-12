@@ -40,12 +40,12 @@ final class SettingsController extends BaseController
         }
 
         if ($group === 'booking' && $payload['values']['pickup_start_time'] >= $payload['values']['pickup_end_time']) {
-            return redirect()->to(site_url('admin/settings#booking'))->withInput()->with('error', 'Date Leaving end time must be later than the start time.');
+            return redirect()->to(site_url('admin/settings#booking'))->withInput()->with('error', 'Leaving Campus end time must be later than the start time.');
         }
 
         if ($group === 'booking'
             && strtotime($payload['values']['pickup_end_time']) - strtotime($payload['values']['pickup_start_time']) < ((int) $payload['values']['slot_duration_minutes'] * 60)) {
-            return redirect()->to(site_url('admin/settings#booking'))->withInput()->with('error', 'The date leaving window must contain at least one complete booking slot.');
+            return redirect()->to(site_url('admin/settings#booking'))->withInput()->with('error', 'The leaving campus window must contain at least one complete booking slot.');
         }
 
         if ($group === 'booking' && ! $this->blackoutDatesAreValid($payload['values']['blackout_dates'])) {
@@ -162,10 +162,12 @@ final class SettingsController extends BaseController
                 'summer_storage_additional_box_price' => $sharedBoxPrice,
                 'summer_advantage_box_price' => $sharedBoxPrice,
                 'summer_school_fee' => trim((string) $this->request->getPost('summer_school_fee')),
+                'service_fee_percent' => trim((string) $this->request->getPost('service_fee_percent')) ?: '0',
             ], 'rules' => [
                 'summer_storage_base_price' => 'required|decimal|greater_than_equal_to[0]|less_than_equal_to[100000]',
                 'summer_advantage_box_price' => 'required|decimal|greater_than_equal_to[0]|less_than_equal_to[100000]',
                 'summer_school_fee' => 'required|decimal|greater_than_equal_to[0]|less_than_equal_to[100000]',
+                'service_fee_percent' => 'required|decimal|greater_than_equal_to[0]|less_than_equal_to[20]',
             ], 'clearSecrets' => []];
         }
 

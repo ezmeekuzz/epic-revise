@@ -31,6 +31,10 @@ final class UserModel extends Model
         'status',
         'email_verified_at',
         'last_login_at',
+        'failed_login_count',
+        'locked_until',
+        'totp_secret',
+        'totp_enabled',
     ];
     protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';

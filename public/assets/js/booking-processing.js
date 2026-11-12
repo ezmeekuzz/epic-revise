@@ -252,12 +252,18 @@
             if (!summaryNode || !totalNode) return;
             summaryNode.replaceChildren();
             const prices = config.prices || {};
+            const feePercent = Math.max(0, Number.parseFloat(prices.service_fee_percent || "0") || 0);
+            const finishSummary = (subtotal) => {
+                const fee = Math.round(subtotal * feePercent) / 100;
+                if (fee > 0) appendSummaryLine(`Service fee (${feePercent}%)`, fee);
+                totalNode.textContent = money(subtotal + fee);
+            };
 
             if (bookingType() === "summer_advantage") {
                 const quantity = Math.max(0, Number.parseInt(advantageBoxes?.value || "0", 10) || 0);
                 const total = quantity * amount(prices.summer_advantage_box_price);
-                appendSummaryLine(`Summer Advantage boxes × ${quantity}`, total);
-                totalNode.textContent = money(total);
+                appendSummaryLine(`Summer Advantage boxes × ${quantity} (${money(amount(prices.summer_advantage_box_price))} per box)`, total);
+                finishSummary(total);
                 return;
             }
 
@@ -272,12 +278,12 @@
             const serviceSubtotal = base + boxTotal + itemsTotal + summerSchoolFee;
             const studyAbroadCharge = studyAbroad ? serviceSubtotal : 0;
 
-            appendSummaryLine("Summer Storage base package", base);
-            if (boxQuantity > 0) appendSummaryLine(`Additional boxes × ${boxQuantity}`, boxTotal);
-            lines.forEach((line) => appendSummaryLine(`${line.item.name} (${line.size.name}) × ${line.quantity}`, amount(line.size.unit_price) * line.quantity));
+            appendSummaryLine("Standard Package (5 lg boxes / Base Package)", base);
+            if (boxQuantity > 0) appendSummaryLine(`Additional boxes × ${boxQuantity} @ ${money(amount(prices.summer_storage_additional_box_price))} each`, boxTotal);
+            lines.forEach((line) => appendSummaryLine(`${line.item.name} (${line.size.name}) × ${line.quantity} @ ${money(amount(line.size.unit_price))} each`, amount(line.size.unit_price) * line.quantity));
             if (summerSchoolFee > 0) appendSummaryLine("Summer school fee", summerSchoolFee);
-            if (studyAbroadCharge > 0) appendSummaryLine("Study-abroad second semester", studyAbroadCharge);
-            totalNode.textContent = money(serviceSubtotal + studyAbroadCharge);
+            if (studyAbroadCharge > 0) appendSummaryLine("Study abroad: second-semester storage (doubles the order subtotal)", studyAbroadCharge);
+            finishSummary(serviceSubtotal + studyAbroadCharge);
         };
 
         /** Mirrors picker quantities into the items[n][size_id|quantity] fields the server expects. */

@@ -7,10 +7,12 @@ namespace App\Libraries;
 use App\Models\BookingItemModel;
 use App\Models\BookingModel;
 use App\Models\DormModel;
+use App\Models\ItemSizeModel;
+use App\Models\TransactionModel;
 use Throwable;
 
 /**
- * Sends the customer and admin emails for booking creation and for pickup/date returning
+ * Sends the customer and admin emails for booking creation and for pickup/returning to campus
  * schedule changes. Booking saves never fail because an email could not be sent.
  */
 final class BookingNotifier
@@ -60,7 +62,47 @@ final class BookingNotifier
     }
 
     /**
-     * Emails the customer and the admin when a date leaving or date returning/time differs from
+     * Confirms items/boxes added to an existing order (student, parent and support).
+     *
+     * @param list<array{size_id: int, quantity: int}> $items
+     */
+    public function itemsAdded(int $bookingId, int $boxes, array $items): void
+    {
+        $this->guard('order items added', $bookingId, function () use ($bookingId, $boxes, $items): void {
+            $booking = (new BookingModel())->find($bookingId);
+            if ($booking === null) {
+                return;
+            }
+
+            $rows = [];
+            if ($boxes > 0) {
+                $rows[] = ['Additional boxes', (string) $boxes . ' @ $' . number_format((float) $booking['additional_box_amount'], 2)];
+            }
+            foreach ($items as $item) {
+                $size = (new ItemSizeModel())->select('item_sizes.name AS size_name, items.name AS item_name')->join('items', 'items.id = item_sizes.item_id')->find((int) $item['size_id']);
+                if ($size !== null) {
+                    $rows[] = [$size['item_name'] . ($size['size_name'] ? ' (' . $size['size_name'] . ')' : ''), 'x ' . (int) $item['quantity']];
+                }
+            }
+
+            $paid    = (float) ((new TransactionModel())->selectSum('amount')->where('booking_id', $bookingId)->where('status', 'completed')->first()['amount'] ?? 0);
+            $balance = max(0, round((float) $booking['total_amount'] - $paid, 2));
+            $links   = new BookingLinkService();
+            $link    = $links->accountLink($booking, '/account/bookings/' . $bookingId);
+            (new SmtpService())->sendOrderItemsAdded(
+                $booking,
+                (new BookingItemModel())->where('booking_id', $bookingId)->findAll(),
+                $this->dorm($booking),
+                $rows,
+                $balance,
+                $link['url'],
+                $balance > 0 ? $links->paymentUrl($booking) : null,
+            );
+        });
+    }
+
+    /**
+     * Emails the customer and the admin when a leaving campus or returning to campus/time differs from
      * $before. Does nothing when neither changed.
      *
      * @param array<string, mixed> $before Booking row as it was before the update.

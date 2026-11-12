@@ -14,7 +14,7 @@ final class SettingsService
     private const GROUPS = [
         'general' => ['homepage_message_title', 'homepage_message_body', 'current_terms_text', 'business_name', 'support_email', 'business_phone', 'business_timezone'],
         'booking' => ['bookings_enabled', 'booking_unavailable_message', 'daily_booking_capacity', 'minimum_advance_hours', 'pickup_start_time', 'pickup_end_time', 'slot_duration_minutes', 'blackout_dates'],
-        'pricing' => ['summer_storage_base_price', 'summer_storage_additional_box_price', 'summer_advantage_box_price', 'summer_school_fee'],
+        'pricing' => ['summer_storage_base_price', 'summer_storage_additional_box_price', 'summer_advantage_box_price', 'summer_school_fee', 'service_fee_percent'],
         'email' => ['smtp_enabled', 'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password', 'smtp_crypto', 'email_from_address', 'email_from_name'],
         'payment' => [
             'payments_enabled', 'payment_provider', 'payment_mode', 'payment_currency',

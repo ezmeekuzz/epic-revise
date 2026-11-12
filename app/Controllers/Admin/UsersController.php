@@ -51,22 +51,32 @@ final class UsersController extends BaseController
     public function create(): RedirectResponse
     {
         $data = $this->userInput();
+        // Admin-created customers are active immediately: no email confirmation step. A password is optional;
+        // without one the customer can set it later with "Forgot password" or a link from the order emails.
+        if ($data['password'] === '' && $data['password_confirm'] === '') {
+            $data['password'] = $data['password_confirm'] = bin2hex(random_bytes(16));
+        }
+        $data['status'] = $data['status'] === '' ? 'active' : $data['status'];
 
         if (! $this->validateData($data, $this->rules(true))) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         try {
-            (new UserModel())->insert([
+            $userId = (int) (new UserModel())->insert([
                 ...CustomerDetails::input($this->request),
                 'name'          => $data['name'],
                 'email'         => $data['email'],
                 'password_hash' => password_hash($data['password'], PASSWORD_DEFAULT),
                 'role'          => 'customer',
                 'status'        => $data['status'],
-            ]);
+            ], true);
         } catch (DatabaseException) {
             return redirect()->back()->withInput()->with('error', 'The user could not be created. The email address may already exist.');
+        }
+
+        if ($this->request->getPost('next') === 'order') {
+            return redirect()->to(site_url('admin/bookings/new?user=' . $userId))->with('success', 'Customer created. Now fill in the order.');
         }
 
         return redirect()->route('admin.users')->with('success', 'User account created successfully.');
