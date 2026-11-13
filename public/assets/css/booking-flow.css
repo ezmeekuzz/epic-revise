@@ -47,3 +47,39 @@
 
 @media(max-width:575.98px){.item-selected-row{flex-direction:column;align-items:stretch}.item-selected-controls{justify-content:space-between}}
 @media(prefers-reduced-motion:reduce){.slot-button{transition:none}}
+
+/* Booking form: custom radios, checkboxes and choice cards (shared by account and public pages) */
+[data-booking-processing-form]{--choice-accent:var(--primary-deep,var(--admin-blue,#005aab));--choice-line:var(--line,var(--admin-line,#dedede));--choice-ink:var(--navy-deep,var(--admin-ink,#141414));--choice-muted:var(--ink-soft,var(--admin-muted,#707070));--choice-tint:rgb(0 90 171/.07)}
+[data-booking-processing-form] input[type=radio],[data-booking-processing-form] input[type=checkbox]{appearance:none;-webkit-appearance:none;flex:0 0 auto;width:22px;height:22px;margin:0;border:2px solid #b4bcc6;background:#fff center/14px no-repeat;cursor:pointer;transition:border-color .15s ease,background-color .15s ease,box-shadow .15s ease}
+[data-booking-processing-form] input[type=radio]{border-radius:50%}
+[data-booking-processing-form] input[type=checkbox]{border-radius:6px}
+[data-booking-processing-form] input[type=radio]:hover,[data-booking-processing-form] input[type=checkbox]:hover{border-color:var(--choice-accent)}
+[data-booking-processing-form] input[type=radio]:checked{border-color:var(--choice-accent);background-color:#fff;background-image:radial-gradient(circle,var(--choice-accent) 0 45%,transparent 50%)}
+[data-booking-processing-form] input[type=checkbox]:checked{border-color:var(--choice-accent);background-color:var(--choice-accent);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E")}
+[data-booking-processing-form] input[type=radio]:focus-visible,[data-booking-processing-form] input[type=checkbox]:focus-visible{outline:0;box-shadow:0 0 0 4px rgb(0 90 171/.22)}
+[data-booking-processing-form] input.is-invalid[type=checkbox]{border-color:#dc3545}
+
+/* Service / payment choice cards */
+[data-booking-processing-form] .service-choice{display:flex;min-height:0;padding:20px 22px;border-width:2px;border-color:var(--choice-line);background:#fff}
+[data-booking-processing-form] .service-choice input{top:20px;right:20px;width:22px;height:22px}
+[data-booking-processing-form] .service-choice-copy{padding-right:34px}
+[data-booking-processing-form] .service-choice:has(input:checked),[data-booking-processing-form] .service-choice.is-selected{border-color:var(--choice-accent);background:var(--choice-tint);box-shadow:0 0 0 4px rgb(0 90 171/.12)}
+[data-booking-processing-form] .service-choice:has(input:focus-visible){border-color:var(--choice-accent);box-shadow:0 0 0 4px rgb(0 90 171/.25)}
+[data-booking-processing-form] .service-choice-copy small{margin:6px 0 12px}
+[data-booking-processing-form] .service-choice-copy b{display:inline-block;align-self:flex-start;padding:4px 10px;border-radius:999px;background:#fff;border:1px solid var(--choice-line);color:var(--choice-ink)}
+
+/* Yes / No questions as two large segmented options */
+[data-booking-processing-form] .binary-choice{padding:18px;border-color:var(--choice-line);border-radius:14px;background:#fff}
+[data-booking-processing-form] .binary-choice>div{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+[data-booking-processing-form] .binary-choice label{justify-content:center;gap:10px;min-height:46px;padding:10px 14px;border:2px solid var(--choice-line);border-radius:10px;background:#fff;color:var(--choice-ink);cursor:pointer;transition:border-color .15s ease,background-color .15s ease}
+[data-booking-processing-form] .binary-choice label:hover{border-color:var(--choice-accent)}
+[data-booking-processing-form] .binary-choice label:has(input:checked){border-color:var(--choice-accent);background:var(--choice-tint);color:var(--choice-accent)}
+[data-booking-processing-form] .binary-choice label:has(input:focus-visible){box-shadow:0 0 0 4px rgb(0 90 171/.22)}
+
+/* Terms checkbox as a tappable row */
+[data-booking-processing-form] .form-check{display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px;min-height:0;margin:0;padding:14px;border:2px solid var(--choice-line);border-radius:12px;background:#fff;transition:border-color .15s ease,background-color .15s ease}
+[data-booking-processing-form] .form-check:has(input:checked){border-color:var(--choice-accent);background:var(--choice-tint)}
+[data-booking-processing-form] .form-check .form-check-input{float:none;margin:2px 0 0}
+[data-booking-processing-form] .form-check .form-check-label{flex:1;font-size:.9rem;line-height:1.5;color:var(--choice-ink);cursor:pointer}
+[data-booking-processing-form] .form-check .invalid-feedback{display:block;flex:0 0 100%}
+@media(max-width:767.98px){[data-booking-processing-form] .service-choice{padding:16px 18px}}
