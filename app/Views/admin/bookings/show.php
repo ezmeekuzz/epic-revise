@@ -59,7 +59,7 @@ $balance = max(0, (float) $booking['total_amount'] - $paid);
         <div class="summary-row total"><span>Total</span><strong>$<?= number_format((float) $booking['total_amount'], 2) ?></strong></div>
         <div class="summary-row"><span>Net paid</span><strong>$<?= number_format($paid, 2) ?></strong></div>
         <div class="summary-row"><span>Balance</span><strong>$<?= number_format($balance, 2) ?></strong></div>
-        <div class="summary-status"><span>Payment status</span><span class="status-pill status-<?= esc($booking['payment_status'], 'attr') ?>"><?= esc(ucfirst($booking['payment_status'])) ?></span></div>
+        <div class="summary-status"><span>Payment status</span><span class="status-pill status-<?= esc($booking['payment_status'], 'attr') ?>"><?= esc(['unpaid' => 'Pending Payment', 'partial' => 'Outstanding Balance', 'paid' => 'Paid'][$booking['payment_status']] ?? ucfirst($booking['payment_status'])) ?></span></div>
         <a class="btn btn-outline-primary w-100 mt-3" href="<?= site_url('admin/payments/new?booking=' . $booking['id']) ?>">Record payment</a>
     </aside>
 </div>

@@ -20,6 +20,8 @@ $bookingOpen = ($booking['bookings_enabled'] ?? '0') === '1';
 $slotMinutes = (int) ($booking['slot_duration_minutes'] ?? 30);
 $lastSlot = date('H:i', strtotime((string) ($booking['pickup_end_time'] ?? '17:00')) - ($slotMinutes * 60));
 $bookingType = old('booking_type', $selectedBookingType ?? 'summer_storage');
+// Arrived from a specific service: show only that service so nothing else is offered.
+$lockedService = ! empty($lockedService) || old('booking_type') !== null && ! empty(old('locked_service'));
 $oldItems = old('items', []);
 if (! is_array($oldItems)) {
     $oldItems = [];
@@ -73,14 +75,15 @@ $field = static function (string $name, string $label, array $errors, string $va
                                     <div><h2 class="h4 mb-1" id="serviceHeading">Choose your service</h2><p class="text-muted-brand mb-0">Each service has its own processing and pricing rules.</p></div>
                                 </div>
                                 <div class="service-choice-grid mt-4">
-                                    <label class="service-choice<?= $bookingType === 'summer_storage' ? ' is-selected' : '' ?>">
+                                    <?php if (! $lockedService || $bookingType === 'summer_storage'): ?><label class="service-choice<?= $bookingType === 'summer_storage' ? ' is-selected' : '' ?>">
                                         <input type="radio" name="booking_type" value="summer_storage"<?= $bookingType === 'summer_storage' ? ' checked' : '' ?>>
                                         <span class="service-choice-copy"><strong>Summer Storage (April to August)</strong><small>This offering is for current HPU students.</small><b>From $<?= esc($pricing['summer_storage_base_price']) ?></b></span>
-                                    </label>
-                                    <label class="service-choice<?= $bookingType === 'summer_advantage' ? ' is-selected' : '' ?>">
+                                    </label><?php endif ?>
+                                    <?php if (! $lockedService || $bookingType === 'summer_advantage'): ?><label class="service-choice<?= $bookingType === 'summer_advantage' ? ' is-selected' : '' ?>">
                                         <input type="radio" name="booking_type" value="summer_advantage"<?= $bookingType === 'summer_advantage' ? ' checked' : '' ?>>
                                         <span class="service-choice-copy"><strong>Summer Advantage (July to August)</strong><small>For incoming HPU freshmen attending the Summer Advantage Program.</small><b>$<?= esc($pricing['summer_advantage_box_price']) ?> per box</b></span>
-                                    </label>
+                                    </label><?php endif ?>
+                                    <?php if ($lockedService): ?><input type="hidden" name="locked_service" value="1"><?php endif ?>
                                 </div>
                                 <?php if (isset($errors['booking_type'])): ?><div class="text-danger small mt-2"><?= esc($errors['booking_type']) ?></div><?php endif ?>
                             </section>

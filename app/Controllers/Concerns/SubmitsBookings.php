@@ -33,11 +33,13 @@ trait SubmitsBookings
         $pricingService = new BookingPricingService();
         $timezone = $settings->get('business_timezone', 'America/New_York');
         $selectedBookingType = (string) $this->request->getGet('booking_type');
-        if (! in_array($selectedBookingType, ['summer_storage', 'summer_advantage'], true)) {
+        $lockedService = in_array($selectedBookingType, ['summer_storage', 'summer_advantage'], true);
+        if (! $lockedService) {
             $selectedBookingType = 'summer_storage';
         }
 
         return [
+            'lockedService' => $lockedService,
             'user' => $user ?? [],
             'guest' => $user === null,
             'layout' => $user === null ? 'layouts/site' : 'layouts/account',

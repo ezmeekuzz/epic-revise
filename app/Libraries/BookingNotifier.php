@@ -61,6 +61,28 @@ final class BookingNotifier
         });
     }
 
+    /** Receipt to the student (copying parent and support) once an online payment is verified. */
+    public function paymentReceived(int $bookingId, float $amount): void
+    {
+        $this->guard('payment received', $bookingId, function () use ($bookingId, $amount): void {
+            $booking = (new BookingModel())->find($bookingId);
+            if ($booking === null) {
+                return;
+            }
+
+            $row = (new \App\Models\TransactionModel())->selectSum('amount')->where('booking_id', $bookingId)->where('status', 'completed')->first();
+            $balance = max(0, round((float) $booking['total_amount'] - round((float) ($row['amount'] ?? 0), 2), 2));
+            (new SmtpService())->sendPaymentReceived(
+                $booking,
+                (new BookingItemModel())->where('booking_id', $bookingId)->findAll(),
+                $this->dorm($booking),
+                $amount,
+                $balance,
+                (new BookingLinkService())->accountLink($booking, '/account/bookings/' . $bookingId),
+            );
+        });
+    }
+
     /**
      * Confirms items/boxes added to an existing order (student, parent and support).
      *

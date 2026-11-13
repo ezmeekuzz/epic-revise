@@ -52,18 +52,19 @@ final class BookingsController extends BaseController
     {
         $search   = trim((string) $this->request->getGet('q'));
         $status   = (string) $this->request->getGet('status');
-        $bookings = $this->filteredBookings($type, $search, $status)->orderBy('created_at', 'DESC')->findAll();
+        $payment  = (string) $this->request->getGet('payment');
+        $bookings = $this->filteredBookings($type, $search, $status, $payment)->orderBy('created_at', 'DESC')->findAll();
 
         return view('admin/bookings/index', [
             'title' => $type === 'summer_storage' ? 'Summer Storage Bookings' : ($type === 'summer_advantage' ? 'Summer Advantage Bookings' : 'Booking Masterlist'),
             'activeAdminPage' => 'bookings', 'bookings' => $bookings,
-            'filters' => ['q' => $search, 'status' => $status], 'statuses' => $this->statuses(), 'bookingType' => $type,
+            'filters' => ['q' => $search, 'status' => $status, 'payment' => $payment], 'statuses' => $this->statuses(), 'bookingType' => $type,
             'notificationTypes' => $this->notificationTypes(),
             'paidByBooking' => $this->paidAmountsByBooking(array_column($bookings, 'id')),
         ]);
     }
 
-    private function filteredBookings(?string $type, string $search, string $status): BookingModel
+    private function filteredBookings(?string $type, string $search, string $status, string $payment = ''): BookingModel
     {
         $model = new BookingModel();
 
@@ -75,6 +76,12 @@ final class BookingsController extends BaseController
         }
         if ($type !== null) {
             $model->where('booking_type', $type);
+        }
+        // "outstanding" = anything not fully paid (unpaid or partially paid) and still active.
+        if ($payment === 'outstanding') {
+            $model->whereIn('payment_status', ['unpaid', 'partial'])->where('status !=', 'cancelled');
+        } elseif (in_array($payment, ['unpaid', 'partial', 'paid'], true)) {
+            $model->where('payment_status', $payment);
         }
 
         return $model;
@@ -406,7 +413,7 @@ final class BookingsController extends BaseController
             $bookings = (new BookingModel())->whereIn('id', $ids)->findAll();
         } else {
             $bookingType = in_array((string) $this->request->getPost('type'), ['summer_storage', 'summer_advantage'], true) ? (string) $this->request->getPost('type') : null;
-            $bookings = $this->filteredBookings($bookingType, trim((string) $this->request->getPost('q')), (string) $this->request->getPost('status'))->findAll();
+            $bookings = $this->filteredBookings($bookingType, trim((string) $this->request->getPost('q')), (string) $this->request->getPost('status'), (string) $this->request->getPost('payment'))->findAll();
         }
 
         if ($bookings === []) {
@@ -605,7 +612,7 @@ final class BookingsController extends BaseController
     {
         $search   = trim((string) $this->request->getGet('q'));
         $status   = (string) $this->request->getGet('status');
-        $bookings = $this->filteredBookings($type, $search, $status)->orderBy('created_at', 'DESC')->findAll();
+        $bookings = $this->filteredBookings($type, $search, $status, (string) $this->request->getGet('payment'))->orderBy('created_at', 'DESC')->findAll();
         $paidByBooking = $this->paidAmountsByBooking(array_column($bookings, 'id'));
 
         $headers = ['Reference', 'Type', 'Customer', 'Email', 'Phone', 'Student ID', 'Leaving Campus', 'Leaving Campus location', 'Returning to Campus', 'Returning to Campus location', 'Warehouse row', 'Total', 'Paid', 'Balance', 'Payment status', 'Status', 'Created'];
@@ -742,7 +749,7 @@ final class BookingsController extends BaseController
     {
         return match ($type) {
             'confirmation' => true,
-            'balance-due' => max(0, round((float) $booking['total_amount'] - ($paidByBooking[(int) $booking['id']] ?? 0.0), 2)) >= 0.01,
+            'balance-due' => $booking['status'] !== 'cancelled' && max(0, round((float) $booking['total_amount'] - ($paidByBooking[(int) $booking['id']] ?? 0.0), 2)) >= 0.01,
             'pickup-reminder' => $booking['pickup_date'] !== null,
             'pickup-needed' => $booking['pickup_date'] === null,
             'dropoff-reminder' => $booking['dropoff_date'] !== null,

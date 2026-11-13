@@ -415,6 +415,40 @@ final class SmtpService
     }
 
     /**
+     * Receipt after an online payment is verified. Goes to the student and copies the parent and support.
+     *
+     * @param array<string, mixed>       $booking
+     * @param list<array<string, mixed>> $bookingItems
+     * @param array<string, mixed>|null  $dorm
+     * @param array{label: string, url: string, hasAccount: bool} $accountLink
+     */
+    public function sendPaymentReceived(array $booking, array $bookingItems, ?array $dorm, float $amount, float $balance, array $accountLink): bool
+    {
+        $paragraphs = ['We received your payment of $' . number_format($amount, 2) . ' for booking ' . $booking['reference_code'] . '. Thank you!'];
+        $paragraphs[] = $balance >= 0.01
+            ? 'Your remaining balance is $' . number_format($balance, 2) . '. You can pay it any time using the link below.'
+            : 'Your booking is paid in full. No further payment is needed.';
+        $paragraphs[] = 'If you have additional items to add to your order or any questions, contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.';
+
+        return $this->sendBookingNotice(
+            (string) $booking['customer_email'],
+            (string) $booking['customer_name'],
+            'payment_received',
+            'Payment received for EPIC Storage booking ' . $booking['reference_code'],
+            'Payment received',
+            $balance >= 0.01 ? 'Payment received for ' . $booking['reference_code'] : 'Booking ' . $booking['reference_code'] . ' is paid',
+            $paragraphs,
+            $accountLink['label'],
+            $accountLink['url'],
+            [
+                $this->bookingInfoTable($booking, $dorm),
+                $this->bookingPricingTable($booking, $bookingItems),
+            ],
+            cc: $this->copyRecipients($booking),
+        );
+    }
+
+    /**
      * Staff "Invite to register" for a walk-in booking.
      *
      * @param array<string, mixed> $booking

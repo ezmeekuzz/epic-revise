@@ -50,6 +50,11 @@ final class PaymentService
         }
 
         (new BookingService())->refreshPaymentStatus((int) $payment['booking_id']);
+
+        // Online (Square) payments email a receipt; staff-recorded payments stay silent.
+        if (($payment['provider'] ?? '') === 'square') {
+            (new BookingNotifier())->paymentReceived((int) $payment['booking_id'], (float) $payment['amount']);
+        }
     }
 
     public function refund(int $paymentId): void
