@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Libraries\BookingCharge;
 use App\Libraries\BookingLinkService;
 use App\Libraries\PaymentService;
 use App\Libraries\SquarePaymentGateway;
@@ -105,86 +106,17 @@ final class CustomerPaymentController extends BaseController
             return $this->response->setStatusCode(422)->setJSON(['status' => 'error', 'message' => 'The payment session is invalid or expired. Refresh the page and try again.']);
         }
 
-        $balance = $this->outstandingBalance($booking);
-        if ($balance < 0.01) {
+        $result = (new BookingCharge())->run($booking, $sourceId, $submittedKey, $guest);
+        if ($result['ok']) {
             session()->remove($this->sessionKey($id));
 
-            return $this->response->setJSON(['status' => 'success', 'message' => 'This booking is already paid.', 'redirect' => $doneUrl]);
+            return $this->response->setJSON(['status' => 'success', 'message' => $result['message'], 'redirect' => $doneUrl]);
         }
-
-        $payments = new PaymentModel();
-        $payment = $payments->where('reference', $submittedKey)->first();
-        try {
-            if ($payment === null) {
-                $paymentId = (new PaymentService())->create([
-                    'booking_id' => $id,
-                    // A guest booking has no owner yet; linking it to an account later updates this too.
-                    'user_id' => ! empty($booking['user_id']) ? (int) $booking['user_id'] : null,
-                    'reference' => $submittedKey,
-                    'provider' => 'square',
-                    'method' => 'card',
-                    'amount' => number_format($balance, 2, '.', ''),
-                    'currency' => $configuration['currency'],
-                    'status' => 'pending',
-                    'notes' => $guest ? 'Customer-initiated Square payment (no account).' : 'Customer-initiated Square payment.',
-                ]);
-                $payment = $payments->find($paymentId);
-            }
-            if ($payment === null) {
-                throw new RuntimeException('The payment attempt could not be created.');
-            }
-            if ($payment['status'] === 'completed') {
-                session()->remove($this->sessionKey($id));
-
-                return $this->response->setJSON(['status' => 'success', 'message' => 'Payment completed.', 'redirect' => $doneUrl]);
-            }
-            if ($payment['status'] !== 'pending') {
-                throw new RuntimeException('This payment attempt can no longer be processed. Refresh the page and try again.');
-            }
-
-            $result = (new SquarePaymentGateway())->charge(
-                $sourceId,
-                // Retries retain the amount saved with this idempotency key.
-                // Additional items may have increased the order balance since the attempt began.
-                (int) round((float) $payment['amount'] * 100),
-                $configuration['currency'],
-                $submittedKey,
-                (string) $booking['reference_code'],
-            );
-            if (! $result['success']) {
-                $payments->update((int) $payment['id'], ['status' => 'failed', 'notes' => (string) ($result['message'] ?? 'Square payment failed.')]);
-                session()->remove($this->sessionKey($id));
-
-                return $this->response->setStatusCode(422)->setJSON([
-                    'status' => 'error',
-                    'message' => (string) ($result['message'] ?? 'Square could not complete the payment.'),
-                    'reload' => true,
-                ]);
-            }
-
-            $payments->update((int) $payment['id'], [
-                'external_reference' => $result['paymentId'],
-                'notes' => $result['receiptUrl'] !== '' ? 'Square receipt: ' . $result['receiptUrl'] : 'Square payment completed.',
-            ]);
-            $currentPayment = $payments->find((int) $payment['id']);
-            if (($currentPayment['status'] ?? '') !== 'completed') {
-                (new PaymentService())->complete((int) $payment['id']);
-            }
+        if ($result['reload']) {
             session()->remove($this->sessionKey($id));
-
-            return $this->response->setJSON([
-                'status' => 'success',
-                'message' => 'Payment completed successfully.',
-                'redirect' => $doneUrl,
-            ]);
-        } catch (Throwable $exception) {
-            log_message('error', 'Customer Square payment persistence failed for booking {booking}: {type}', [
-                'booking' => $id,
-                'type' => $exception::class,
-            ]);
-
-            return $this->response->setStatusCode(500)->setJSON(['status' => 'error', 'message' => 'The payment could not be confirmed. Please check your booking before trying again.']);
         }
+
+        return $this->response->setStatusCode($result['code'])->setJSON(['status' => 'error', 'message' => $result['message'], 'reload' => $result['reload']]);
     }
 
     private function doneUrl(int $id, bool $guest): string

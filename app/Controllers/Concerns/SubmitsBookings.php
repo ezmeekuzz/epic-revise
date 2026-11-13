@@ -40,6 +40,7 @@ trait SubmitsBookings
 
         return [
             'lockedService' => $lockedService,
+            'square' => (new \App\Libraries\SquarePaymentGateway())->clientConfiguration(),
             'user' => $user ?? [],
             'guest' => $user === null,
             'layout' => $user === null ? 'layouts/site' : 'layouts/account',
@@ -157,5 +158,22 @@ trait SubmitsBookings
 
             return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Booking not saved', 'message' => 'Your booking request could not be saved. Please try again.']);
         }
+    }
+
+    /**
+     * Single-page checkout: the booking form can carry a Square card token. The booking is already
+     * saved at this point, so a declined card only means "pay on the next page", never a lost order.
+     *
+     * @return array{ok: bool, message: string, code: int, reload: bool}|null null when no card was submitted
+     */
+    protected function chargeFromCheckout(int $bookingId, bool $guest): ?array
+    {
+        $token = trim((string) $this->request->getPost('square_token'));
+        $booking = $token !== '' ? (new \App\Models\BookingModel())->find($bookingId) : null;
+        if ($booking === null) {
+            return null;
+        }
+
+        return (new \App\Libraries\BookingCharge())->run($booking, $token, 'EPIC-' . $bookingId . '-' . bin2hex(random_bytes(12)), $guest);
     }
 }

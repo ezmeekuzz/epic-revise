@@ -133,6 +133,14 @@ final class AccountController extends BaseController
         $notifier->customerBookingCreated($result['id']);
         $notifier->adminBookingCreated($result['id']);
 
+        $charge = $this->chargeFromCheckout($result['id'], false);
+        if ($charge !== null && $charge['ok']) {
+            return redirect()->route('account.bookings.show', [$result['id']])->with('success', 'Your booking is saved and your payment was received.');
+        }
+        if ($charge !== null) {
+            return redirect()->route('account.bookings.payment', [$result['id']])->with('alert', ['type' => 'warning', 'title' => 'Booking saved, payment not completed', 'message' => $charge['message'] . ' Your booking is saved. You can try again below.']);
+        }
+
         return redirect()->route('account.bookings.payment', [$result['id']])->with('success', 'Your service request was saved. Continue with secure payment.');
     }
 

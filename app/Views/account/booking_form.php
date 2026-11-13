@@ -185,6 +185,25 @@ $field = static function (string $name, string $label, array $errors, string $va
                                     </div>
                                 </div>
                             </section>
+
+                            <?php if (! empty($square['ready'])): ?>
+                            <section class="portal-card mb-4" aria-labelledby="checkoutPaymentHeading" data-checkout-payment>
+                                <div class="portal-section-heading">
+                                    <span class="booking-step">5</span>
+                                    <div><h2 class="h4 mb-1" id="checkoutPaymentHeading">Payment</h2><p class="text-muted-brand mb-0">Pay now to finish in one step, or save your order and pay later with a link we email you.</p></div>
+                                </div>
+                                <div class="service-choice-grid mt-4">
+                                    <label class="service-choice is-selected"><input type="radio" name="payment_option" value="now" checked><span class="service-choice-copy"><strong>Pay now by card</strong><small>Secure payment through Square.</small></span></label>
+                                    <label class="service-choice"><input type="radio" name="payment_option" value="later"><span class="service-choice-copy"><strong>Pay later</strong><small>Your order is saved. We email you a payment link.</small></span></label>
+                                </div>
+                                <div class="mt-4" data-checkout-card-wrap>
+                                    <div id="checkout-card-container" class="square-card-container" aria-label="Secure Square card fields"></div>
+                                    <div class="payment-inline-status mt-3" data-checkout-status role="status" aria-live="polite"></div>
+                                    <p class="field-hint mb-0">Card details are collected securely by Square and are not stored by EPIC.</p>
+                                </div>
+                                <input type="hidden" name="square_token" value="" data-checkout-token>
+                            </section>
+                            <?php endif ?>
                         </div>
 
                         <aside class="portal-card booking-price-summary" aria-labelledby="estimateHeading">
@@ -197,7 +216,7 @@ $field = static function (string $name, string $label, array $errors, string $va
                                 <label class="form-check-label" for="order_terms">I agree to the <a href="<?= site_url('terms') ?>" target="_blank" rel="noopener">Terms and Conditions</a> for this order.</label>
                                 <?php if (isset($errors['terms'])): ?><div class="invalid-feedback"><?= esc($errors['terms']) ?></div><?php endif ?>
                             </div>
-                            <div class="d-grid gap-2 mt-3"><button class="btn btn-brand-primary" type="submit">Continue to payment</button><a class="btn btn-light" href="<?= site_url($guest ? 'services' : 'account') ?>">Cancel</a></div>
+                            <div class="d-grid gap-2 mt-3"><button class="btn btn-brand-primary" type="submit" data-checkout-submit><?= ! empty($square['ready']) ? 'Place order' : 'Continue to payment' ?></button><a class="btn btn-light" href="<?= site_url($guest ? 'services' : 'account') ?>">Cancel</a></div>
                         </aside>
                     </div>
                 </form>
@@ -209,5 +228,10 @@ $field = static function (string $name, string $label, array $errors, string $va
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
+<?php if (! empty($square['ready'])): ?>
+<script id="checkoutSquareConfig" type="application/json"><?= json_encode(['applicationId' => $square['applicationId'], 'locationId' => $square['locationId'], 'currency' => $square['currency']], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR) ?></script>
+<script src="<?= esc($square['sdkUrl'], 'attr') ?>"></script>
+<script src="<?= base_url('assets/js/booking-checkout.js') ?>?v=<?= (int) filemtime(FCPATH . 'assets/js/booking-checkout.js') ?>"></script>
+<?php endif ?>
 <script src="<?= base_url('assets/js/booking-processing.js') ?>?v=<?= (int) filemtime(FCPATH . 'assets/js/booking-processing.js') ?>"></script>
 <?= $this->endSection() ?>

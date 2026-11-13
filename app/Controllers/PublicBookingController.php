@@ -64,6 +64,14 @@ final class PublicBookingController extends BaseController
         $this->sendBookingReceivedEmail($result['id']);
         (new BookingNotifier())->adminBookingCreated($result['id']);
 
+        $charge = $this->chargeFromCheckout($result['id'], true);
+        if ($charge !== null && $charge['ok']) {
+            return redirect()->to(site_url('book/' . $result['id'] . '/confirmed'))->with('success', 'Your booking is saved and your payment was received.');
+        }
+        if ($charge !== null) {
+            return redirect()->to(site_url('book/' . $result['id'] . '/pay'))->with('alert', ['type' => 'warning', 'title' => 'Booking saved, payment not completed', 'message' => $charge['message'] . ' Your booking is saved. You can try again below.']);
+        }
+
         return redirect()->to(site_url('book/' . $result['id'] . '/pay'))->with('success', 'Your booking was saved. Complete your payment below.');
     }
 
