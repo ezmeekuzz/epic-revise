@@ -54,7 +54,7 @@
       "@id": "https://epicstoragehpu.com/#webpage",
       "url": "https://epicstoragehpu.com/",
       "name": "HPU Dorm Storage & Moving | EPIC Storage Solutions",
-      "description": "Dorm-to-dorm summer storage for High Point University students, including boxes, pickup, secure storage, and redelivery in High Point, NC.",
+      "description": "Dorm-to-dorm summer storage for High Point University students, including boxes, leaving campus collection, secure storage, and returning to campus delivery in High Point, NC.",
       "isPartOf": {
         "@id": "https://epicstoragehpu.com/#website"
       },
@@ -84,7 +84,7 @@
           <ul class="hero2-checklist">
             <li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Boxes and packing tape</li>
             <li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Secured storage</li>
-            <li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Pick-up from your dorm room</li>
+            <li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Leaving Campus: collected from your dorm room</li>
             <li><span class="check-circle"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Redeliver back to your dorm room</li>
           </ul>
 
@@ -148,7 +148,7 @@
         <div>
           <span class="home-action pill-eyebrow solid">The Process</span>
           <h2>How it works</h2>
-          <p>Three simple steps between drop-off and move-in day.</p>
+          <p>Three simple steps between leaving campus and returning to campus.</p>
         </div>
       </div>
 
@@ -163,7 +163,7 @@
           <span class="process2-icon"><img src="<?= base_url('assets/images/noun_pack_8473700.png') ?>" alt=""></span>
           <span class="process2-num">2</span>
           <h3>Pack</h3>
-          <p>Complimentary boxes and packing tape are available before your pick-up date, with all the specifics sent by email.</p>
+          <p>Complimentary boxes and packing tape are available before you leave campus, with all the specifics sent by email.</p>
         </div>
         <div class="process2-card outline">
           <span class="process2-icon"><img src="<?= base_url('assets/images/noun_ProductReturn_5063282.png') ?>" alt=""></span>
@@ -309,6 +309,6 @@
     </div>
   </section>
 
-<section class="py-5"><div class="container"><h2>Frequently asked questions</h2><details class="mb-3"><summary>Can I add more items later?</summary><p>Yes. Open your existing order in your account and select Add additional items.</p></details><details class="mb-3"><summary>Do I need to schedule when ordering?</summary><p>You can provide pickup details later from your account.</p></details><a href="<?= site_url('faqs') ?>">View all FAQs</a></div></section>
+<section class="py-5"><div class="container"><h2>Frequently asked questions</h2><details class="mb-3"><summary>Can I add more items later?</summary><p>Yes. Open your existing order in your account and select Add additional items.</p></details><details class="mb-3"><summary>Do I need to schedule when ordering?</summary><p>You can provide your leaving campus and returning to campus details later from your account.</p></details><a href="<?= site_url('faqs') ?>">View all FAQs</a></div></section>
 </main>
 <?= $this->endSection() ?>

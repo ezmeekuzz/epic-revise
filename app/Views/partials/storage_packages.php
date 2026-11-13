@@ -17,7 +17,7 @@ $summerAdvantageBoxPrice = number_format((float) ($pricingSettings['summer_advan
               <li>5 Large Boxes (18"×18"×24")</li>
               <li>Packing tape and supplies</li>
               <li>Secured storage</li>
-              <li>Pickup from your dorm</li><li>Re-delivery to your dorm</li>
+              <li>Leaving Campus: collected from your dorm</li><li>Returning to Campus: delivered back to your dorm</li>
             </ul>
             <div class="plan-notes">
               <span>Additional boxes and items can be added</span>
@@ -42,7 +42,7 @@ $summerAdvantageBoxPrice = number_format((float) ($pricingSettings['summer_advan
             <ul class="plan-bullets">
               <li>Packing tape and supplies</li>
               <li>Secured storage</li>
-              <li>Pickup from your dorm</li><li>Re-delivery to your dorm</li>
+              <li>Leaving Campus: collected from your dorm</li><li>Returning to Campus: delivered back to your dorm</li>
             </ul>
             <div class="plan-notes">
               <span>Additional items can be added</span>

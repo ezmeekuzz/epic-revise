@@ -33,7 +33,7 @@ final class AdminOperationsTest extends CIUnitTestCase
         $pages = [
             '/admin/'             => 'Current activity across bookings',
             '/admin/bookings'     => 'Booking Masterlist',
-            '/admin/bookings/new' => 'Create an administrator-managed customer booking',
+            '/admin/bookings/new' => 'Create an order for a customer',
             '/admin/items'        => 'Item Masterlist',
             '/admin/items/new'    => 'Maintain the storage item catalog',
             '/admin/payments'     => 'Record manual or externally processed payments',
@@ -265,7 +265,7 @@ final class AdminOperationsTest extends CIUnitTestCase
         $profilePage = $this->withSession($session)->get('/account/profile');
         $profilePage->assertStatus(200);
         $profilePage->assertSee('Parent or guardian');
-        $profilePage->assertSee('Dorm / pickup location');
+        $profilePage->assertSee('Dorm / leaving campus location');
 
         $profileUpdate = $this->withSession($session)->post('/account/profile', [
             ...\Tests\Support\CustomerFixture::details(),

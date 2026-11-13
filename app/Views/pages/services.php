@@ -68,7 +68,7 @@
         </div>
         <div class="accordion-item">
           <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sf2">When should I sign up?</button></h3>
-          <div id="sf2" class="accordion-collapse collapse" data-bs-parent="#servicesFaq"><div class="accordion-body">Sign up now with our base package to reserve your spot. You can add additional items and update your pickup schedule later via your order confirmation email.</div></div>
+          <div id="sf2" class="accordion-collapse collapse" data-bs-parent="#servicesFaq"><div class="accordion-body">Sign up now with our base package to reserve your spot. You can add additional items and update your leaving campus and returning to campus dates later via your order confirmation email.</div></div>
         </div>
         <div class="accordion-item">
           <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sf3">Do I need to be present when you pick up or drop off?</button></h3>

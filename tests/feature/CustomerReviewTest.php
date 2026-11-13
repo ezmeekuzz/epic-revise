@@ -94,7 +94,8 @@ final class CustomerReviewTest extends CIUnitTestCase
     {
         [$userId, $bookingId] = $this->order();
         $session = ['customer_user_id' => $userId, 'customer_user_name' => 'Review Student', 'customer_user_email' => 'review@example.com', 'customer_is_logged_in' => true];
-        $this->withSession($session)->get('/account/bookings/new')->assertRedirectTo('/account/bookings/' . $bookingId . '/items');
+        // Customers may place more than one order, so the new-order form stays reachable.
+        $this->withSession($session)->get('/account/bookings/new')->assertStatus(200);
         $dashboard = $this->withSession($session)->get('/account');
         $dashboard->assertStatus(200);
         $dashboard->assertSee('parent@example.com');
@@ -108,7 +109,8 @@ final class CustomerReviewTest extends CIUnitTestCase
         $services = $this->get('/services');
         $services->assertStatus(200);
         $this->assertStringNotContainsString('Checking live availability', (string) $services->response()->getBody());
-        $services->assertSee('Scheduling your pickup');
+        $services->assertDontSee('Scheduling your pickup');
+        $services->assertDontSee('NEW COPY PENDING');
     }
 
     public function testDuplicateCheckoutCannotCreateAnotherOrderAndTermsAreSnapshotted(): void
@@ -124,8 +126,12 @@ final class CustomerReviewTest extends CIUnitTestCase
         $first->assertRedirectTo('/account/bookings/' . $active['id'] . '/payment');
         $this->assertSame('Approved review terms.', $active['terms_snapshot']);
         $this->assertNotEmpty($active['terms_accepted_at']);
-        $this->withSession($session)->post('/account/bookings', [csrf_token() => csrf_hash(), ...$payload])->assertRedirectTo('/account/bookings/' . $active['id'] . '/items');
-        $this->assertSame(2, (new BookingModel())->where('user_id', $userId)->countAllResults());
+        // A second checkout creates a second order, which goes to its own payment page.
+        $second = $this->withSession($session)->post('/account/bookings', [csrf_token() => csrf_hash(), ...$payload]);
+        $newest = (new CustomerOrderService())->activeOrder($userId);
+        $this->assertNotSame($active['id'], $newest['id']);
+        $second->assertRedirectTo('/account/bookings/' . $newest['id'] . '/payment');
+        $this->assertSame(3, (new BookingModel())->where('user_id', $userId)->countAllResults());
     }
 
     public function testItemAdditionsRetainPaymentsAndApplyStudyAbroadCharges(): void
