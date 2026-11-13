@@ -197,6 +197,11 @@ $field = static function (string $name, string $label, array $errors, string $va
                                     <label class="service-choice"><input type="radio" name="payment_option" value="later"><span class="service-choice-copy"><strong>Pay later</strong><small>Your order is saved. We email you a payment link.</small></span></label>
                                 </div>
                                 <div class="mt-4" data-checkout-card-wrap>
+                                    <div class="wallet-buttons" data-checkout-wallets hidden>
+                                        <div class="apple-pay-button" id="checkout-apple-pay-button" role="button" tabindex="0" aria-label="Pay with Apple Pay" hidden></div>
+                                        <div id="checkout-google-pay-button" hidden></div>
+                                        <div class="wallet-divider"><span>or pay by card</span></div>
+                                    </div>
                                     <div id="checkout-card-container" class="square-card-container" aria-label="Secure Square card fields"></div>
                                     <div class="payment-inline-status mt-3" data-checkout-status role="status" aria-live="polite"></div>
                                     <p class="field-hint mb-0">Card details are collected securely by Square and are not stored by EPIC.</p>

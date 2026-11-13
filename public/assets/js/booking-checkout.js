@@ -52,6 +52,8 @@
     var payments = window.Square.payments(config.applicationId, config.locationId);
     card = await payments.card();
     await card.attach("#checkout-card-container");
+    // Wallets are optional: a failure here must not disable card payment.
+    if (window.__checkoutSetUpWallets) window.__checkoutSetUpWallets(payments).catch(function () {});
   }
 
   initialize().catch(function (error) {
@@ -61,22 +63,39 @@
     setStatus(error instanceof Error ? error.message : "The card form could not be loaded.", true);
   });
 
-  // Capture on document so we run before the booking form's own submit handlers.
-  document.addEventListener("submit", async function (event) {
-    if (event.target !== form || !payNow() || tokenInput.value || !card) return;
+  function tokenError(result, fallback) {
+    return result.errors && result.errors.length
+      ? result.errors.map(function (item) { return item.message || item.detail || fallback; }).join(" ")
+      : fallback;
+  }
 
-    event.preventDefault();
-    event.stopImmediatePropagation();
+  // One routine for card, Apple Pay and Google Pay: validate the form, get a token, submit the booking.
+  async function submitWith(getToken, message) {
     if (busy) return;
     if (!form.checkValidity()) {
       form.classList.add("was-validated");
       form.reportValidity();
       return;
     }
-
     busy = true;
-    setStatus("Securely verifying your card…", false);
+    setStatus(message, false);
     try {
+      tokenInput.value = await getToken();
+      setStatus("Placing your order…", false);
+      form.requestSubmit(form.querySelector("[data-checkout-submit]"));
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Payment could not be verified.", true);
+      busy = false;
+    }
+  }
+
+  // Capture on document so we run before the booking form's own submit handlers.
+  document.addEventListener("submit", function (event) {
+    if (event.target !== form || !payNow() || tokenInput.value || !card) return;
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    submitWith(async function () {
       var details = { intent: "CHARGE", customerInitiated: true, sellerKeyedIn: false };
       var amount = estimatedTotal();
       if (amount) { details.amount = amount; details.currencyCode = config.currency; }
@@ -84,18 +103,73 @@
       var email = form.querySelector('[name="customer_email"]');
       details.billingContact = { givenName: name ? name.value : "", email: email ? email.value : "" };
       var result = await card.tokenize(details);
-      if (result.status !== "OK" || !result.token) {
-        var message = result.errors && result.errors.length
-          ? result.errors.map(function (item) { return item.message || item.detail; }).join(" ")
-          : "Square could not verify the card details.";
-        throw new Error(message);
-      }
-      tokenInput.value = result.token;
-      setStatus("Placing your order…", false);
-      form.requestSubmit(form.querySelector("[data-checkout-submit]"));
-    } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Card could not be verified.", true);
-      busy = false;
-    }
+      if (result.status !== "OK" || !result.token) throw new Error(tokenError(result, "Square could not verify the card details."));
+      return result.token;
+    }, "Securely verifying your card…");
   }, true);
+
+  // Apple Pay / Google Pay appear only when Square says this device and account support them.
+  async function setUpWallets(payments) {
+    var container = wrap.querySelector("[data-checkout-wallets]");
+    if (!container || typeof payments.paymentRequest !== "function") return;
+
+    var paymentRequest;
+    try {
+      paymentRequest = payments.paymentRequest({
+        countryCode: "US",
+        currencyCode: config.currency,
+        total: { amount: estimatedTotal() || "1.00", label: "EPIC Storage booking" }
+      });
+    } catch (error) {
+      return;
+    }
+
+    function walletToken(wallet, name) {
+      return async function () {
+        // The total changes as the customer edits the order, so refresh it at click time.
+        try {
+          var amount = estimatedTotal();
+          if (amount && typeof paymentRequest.update === "function") {
+            paymentRequest.update({ total: { amount: amount, label: "EPIC Storage booking" } });
+          }
+        } catch (error) { /* keep the amount we started with */ }
+        var result = await wallet.tokenize();
+        if (result.status !== "OK" || !result.token) throw new Error(tokenError(result, name + " did not complete. Try again or pay by card."));
+        return result.token;
+      };
+    }
+
+    var shown = false;
+
+    var appleButton = document.getElementById("checkout-apple-pay-button");
+    if (appleButton && typeof payments.applePay === "function") {
+      try {
+        var applePay = await payments.applePay(paymentRequest);
+        var payWithApple = function () { submitWith(walletToken(applePay, "Apple Pay"), "Waiting for Apple Pay…"); };
+        appleButton.addEventListener("click", payWithApple);
+        appleButton.addEventListener("keydown", function (event) {
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); payWithApple(); }
+        });
+        appleButton.hidden = false;
+        shown = true;
+      } catch (error) { /* unsupported device or domain not registered with Square */ }
+    }
+
+    var googleButton = document.getElementById("checkout-google-pay-button");
+    if (googleButton && typeof payments.googlePay === "function") {
+      try {
+        var googlePay = await payments.googlePay(paymentRequest);
+        googleButton.hidden = false;
+        await googlePay.attach("#checkout-google-pay-button", { buttonColor: "black", buttonSizeMode: "fill", buttonType: "pay" });
+        googleButton.addEventListener("click", function () {
+          submitWith(walletToken(googlePay, "Google Pay"), "Waiting for Google Pay…");
+        });
+        shown = true;
+      } catch (error) { googleButton.hidden = true; }
+    }
+
+    container.hidden = !shown;
+  }
+
+  window.__checkoutSetUpWallets = setUpWallets;
 })();
