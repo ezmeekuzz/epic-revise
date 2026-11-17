@@ -20,12 +20,16 @@ final class AuthService
     ) {
     }
 
+    /** Failed sign-ins allowed from one address for one account before that address is locked out. */
     public const MAX_FAILED_LOGINS = 5;
-    public const LOCKOUT_MINUTES   = 15;
+    /** Failed sign-ins from any addresses before the account itself is locked (stops distributed guessing). */
+    public const MAX_ACCOUNT_FAILURES = 20;
+    public const LOCKOUT_MINUTES      = 15;
 
     /**
-     * Verifies credentials. Repeated failures lock the account for a while (the lock is
-     * silent: the caller just gets null, same as for a wrong password).
+     * Verifies credentials. Repeated failures lock out the address they came from for a while, so a
+     * stranger cannot lock the real owner out by guessing; a much higher account-wide count also
+     * locks the account (the lock is silent: the caller just gets null, same as for a wrong password).
      *
      * @return array<string, mixed>|null
      */
@@ -40,7 +44,14 @@ final class AuthService
 
         $user = $users->first();
 
+        $attemptKey = $this->attemptKey($email);
+        if ((int) cache($attemptKey) >= self::MAX_FAILED_LOGINS) {
+            return null;
+        }
+
         if ($user === null) {
+            cache()->save($attemptKey, (int) cache($attemptKey) + 1, self::LOCKOUT_MINUTES * 60);
+
             return null;
         }
 
@@ -49,10 +60,13 @@ final class AuthService
         }
 
         if ($user['status'] !== 'active' || ! password_verify($password, $user['password_hash'])) {
+            cache()->save($attemptKey, (int) cache($attemptKey) + 1, self::LOCKOUT_MINUTES * 60);
             $this->recordFailure($user);
 
             return null;
         }
+
+        cache()->delete($attemptKey);
 
         if (password_needs_rehash($user['password_hash'], PASSWORD_DEFAULT)) {
             $this->userModel()->update($user['id'], ['password_hash' => password_hash($password, PASSWORD_DEFAULT)]);
@@ -76,12 +90,17 @@ final class AuthService
         $this->startSession($user);
     }
 
+    private function attemptKey(string $email): string
+    {
+        return 'login_fail_' . hash('sha256', mb_strtolower(trim($email)) . '|' . service('request')->getIPAddress());
+    }
+
     /** @param array<string, mixed> $user */
     private function recordFailure(array $user): void
     {
         $count  = (int) ($user['failed_login_count'] ?? 0) + 1;
         $update = ['failed_login_count' => $count];
-        if ($count >= self::MAX_FAILED_LOGINS) {
+        if ($count >= self::MAX_ACCOUNT_FAILURES) {
             $update = ['failed_login_count' => 0, 'locked_until' => date('Y-m-d H:i:s', time() + self::LOCKOUT_MINUTES * 60)];
         }
         $this->userModel()->update($user['id'], $update);

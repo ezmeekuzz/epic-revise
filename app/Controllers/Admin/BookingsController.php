@@ -191,7 +191,11 @@ final class BookingsController extends BaseController
             return redirect()->back()->withInput()->with('error', 'The booking could not be created. Please review the details.');
         }
 
-        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Booking created. Add its size-specific items below.');
+        // The student gets the order confirmation straight away (parent and support receive link-free copies).
+        // Totals are final once items are added, so staff can resend from the booking page at any time.
+        (new BookingNotifier())->customerBookingCreated($id);
+
+        return redirect()->route('admin.bookings.show', [$id])->with('success', 'Order created and the confirmation email was sent. Add its size-specific items below.');
     }
 
     public function show(int $id): string

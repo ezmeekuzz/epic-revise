@@ -28,19 +28,28 @@ final class Totp
 
     public function verify(string $secret, string $code, int $window = 1, ?int $timestamp = null): bool
     {
+        return $this->matchedStep($secret, $code, $window, $timestamp) !== null;
+    }
+
+    /**
+     * The 30-second time step the code belongs to, or null if it is not valid. Callers store the step
+     * and reject any code whose step is not newer, so one code cannot be replayed.
+     */
+    public function matchedStep(string $secret, string $code, int $window = 1, ?int $timestamp = null): ?int
+    {
         $code = preg_replace('/\s+/', '', $code) ?? '';
         if (! preg_match('/^\d{6}$/', $code)) {
-            return false;
+            return null;
         }
 
         $counter = intdiv($timestamp ?? time(), 30);
         for ($offset = -$window; $offset <= $window; $offset++) {
             if (hash_equals($this->code($secret, $counter + $offset), $code)) {
-                return true;
+                return $counter + $offset;
             }
         }
 
-        return false;
+        return null;
     }
 
     public function code(string $secret, int $counter): string

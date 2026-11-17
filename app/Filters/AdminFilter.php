@@ -65,8 +65,15 @@ final class AdminFilter implements FilterInterface
         $ids    = array_values(array_filter($parts, static fn (string $part): bool => ctype_digit($part)));
         $action = $words === [] ? 'admin' : implode('.', $words);
         $target = $ids === [] ? null : ($words[0] ?? 'record') . '/' . implode('/', $ids);
-        $status = $response->getStatusCode();
+        $status  = $response->getStatusCode();
+        $session = service('session');
+        $alert   = $session->getFlashdata('alert');
+        // A redirect back with an error message means the change was refused, not saved.
+        $rejected = $status >= 400
+            || $session->getFlashdata('error') !== null
+            || $session->getFlashdata('errors') !== null
+            || (is_array($alert) && in_array($alert['type'] ?? '', ['error', 'warning'], true));
 
-        ActivityLog::record($action, $target, $status >= 400 ? 'failed (HTTP ' . $status . ')' : null);
+        ActivityLog::record($action, $target, $status >= 400 ? 'HTTP ' . $status : null, null, null, $rejected ? 'rejected' : 'ok');
     }
 }

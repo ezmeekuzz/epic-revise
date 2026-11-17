@@ -126,6 +126,7 @@ $routes->group('admin', ['filter' => 'admin'], static function ($routes): void {
     $routes->post('payments/(:num)/complete', 'Admin\\PaymentsController::complete/$1', ['as' => 'admin.payments.complete']);
     $routes->post('payments/(:num)/refund', 'Admin\\PaymentsController::refund/$1', ['as' => 'admin.payments.refund']);
     $routes->get('activity-log', 'Admin\\ActivityLogController::index', ['as' => 'admin.activity-log']);
+    $routes->get('activity-log/export.csv', 'Admin\\ActivityLogController::exportCsv', ['as' => 'admin.activity-log.export']);
     $routes->get('transactions', 'Admin\\TransactionsController::index', ['as' => 'admin.transactions']);
     $routes->get('settings', 'Admin\\SettingsController::index', ['as' => 'admin.settings']);
     $routes->post('settings/(:alpha)', 'Admin\\SettingsController::update/$1', ['as' => 'admin.settings.update']);

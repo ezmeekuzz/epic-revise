@@ -121,9 +121,25 @@ final class EpicRevisionTest extends CIUnitTestCase
         $method->setAccessible(true);
 
         $copies = $method->invoke(new SmtpService(), ['parent_email_address' => 'Parent@Example.com']);
-        $this->assertSame(['Parent@Example.com', 'support@example.com'], $copies);
-        $this->assertSame(['support@example.com'], $method->invoke(new SmtpService(), ['parent_email_address' => 'not-an-email']));
-        $this->assertSame(['SUPPORT@example.com'], $method->invoke(new SmtpService(), ['parent_email_address' => 'SUPPORT@example.com']));
+        $this->assertSame(['Parent or guardian' => 'Parent@Example.com', 'EPIC Support' => 'support@example.com'], $copies);
+        $this->assertSame(['EPIC Support' => 'support@example.com'], $method->invoke(new SmtpService(), ['parent_email_address' => 'not-an-email']));
+        $this->assertSame(['Parent or guardian' => 'SUPPORT@example.com'], $method->invoke(new SmtpService(), ['parent_email_address' => 'SUPPORT@example.com']));
+    }
+
+    public function testParentAndSupportCopiesNeverCarryAccountLinks(): void
+    {
+        $paragraphs = [
+            'We received your Summer Storage booking EPIC-1. Your booking total is $515.00.',
+            'If you have not finished paying, use the Pay now button to complete your payment securely.',
+            'This email address already has an EPIC account. Use the button below to add this booking to it in one click. No password needed.',
+            'Questions? Contact Service Support at support@epicstoragehpu.com.',
+        ];
+        $copy = SmtpService::recordCopyParagraphs($paragraphs, 'Sam Student', 'sam@example.com');
+
+        $this->assertStringContainsString('copy of the notice sent to Sam Student', $copy[0]);
+        $this->assertCount(3, $copy, 'Only the two sentences pointing at buttons or links are removed.');
+        $this->assertStringNotContainsString('button', strtolower(implode(' ', $copy)));
+        $this->assertStringContainsString('Your booking total is $515.00', $copy[1]);
     }
 
     public function testAdminCreatesCustomerWithoutConfirmationAndStartsAnOrder(): void
@@ -175,10 +191,32 @@ final class EpicRevisionTest extends CIUnitTestCase
         $id = (int) (new UserModel())->insert(['name' => 'Lock Admin', 'email' => $email, 'password_hash' => password_hash('correct horse battery', PASSWORD_DEFAULT), 'role' => 'admin', 'status' => 'active'], true);
         $auth = new AuthService(null, service('session'));
 
+        $key = 'login_fail_' . hash('sha256', $email . '|' . service('request')->getIPAddress());
+        cache()->delete($key);
+
         for ($i = 0; $i < AuthService::MAX_FAILED_LOGINS; $i++) {
             $this->assertNull($auth->attempt($email, 'wrong password', 'admin', false));
         }
-        $this->assertNull($auth->attempt($email, 'correct horse battery', 'admin', false), 'A locked account rejects even the right password.');
+        $this->assertNull($auth->attempt($email, 'correct horse battery', 'admin', false), 'The guessing address is locked out even with the right password.');
+        $this->assertNull((new UserModel())->find($id)['locked_until'], 'Guessing from one address must not lock the real owner out everywhere.');
+
+        cache()->delete($key); // the same person from another address
+        $this->assertNotNull($auth->attempt($email, 'correct horse battery', 'admin', false));
+        cache()->delete($key);
+    }
+
+    public function testAccountLocksWhenManyDifferentAddressesKeepGuessing(): void
+    {
+        $email = 'distributed@example.com';
+        $id = (int) (new UserModel())->insert(['name' => 'Spread Admin', 'email' => $email, 'password_hash' => password_hash('correct horse battery', PASSWORD_DEFAULT), 'role' => 'admin', 'status' => 'active', 'failed_login_count' => AuthService::MAX_ACCOUNT_FAILURES - 1], true);
+        $auth = new AuthService(null, service('session'));
+        $key = 'login_fail_' . hash('sha256', $email . '|' . service('request')->getIPAddress());
+        cache()->delete($key);
+
+        $this->assertNull($auth->attempt($email, 'wrong password', 'admin', false));
+        $this->assertNotNull((new UserModel())->find($id)['locked_until']);
+        cache()->delete($key);
+        $this->assertNull($auth->attempt($email, 'correct horse battery', 'admin', false), 'The account-wide lock holds for every address.');
 
         (new UserModel())->update($id, ['locked_until' => date('Y-m-d H:i:s', time() - 60)]);
         $this->assertNotNull($auth->attempt($email, 'correct horse battery', 'admin', false));
@@ -207,6 +245,13 @@ final class EpicRevisionTest extends CIUnitTestCase
         $ok = $this->withSession($pending)->post('/admin/login/verify', [csrf_token() => csrf_hash(), 'code' => $good]);
         $ok->assertRedirectTo('/admin');
         $this->assertSame($id, (int) session()->get('admin_user_id'));
+
+        // The same code cannot be used a second time.
+        $this->assertNotNull((new UserModel())->find($id)['totp_last_step']);
+        session()->remove(['admin_user_id', 'admin_is_logged_in']);
+        $replay = $this->withSession($pending)->post('/admin/login/verify', [csrf_token() => csrf_hash(), 'code' => $good]);
+        $replay->assertRedirect();
+        $this->assertNull(session()->get('admin_user_id'), 'A used code must be rejected.');
     }
 
     public function testAdminChangesAreWrittenToTheActivityLog(): void
@@ -224,9 +269,39 @@ final class EpicRevisionTest extends CIUnitTestCase
         $this->assertSame('bookings.warehouse', $entry['action']);
         $this->assertSame('bookings/' . $bookingId, $entry['target']);
 
+        $this->assertSame('ok', $entry['outcome']);
+
+        // A refused change (validation error) is recorded as rejected, not as a saved change.
+        $this->withSession($session)->post('/admin/bookings/' . $bookingId . '/warehouse', [csrf_token() => csrf_hash(), 'row_in_warehouse' => 'not-a-number']);
+        $refused = db_connect()->table('admin_activity_log')->where('admin_user_id', $adminId)->orderBy('id', 'DESC')->get()->getRowArray();
+        $this->assertSame('rejected', $refused['outcome']);
+
         $page = $this->withSession($session)->get('/admin/activity-log');
         $page->assertStatus(200);
         $page->assertSee('bookings.warehouse');
+        $page->assertSee('Rejected');
+
+        $csv = $this->withSession($session)->get('/admin/activity-log/export.csv');
+        $csv->assertStatus(200);
+        $csv->assertHeader('Content-Type', 'text/csv; charset=utf-8');
+        $csv->assertSee('bookings.warehouse');
+    }
+
+    public function testAdminCreatedOrderSendsTheConfirmationAndStillSaves(): void
+    {
+        [, $session] = $this->adminSession();
+        $payload = [
+            csrf_token() => csrf_hash(), 'customer_name' => 'Counter Student', 'customer_email' => 'counter@example.com', 'booking_type' => 'summer_storage',
+            'booking_date' => date('Y-m-d'), 'base_price' => '450.00', 'additional_box_quantity' => '0', 'additional_box_amount' => '50.00', 'addtl_box_total_amount' => '0.00',
+            'study_abroad_additional_storage_price' => '0.00', 'is_study_abroad' => '0', 'is_summer_school' => '0', 'summer_school_fee' => '0.00', 'pickup_status' => 'unscheduled',
+            'dropoff_status' => 'unscheduled', 'status' => 'pending', 'discount_amount' => '0.00', 'service_fee_percent' => '3.00', 'service_name' => 'Summer Storage',
+        ];
+        $response = $this->withSession($session)->post('/admin/bookings', $payload);
+        $booking = (new BookingModel())->where('customer_email', 'counter@example.com')->first();
+
+        $this->assertNotNull($booking, 'The order is saved even when the email cannot be delivered (SMTP is off in tests).');
+        $this->assertSame('463.50', $booking['total_amount']);
+        $response->assertRedirectTo('/admin/bookings/' . $booking['id']);
     }
 
     public function testLeavingAndReturningLabelsReplacePickupAndDropoffWording(): void

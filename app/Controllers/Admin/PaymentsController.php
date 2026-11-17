@@ -40,7 +40,7 @@ final class PaymentsController extends BaseController
 
     public function new(): string
     {
-        $bookings = (new BookingModel())->whereNotIn('status', ['cancelled'])->orderBy('created_at', 'DESC')->findAll(100);
+        $bookings = (new BookingModel())->whereNotIn('status', ['cancelled'])->orderBy('created_at', 'DESC')->findAll(1000);
         $selected = (int) $this->request->getGet('booking');
         if ($selected > 0 && ! in_array($selected, array_map('intval', array_column($bookings, 'id')), true)) {
             $extra = (new BookingModel())->find($selected);

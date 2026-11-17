@@ -85,11 +85,13 @@ final class AuthController extends BaseController
             return redirect()->route('admin.login')->with('alert', ['type' => 'warning', 'title' => 'Too many attempts', 'message' => 'Too many incorrect codes. Please wait 15 minutes and sign in again.']);
         }
 
-        if (! (new Totp())->verify(Totp::decryptSecret((string) $user['totp_secret']), (string) $this->request->getPost('code'))) {
-            ActivityLog::record('login.2fa_failed', $user['email'], null, (int) $user['id'], (string) $user['name']);
+        $step = (new Totp())->matchedStep(Totp::decryptSecret((string) $user['totp_secret']), (string) $this->request->getPost('code'));
+        if ($step === null || ($user['totp_last_step'] !== null && $step <= (int) $user['totp_last_step'])) {
+            ActivityLog::record('login.2fa_failed', $user['email'], $step === null ? null : 'code already used', (int) $user['id'], (string) $user['name']);
 
-            return redirect()->back()->with('error', 'That code was not correct. Please try again.');
+            return redirect()->back()->with('error', 'That code was not correct or was already used. Wait for the next code and try again.');
         }
+        (new UserModel())->update((int) $user['id'], ['totp_last_step' => $step]);
 
         session()->remove(['admin_2fa_user_id', 'admin_2fa_at']);
         (new AuthService())->completeLogin($user);

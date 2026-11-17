@@ -35,6 +35,7 @@ final class UserModel extends Model
         'locked_until',
         'totp_secret',
         'totp_enabled',
+        'totp_last_step',
     ];
     protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';

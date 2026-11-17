@@ -148,6 +148,7 @@ final class SmtpService
                 $this->bookingInfoTable($booking, $dorm),
                 $this->bookingPricingTable($booking, $bookingItems),
             ],
+            cc: $this->copyRecipients($booking),
         );
     }
 
@@ -504,10 +505,6 @@ final class SmtpService
         $messageId = $this->messageId();
         $email->setHeader('X-Epic-Delivery-ID', $messageId);
         $email->setTo($recipient);
-        $cc = array_values(array_filter($cc, static fn (string $address): bool => strcasecmp($address, $recipient) !== 0));
-        if ($cc !== []) {
-            $email->setCC($cc);
-        }
         $email->setSubject($subject);
         $logoSource = $this->attachInlineImage($email, 'epic-logo-white.png');
         $email->setMessage(view('emails/booking_notice', [
@@ -526,7 +523,67 @@ final class SmtpService
         $sent = $email->send(false);
         $this->logSubmission($purpose, $sent, $recipient, $sender, $messageId, $settings);
 
+        $this->sendRecordCopies($cc, $recipient, $name, $purpose, $subject, $eyebrow, $heading, $paragraphs, $tables);
+
         return $sent;
+    }
+
+    /**
+     * Text for a record copy: drops any sentence that points at a button, link or password, and says
+     * who the original went to.
+     *
+     * @param list<string> $paragraphs
+     * @return list<string>
+     */
+    public static function recordCopyParagraphs(array $paragraphs, string $studentName, string $studentEmail): array
+    {
+        $kept = array_values(array_filter($paragraphs, static fn (string $text): bool => preg_match('/\b(button|link|click|password)\b/i', $text) !== 1));
+        array_unshift($kept, 'This is a copy of the notice sent to ' . $studentName . ' (' . $studentEmail . '). It is for your records and contains no account links.');
+
+        return $kept;
+    }
+
+    /**
+     * Parent and support receive their own record copy: the same order details but never the buttons or
+     * links, because those carry one-click login, claim or payment access to the student's account.
+     *
+     * @param array<string, string>                                               $copyTo    Role label => address.
+     * @param list<string>                                                        $paragraphs
+     * @param list<array{title: string, rows: list<array{0: string, 1: string}>}> $tables
+     */
+    private function sendRecordCopies(array $copyTo, string $studentEmail, string $studentName, string $purpose, string $subject, string $eyebrow, string $heading, array $paragraphs, array $tables): void
+    {
+        $safeParagraphs = self::recordCopyParagraphs($paragraphs, $studentName, $studentEmail);
+
+        foreach ($copyTo as $greeting => $address) {
+            if ($address === '' || strcasecmp($address, $studentEmail) === 0) {
+                continue;
+            }
+
+            $settings  = new SettingsService();
+            $email     = $this->configuredMailer();
+            $sender    = $this->configureSender($email, $settings);
+            $messageId = $this->messageId();
+            $email->setHeader('X-Epic-Delivery-ID', $messageId);
+            $email->setTo($address);
+            $email->setSubject('Copy: ' . $subject);
+            $logoSource = $this->attachInlineImage($email, 'epic-logo-white.png');
+            $email->setMessage(view('emails/booking_notice', [
+                'name'       => $greeting,
+                'eyebrow'    => $eyebrow,
+                'heading'    => $heading,
+                'paragraphs' => $safeParagraphs,
+                'ctaLabel'   => null,
+                'ctaUrl'     => null,
+                'logoSource' => $logoSource,
+                'tables'     => $tables,
+                'secondaryCtaLabel' => null,
+                'secondaryCtaUrl'   => null,
+            ]));
+
+            $sent = $email->send(false);
+            $this->logSubmission($purpose . '_copy', $sent, $address, $sender, $messageId, $settings);
+        }
     }
 
     /**
@@ -597,23 +654,24 @@ final class SmtpService
     }
 
     /**
-     * Order confirmations go to the student (primary), the parent and EPIC support.
+     * Order notices go to the student; the parent and EPIC support get link-free record copies.
      *
      * @param array<string, mixed> $booking
-     * @return list<string>
+     * @return array<string, string> Greeting => address
      */
     private function copyRecipients(array $booking): array
     {
-        $addresses = [(string) ($booking['parent_email_address'] ?? ''), (new SettingsService())->get('support_email')];
-        $unique = [];
-        foreach ($addresses as $address) {
-            $address = trim($address);
-            if ($address !== '' && filter_var($address, FILTER_VALIDATE_EMAIL) && ! isset($unique[strtolower($address)])) {
-                $unique[strtolower($address)] = $address;
-            }
+        $copies = [];
+        $parent = trim((string) ($booking['parent_email_address'] ?? ''));
+        if ($parent !== '' && filter_var($parent, FILTER_VALIDATE_EMAIL)) {
+            $copies['Parent or guardian'] = $parent;
+        }
+        $support = trim((new SettingsService())->get('support_email'));
+        if ($support !== '' && filter_var($support, FILTER_VALIDATE_EMAIL) && ! in_array(strtolower($support), array_map('strtolower', $copies), true)) {
+            $copies['EPIC Support'] = $support;
         }
 
-        return array_values($unique);
+        return $copies;
     }
 
     private function configureSender(Email $email, SettingsService $settings): string

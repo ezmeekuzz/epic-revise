@@ -305,7 +305,16 @@
             renderSummary();
         };
 
+        // Class-based selected state for browsers without :has() support.
+        const syncChoiceStates = () => {
+            form.querySelectorAll(".binary-choice label, .form-check").forEach((row) => {
+                const input = row.querySelector("input[type=radio], input[type=checkbox]");
+                if (input) row.classList.toggle("is-selected", input.checked === true);
+            });
+        };
+
         const syncService = () => {
+            syncChoiceStates();
             const current = bookingType();
             form.querySelectorAll("[data-service-panel]").forEach((panel) => {
                 panel.hidden = panel.dataset.servicePanel !== current;
@@ -336,6 +345,7 @@
             input.dispatchEvent(new Event("change", { bubbles: true }));
         });
 
+        form.addEventListener("change", syncChoiceStates);
         form.querySelectorAll('input[name="booking_type"]').forEach((input) => input.addEventListener("change", syncService));
         form.querySelectorAll('input[name="is_summer_school"], input[name="is_study_abroad"]').forEach((input) => input.addEventListener("change", renderSummary));
         storageBoxes?.addEventListener("input", renderSummary);

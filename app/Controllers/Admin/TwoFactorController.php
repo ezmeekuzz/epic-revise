@@ -49,11 +49,13 @@ final class TwoFactorController extends BaseController
             return redirect()->route('admin.account.two-factor');
         }
         $secret = service('encrypter')->decrypt(base64_decode($stored, true) ?: '');
-        if (! (new Totp())->verify($secret, (string) $this->request->getPost('code'))) {
+        $step = (new Totp())->matchedStep($secret, (string) $this->request->getPost('code'));
+        if ($step === null) {
             return redirect()->back()->with('error', 'That code was not correct. Check your authenticator app and try again.');
         }
 
-        (new UserModel())->update((int) session()->get('admin_user_id'), ['totp_secret' => $stored, 'totp_enabled' => 1]);
+        // The setup code counts as used, so it cannot be replayed to sign in.
+        (new UserModel())->update((int) session()->get('admin_user_id'), ['totp_secret' => $stored, 'totp_enabled' => 1, 'totp_last_step' => $step]);
         session()->remove('admin_totp_pending');
         ActivityLog::record('two_factor.enabled');
 
@@ -67,11 +69,12 @@ final class TwoFactorController extends BaseController
         }
         $user = $this->currentUser();
         $code = (string) $this->request->getPost('code');
-        if ((int) $user['totp_enabled'] !== 1 || ! (new Totp())->verify(Totp::decryptSecret((string) $user['totp_secret']), $code)) {
-            return redirect()->back()->with('error', 'Enter a current code from your authenticator app to turn two-factor login off.');
+        $step = (int) $user['totp_enabled'] === 1 ? (new Totp())->matchedStep(Totp::decryptSecret((string) $user['totp_secret']), $code) : null;
+        if ($step === null || ($user['totp_last_step'] !== null && $step <= (int) $user['totp_last_step'])) {
+            return redirect()->back()->with('error', 'Enter a current, unused code from your authenticator app to turn two-factor login off.');
         }
 
-        (new UserModel())->update((int) $user['id'], ['totp_secret' => null, 'totp_enabled' => 0]);
+        (new UserModel())->update((int) $user['id'], ['totp_secret' => null, 'totp_enabled' => 0, 'totp_last_step' => null]);
         ActivityLog::record('two_factor.disabled');
 
         return redirect()->route('admin.account.two-factor')->with('success', 'Two-factor login is now off.');
