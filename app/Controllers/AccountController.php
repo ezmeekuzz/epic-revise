@@ -77,7 +77,7 @@ final class AccountController extends BaseController
             'email' => 'required|valid_email|max_length[254]|is_unique[users.email,id,' . $user['id'] . ']',
             'student_id' => 'permit_empty|max_length[50]', 'phone_number' => 'permit_empty|max_length[30]',
             'street_number' => 'permit_empty|max_length[30]', 'street_name' => 'permit_empty|max_length[160]',
-            'dorm_id' => 'permit_empty|is_natural_no_zero', 'dorm_room_number' => 'permit_empty|max_length[30]',
+            'dorm_id' => 'permit_empty|is_natural_no_zero', 'dorm_room_number' => 'permit_empty|max_length[120]',
             'parent_phone_number' => 'permit_empty|max_length[30]', 'parent_email_address' => 'permit_empty|valid_email|max_length[254]',
         ];
         $rules = [...$rules, ...CustomerDetails::rules()];
@@ -130,10 +130,13 @@ final class AccountController extends BaseController
         }
 
         $notifier = new BookingNotifier();
-        $notifier->customerBookingCreated($result['id']);
         $notifier->adminBookingCreated($result['id']);
 
         $charge = $this->chargeFromCheckout($result['id'], false);
+        // A paid order gets only the payment receipt; Pay later and declined cards get the order notice.
+        if ($charge === null || ! $charge['ok']) {
+            $notifier->customerBookingCreated($result['id']);
+        }
         if ($charge !== null && $charge['ok']) {
             return redirect()->route('account.bookings.show', [$result['id']])->with('success', 'Your booking is saved and your payment was received.');
         }

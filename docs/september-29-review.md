@@ -15,7 +15,7 @@ The local CodeIgniter application implements the requested mobile sizing, brande
 
 ## Terms and historical records
 
-The original legal text is preserved in a collapsed archive labelled **Previous terms — expired on September 1st, 2016**. The supplied Articles 1-15 document is now imported into the main display. Its source states September 10, 2026 and explicitly labels the agreement a draft for legal review; that notice is preserved and surfaced on the page. Article links and headings improve navigation without changing the wording. New customer orders store the accepted text and acceptance time; both customer and administrator order views expose that snapshot. Old orders are not assigned a new acceptance date or retrospectively changed terms.
+The original legal text is preserved in a collapsed archive labelled **Previous terms — expired on September 1st, 2016**. The supplied ~Articles 1-15 document is now imported into the main display. Its source states September 10, 2026 and explicitly labels the agreement a draft for legal review; that notice is preserved and surfaced on the page. Article links and headings improve navigation without changing the wording. New customer orders store the accepted text and acceptance time; both customer and administrator order views expose that snapshot. Old orders are not assigned a new acceptance date or retrospectively changed terms.
 
 ## Availability
 

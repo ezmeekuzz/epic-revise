@@ -186,7 +186,8 @@ final class SettingsController extends BaseController
 
         if ($group === 'payment') {
             return ['values' => [
-                'payments_enabled' => $this->request->getPost('payments_enabled') === '1' ? '1' : '0', 'payment_provider' => (string) $this->request->getPost('payment_provider'),
+                'payments_enabled' => $this->request->getPost('payments_enabled') === '1' ? '1' : '0',
+                'pay_later_enabled' => $this->request->getPost('pay_later_enabled') === '1' ? '1' : '0', 'payment_provider' => (string) $this->request->getPost('payment_provider'),
                 'payment_mode' => (string) $this->request->getPost('payment_mode'), 'payment_currency' => strtoupper(trim((string) $this->request->getPost('payment_currency'))),
                 'payment_public_key' => trim((string) $this->request->getPost('payment_public_key')), 'payment_secret_key' => (string) $this->request->getPost('payment_secret_key'),
                 'payment_webhook_secret' => (string) $this->request->getPost('payment_webhook_secret'),
@@ -195,7 +196,7 @@ final class SettingsController extends BaseController
                 'square_location_id' => trim((string) $this->request->getPost('square_location_id')),
                 'square_webhook_signature_key' => (string) $this->request->getPost('square_webhook_signature_key'),
             ], 'rules' => [
-                'payments_enabled' => 'required|in_list[0,1]', 'payment_provider' => 'required|in_list[manual,stripe,square,paypal]',
+                'payments_enabled' => 'required|in_list[0,1]', 'pay_later_enabled' => 'required|in_list[0,1]', 'payment_provider' => 'required|in_list[manual,stripe,square,paypal]',
                 'payment_mode' => 'required|in_list[sandbox,live]', 'payment_currency' => 'required|alpha|exact_length[3]',
                 'payment_public_key' => 'permit_empty|max_length[500]', 'payment_secret_key' => 'permit_empty|max_length[500]', 'payment_webhook_secret' => 'permit_empty|max_length[500]',
                 'square_application_id' => 'permit_empty|max_length[255]', 'square_access_token' => 'permit_empty|max_length[500]',

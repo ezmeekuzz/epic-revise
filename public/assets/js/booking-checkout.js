@@ -47,7 +47,7 @@
 
   async function initialize() {
     if (!window.Square || typeof window.Square.payments !== "function") {
-      throw new Error("Secure card form did not load. You can choose Pay later and pay from the emailed link.");
+      throw new Error("Secure card form did not load. Please refresh the page and try again, or call our office at 336.549.5216.");
     }
     var payments = window.Square.payments(config.applicationId, config.locationId);
     card = await payments.card();

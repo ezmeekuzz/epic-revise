@@ -41,6 +41,7 @@ trait SubmitsBookings
         return [
             'lockedService' => $lockedService,
             'square' => (new \App\Libraries\SquarePaymentGateway())->clientConfiguration(),
+            'payLaterEnabled' => $settings->get('pay_later_enabled', '1') === '1',
             'user' => $user ?? [],
             'guest' => $user === null,
             'layout' => $user === null ? 'layouts/site' : 'layouts/account',
@@ -100,7 +101,7 @@ trait SubmitsBookings
             'dorm_id' => 'permit_empty|is_natural_no_zero',
             'pickup_date' => 'permit_empty|valid_date[Y-m-d]',
             'pickup_time' => 'permit_empty|regex_match[/^([01]\\d|2[0-3]):[0-5]\\d$/]',
-            'room_number' => 'permit_empty|max_length[30]',
+            'room_number' => 'permit_empty|max_length[120]',
         ];
         if ($guest) {
             $rules['customer_name'] = 'required|min_length[2]|max_length[100]';
@@ -121,7 +122,11 @@ trait SubmitsBookings
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $availabilityError = (new BookingAvailabilityService())->validationError($data['pickup_date'], $data['pickup_time']);
+        // The form collects only a leaving-campus date (the time is set later), so a date alone is accepted
+        // as long as bookings are open and the day is not in the past or blacked out.
+        $availabilityError = $data['pickup_date'] !== '' && $data['pickup_time'] === ''
+            ? $this->dateOnlyError($data['pickup_date'])
+            : (new BookingAvailabilityService())->validationError($data['pickup_date'], $data['pickup_time']);
         if ($availabilityError !== null) {
             return redirect()->back()->withInput()->with('error', $availabilityError);
         }
@@ -158,6 +163,21 @@ trait SubmitsBookings
 
             return redirect()->back()->withInput()->with('alert', ['type' => 'error', 'title' => 'Booking not saved', 'message' => 'Your booking request could not be saved. Please try again.']);
         }
+    }
+
+    private function dateOnlyError(string $date): ?string
+    {
+        $settings = new SettingsService();
+        if ($settings->get('bookings_enabled', '0') !== '1') {
+            return $settings->get('booking_unavailable_message', 'Online booking is temporarily unavailable. Please contact our team for assistance.');
+        }
+        $today = (new DateTimeImmutable('now', new DateTimeZone($settings->get('business_timezone', 'America/New_York'))))->format('Y-m-d');
+        if ($date < $today) {
+            return 'Choose a leaving campus date that is today or later.';
+        }
+        $blackouts = array_filter(array_map('trim', explode(',', $settings->get('blackout_dates'))));
+
+        return in_array($date, $blackouts, true) ? 'That leaving campus date is not available. Please choose another date.' : null;
     }
 
     /**

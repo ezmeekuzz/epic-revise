@@ -61,10 +61,14 @@ final class PublicBookingController extends BaseController
 
         $links = new BookingLinkService();
         $links->grantGuestAccess($result['id']);
-        $this->sendBookingReceivedEmail($result['id']);
         (new BookingNotifier())->adminBookingCreated($result['id']);
 
         $charge = $this->chargeFromCheckout($result['id'], true);
+        // A paid order gets only the payment receipt; the "saved but not guaranteed until paid" email
+        // goes to Pay later orders and to orders whose card was declined.
+        if ($charge === null || ! $charge['ok']) {
+            $this->sendBookingReceivedEmail($result['id']);
+        }
         if ($charge !== null && $charge['ok']) {
             return redirect()->to(site_url('book/' . $result['id'] . '/confirmed'))->with('success', 'Your booking is saved and your payment was received.');
         }

@@ -17,7 +17,7 @@ final class SettingsService
         'pricing' => ['summer_storage_base_price', 'summer_storage_additional_box_price', 'summer_advantage_box_price', 'summer_school_fee', 'service_fee_percent'],
         'email' => ['smtp_enabled', 'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password', 'smtp_crypto', 'email_from_address', 'email_from_name'],
         'payment' => [
-            'payments_enabled', 'payment_provider', 'payment_mode', 'payment_currency',
+            'payments_enabled', 'pay_later_enabled', 'payment_provider', 'payment_mode', 'payment_currency',
             'payment_public_key', 'payment_secret_key', 'payment_webhook_secret',
             'square_application_id', 'square_access_token', 'square_location_id', 'square_webhook_signature_key',
         ],

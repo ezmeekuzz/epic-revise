@@ -580,7 +580,7 @@ final class BookingsController extends BaseController
             'is_study_abroad' => 'required|in_list[0,1]', 'is_summer_school' => 'required|in_list[0,1]', 'summer_school_fee' => 'required|decimal|greater_than_equal_to[0]', 'notes' => 'permit_empty|max_length[5000]',
             'row_in_warehouse' => 'permit_empty|is_natural_no_zero',
             'pickup_date' => 'permit_empty|valid_date[Y-m-d]', 'pickup_time' => 'permit_empty|regex_match[/^([01]\\d|2[0-3]):[0-5]\\d$/]',
-            'pickup_location' => 'permit_empty|max_length[160]', 'room_number' => 'permit_empty|max_length[30]', 'dropoff_date' => 'permit_empty|valid_date[Y-m-d]',
+            'pickup_location' => 'permit_empty|max_length[160]', 'room_number' => 'permit_empty|max_length[120]', 'dropoff_date' => 'permit_empty|valid_date[Y-m-d]',
             'dropoff_time' => 'permit_empty|regex_match[/^([01]\\d|2[0-3]):[0-5]\\d$/]', 'dropoff_location' => 'permit_empty|max_length[160]',
             'dropoff_room_number' => 'permit_empty|max_length[30]', 'pickup_status' => 'required|in_list[unscheduled,scheduled,completed,cancelled]',
             'dropoff_status' => 'required|in_list[unscheduled,scheduled,completed,cancelled]', 'status' => 'required|in_list[' . implode(',', $this->statuses()) . ']',

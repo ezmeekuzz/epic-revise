@@ -118,6 +118,7 @@ final class SmtpService
                 $this->bookingInfoTable($booking, $dorm),
                 $this->bookingPricingTable($booking, $bookingItems),
             ],
+            cc: $this->copyRecipients($booking),
         );
     }
 
@@ -170,8 +171,8 @@ final class SmtpService
             'Booking ' . $booking['reference_code'] . ' received',
             [
                 'We received your ' . $booking['service_name'] . ' booking at High Point University. Your booking total is $' . number_format((float) $booking['total_amount'], 2) . '.',
-                'You can change your leaving campus and returning to campus and time from your account. You will receive an email whenever they change.',
-                'If you have any questions, contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.',
+                'If your order is not paid yet, it is saved but NOT guaranteed until paid. You can pay any outstanding balance, add items to your order, and update your leaving campus details from your account. You will receive an email whenever they change.',
+                'If you have any questions, please contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.',
             ],
             'View my booking',
             $viewUrl,
@@ -270,6 +271,7 @@ final class SmtpService
             [
                 'We added the items below to your existing EPIC Storage order. Your updated order total is $' . number_format((float) $booking['total_amount'], 2) . ($balance > 0.004 ? ' and the balance due is $' . number_format($balance, 2) . '.' : '. Nothing further is due.'),
                 'Please remember to write anything you add on the order sheet that comes with your packing supplies, and keep all of your items together in one room.',
+                'You can add more items at any time from your customer portal: use the button below to open your order, add items, and pay any balance online.',
                 'Questions? Contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.',
             ],
             $balance > 0.004 && $payUrl !== null ? 'Pay balance now' : 'View my order',
@@ -385,14 +387,15 @@ final class SmtpService
      */
     public function sendGuestBookingReceived(array $booking, array $bookingItems, ?array $dorm, ?string $paymentUrl, array $accountLink): bool
     {
-        $paragraphs = ['We received your ' . $booking['service_name'] . ' booking ' . $booking['reference_code'] . '. Your booking total is $' . number_format((float) $booking['total_amount'], 2) . '.'];
+        $paragraphs = ['Thank you for your order! We received your ' . $booking['service_name'] . ' booking ' . $booking['reference_code'] . '. Your order total is $' . number_format((float) $booking['total_amount'], 2) . '.'];
         if ($paymentUrl !== null) {
-            $paragraphs[] = 'If you have not finished paying, use the Pay now button to complete your payment securely.';
+            $paragraphs[] = 'Your order is saved but NOT guaranteed until it is paid. Use the Pay now button to complete your payment and secure your spot.';
         }
         $paragraphs[] = $accountLink['hasAccount']
-            ? 'This email address already has an EPIC account. Use the button below to add this booking to it in one click. No password needed.'
-            : 'Create your EPIC account to track this booking, pay balances and schedule your leaving campus. Your email address is already filled in, so you only need to choose a password.';
+            ? 'This email address already has an EPIC account. Use the second button below to add this booking to it in one click. No password needed. From your account you can view your order, pay any outstanding balance, and add items to your order directly from the website.'
+            : 'Click Create Account at the bottom of this email to complete your account setup. Once your account is complete, you can view your order, pay any outstanding balance, and add items to your order directly from the website.';
         $paragraphs[] = 'If you did not make this booking, you can ignore this email. Nothing is added to an account unless you click the button.';
+        $paragraphs[] = 'If you have any questions, please contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.';
 
         return $this->sendBookingNotice(
             (string) $booking['customer_email'],
@@ -429,7 +432,10 @@ final class SmtpService
         $paragraphs[] = $balance >= 0.01
             ? 'Your remaining balance is $' . number_format($balance, 2) . '. You can pay it any time using the link below.'
             : 'Your booking is paid in full. No further payment is needed.';
-        $paragraphs[] = 'If you have additional items to add to your order or any questions, contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.';
+        $paragraphs[] = $accountLink['hasAccount']
+            ? 'Click the button at the bottom of this email to open your order. From your account you can view your order, pay any outstanding balance, and add items to your order directly from the website.'
+            : 'At the bottom of this email, click Create Account to complete your account setup. Once your account is complete, you can view your order, pay any outstanding balance, and add items to your order directly from the website.';
+        $paragraphs[] = 'You will receive an email from our office in March providing you with box and supply drop off details and pick-up instructions. If you have any questions, please contact Service Support at support@epicstoragehpu.com or call our office at 336.549.5216.';
 
         return $this->sendBookingNotice(
             (string) $booking['customer_email'],
@@ -472,6 +478,7 @@ final class SmtpService
             ],
             $accountLink['label'],
             $accountLink['url'],
+            cc: $this->copyRecipients($booking),
         );
     }
 

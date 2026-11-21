@@ -6,6 +6,7 @@
  * Pricing, items, leaving campus and the shared validation are identical in both.
  */
 $guest = $guest ?? false;
+$payLaterEnabled = ($payLaterEnabled ?? true) !== false;
 ?>
 <?= $this->extend($layout ?? 'layouts/account') ?>
 
@@ -53,7 +54,7 @@ $field = static function (string $name, string $label, array $errors, string $va
             <div class="account-hero mb-4">
                 <span class="eyebrow"><?= $guest ? 'Book online' : 'Customer portal' ?></span>
                 <h1 class="h2 mt-2 mb-2"><?= $guest ? 'Book your storage' : 'Process your service' ?></h1>
-                <p class="mb-0 text-muted-brand"><?= $guest ? 'No account needed. Choose your service, enter your details and pay securely. Leaving Campus details can be added later.' : 'Configure your storage service and submit it now. Leaving Campus information can be added later.' ?></p>
+                <p class="mb-0 text-muted-brand">Choose your service, enter your details, and pay securely. You can always add items to your order later. If you do not know when you will be leaving campus you can also update those details later. If you have any questions, please call our office at 336.549.5216.</p>
                 <?php if ($guest): ?><p class="small mt-2 mb-0">Already have an account? <a href="<?= site_url('login') ?>">Log in</a> to fill in your details automatically.</p><?php endif ?>
             </div>
 
@@ -91,7 +92,7 @@ $field = static function (string $name, string $label, array $errors, string $va
                             <section class="portal-card mb-4" data-service-panel="summer_storage"<?= $bookingType === 'summer_storage' ? '' : ' hidden' ?> aria-labelledby="storageHeading">
                                 <div class="portal-section-heading">
                                     <span class="booking-step">2</span>
-                                    <div><h2 class="h4 mb-1" id="storageHeading">Summer Storage options</h2><p class="text-muted-brand mb-0">Your base package includes five 18 × 18 × 24-inch boxes, packing tape, leaving campus, storage, and redelivery.</p></div>
+                                    <div><h2 class="h4 mb-1" id="storageHeading">Summer Storage options</h2><p class="text-muted-brand mb-0">Your base package includes five 18 × 18 × 24-inch boxes, packing tape, EPIC will collect all storage items directly from your dorm, storage, and redelivery.</p></div>
                                 </div>
 
                                 <div class="row g-3 mt-2">
@@ -103,7 +104,7 @@ $field = static function (string $name, string $label, array $errors, string $va
                                             <button type="button" data-quantity-action="increment" aria-label="Increase additional Summer Storage boxes"><span aria-hidden="true">+</span></button>
                                         </div>
                                         <?php if (isset($errors['box_quantity'])): ?><div class="invalid-feedback d-block"><?= esc($errors['box_quantity']) ?></div><?php endif ?>
-                                        <p class="field-hint">$<?= esc($pricing['summer_storage_additional_box_price']) ?> for each box beyond the five included boxes—the same per-box price as Summer Advantage.</p>
+                                        <p class="field-hint">$<?= esc($pricing['summer_storage_additional_box_price']) ?> for each additional box beyond the five-box standard package</p>
                                     </div>
                                 </div>
 
@@ -161,28 +162,18 @@ $field = static function (string $name, string $label, array $errors, string $va
                                     <div class="col-md-6"><?= $field('student_id', 'Student ID', $errors, (string) old('student_id', $user['student_id'] ?? ''), ['maxlength' => 50, 'autocomplete' => 'off', 'required' => true]) ?></div>
                                     <div class="col-md-6"><?= $field('parent_phone_number', 'Parent or guardian phone', $errors, (string) old('parent_phone_number', $user['parent_phone_number'] ?? ''), ['type' => 'tel', 'maxlength' => 30, 'autocomplete' => 'off', 'required' => true]) ?></div>
                                     <div class="col-md-6"><?= $field('parent_email_address', 'Parent or guardian email', $errors, (string) old('parent_email_address', $user['parent_email_address'] ?? ''), ['type' => 'email', 'maxlength' => 254, 'autocomplete' => 'off', 'required' => true]) ?></div>
+                                    <div class="col-md-6"><label class="form-label" for="dorm_id">Dorm / leaving campus location</label><?php $dormId = (string) old('dorm_id', (string) ($user['dorm_id'] ?? '')); ?><select class="form-select<?= isset($errors['dorm_id']) ? ' is-invalid' : '' ?>" id="dorm_id" name="dorm_id"><option value="">Choose current dorm</option><?php foreach ($dorms as $dorm): ?><option value="<?= (int) $dorm['id'] ?>"<?= $dormId === (string) $dorm['id'] ? ' selected' : '' ?>><?= esc($dorm['name']) ?></option><?php endforeach ?></select><?php if (isset($errors['dorm_id'])): ?><div class="invalid-feedback"><?= esc($errors['dorm_id']) ?></div><?php endif ?></div>
+                                    <div class="col-md-6"><?= $field('room_number', 'Dorm Room and Suite or Street Address', $errors, (string) old('room_number', $user['dorm_room_number'] ?? ''), ['maxlength' => 120]) ?></div>
                                 </div>
                             </section>
 
                             <section class="portal-card" aria-labelledby="pickupHeading">
                                 <div class="portal-section-heading">
                                     <span class="booking-step">4</span>
-                                    <div><h2 class="h4 mb-1" id="pickupHeading">Leaving Campus details <span class="text-muted-brand fs-6">(optional)</span></h2><p class="text-muted-brand mb-0">Leave these blank and add them later, or pick a time now. Pickups run <?= esc(date('g:i A', strtotime((string) ($booking['pickup_start_time'] ?? '09:00')))) ?>–<?= esc(date('g:i A', strtotime((string) ($booking['pickup_end_time'] ?? '17:00')))) ?> <?= esc($timezone) ?>.</p></div>
+                                    <div><h2 class="h4 mb-1" id="pickupHeading">Leaving Campus details <span class="text-muted-brand fs-6">(optional)</span></h2><p class="text-muted-brand mb-0">You can add the date when you are leaving campus later.</p></div>
                                 </div>
                                 <div class="row g-3 mt-2">
-                                    <div class="col-md-6"><label class="form-label" for="dorm_id">Dorm / leaving campus location</label><?php $dormId = (string) old('dorm_id', (string) ($user['dorm_id'] ?? '')); ?><select class="form-select<?= isset($errors['dorm_id']) ? ' is-invalid' : '' ?>" id="dorm_id" name="dorm_id"><option value="">Choose later</option><?php foreach ($dorms as $dorm): ?><option value="<?= (int) $dorm['id'] ?>"<?= $dormId === (string) $dorm['id'] ? ' selected' : '' ?>><?= esc($dorm['name']) ?></option><?php endforeach ?></select><?php if (isset($errors['dorm_id'])): ?><div class="invalid-feedback"><?= esc($errors['dorm_id']) ?></div><?php endif ?></div>
-                                    <div class="col-md-6"><?= $field('room_number', 'Dorm room', $errors, (string) old('room_number', $user['dorm_room_number'] ?? ''), ['maxlength' => 30]) ?></div>
                                     <div class="col-md-6"><?= $field('pickup_date', 'Leaving Campus', $errors, (string) old('pickup_date'), ['type' => 'date', 'min' => $minimumDate, 'data-slot-date' => true]) ?></div>
-                                    <div class="col-12" data-slot-picker>
-                                        <div data-slot-fallback>
-                                            <?= $field('pickup_time', 'Leaving Campus time', $errors, (string) old('pickup_time'), ['type' => 'time', 'min' => $booking['pickup_start_time'] ?? '09:00', 'max' => $lastSlot, 'step' => $slotMinutes * 60]) ?>
-                                        </div>
-                                        <div class="slot-picker" data-slot-buttons hidden>
-                                            <span class="form-label d-block">Leaving Campus time</span>
-                                            <p class="field-hint mb-2" data-slot-message>Choose a leaving campus to see available times.</p>
-                                            <div class="slot-grid" data-slot-grid role="group" aria-label="Available leaving campus times"></div>
-                                        </div>
-                                    </div>
                                 </div>
                             </section>
 
@@ -190,11 +181,11 @@ $field = static function (string $name, string $label, array $errors, string $va
                             <section class="portal-card mb-4" aria-labelledby="checkoutPaymentHeading" data-checkout-payment>
                                 <div class="portal-section-heading">
                                     <span class="booking-step">5</span>
-                                    <div><h2 class="h4 mb-1" id="checkoutPaymentHeading">Payment</h2><p class="text-muted-brand mb-0">Pay now to finish in one step, or save your order and pay later with a link we email you.</p></div>
+                                    <div><h2 class="h4 mb-1" id="checkoutPaymentHeading">Payment</h2><p class="text-muted-brand mb-0">Pay now to finish your order in one step or save your order to pay later with a link EPIC will email to you.</p></div>
                                 </div>
                                 <div class="service-choice-grid mt-4">
-                                    <label class="service-choice is-selected"><input type="radio" name="payment_option" value="now" checked><span class="service-choice-copy"><strong>Pay now by card</strong><small>Secure payment through Square.</small></span></label>
-                                    <label class="service-choice"><input type="radio" name="payment_option" value="later"><span class="service-choice-copy"><strong>Pay later</strong><small>Your order is saved. We email you a payment link.</small></span></label>
+                                    <label class="service-choice is-selected"><input type="radio" name="payment_option" value="now" checked><span class="service-choice-copy"><strong>Pay now by card</strong><small>Secure your spot and you can add additional items to your order later.</small></span></label>
+                                    <?php if ($payLaterEnabled): ?><label class="service-choice"><input type="radio" name="payment_option" value="later"><span class="service-choice-copy"><strong>Pay later</strong><small>Your order will be saved but NOT guaranteed until paid. You will receive an email with a payment link to complete your order and secure your spot.</small></span></label><?php endif ?>
                                 </div>
                                 <div class="mt-4" data-checkout-card-wrap>
                                     <div class="wallet-buttons" data-checkout-wallets hidden>
@@ -202,9 +193,10 @@ $field = static function (string $name, string $label, array $errors, string $va
                                         <div id="checkout-google-pay-button" hidden></div>
                                         <div class="wallet-divider"><span>or pay by card</span></div>
                                     </div>
+                                    <p class="card-accepted mb-2">All major credit cards accepted, including Apple Pay and Google Pay</p>
                                     <div id="checkout-card-container" class="square-card-container" aria-label="Secure Square card fields"></div>
                                     <div class="payment-inline-status mt-3" data-checkout-status role="status" aria-live="polite"></div>
-                                    <p class="field-hint mb-0">Card details are collected securely by Square and are not stored by EPIC.</p>
+                                    <p class="field-hint square-note mb-0"><svg class="square-mark" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><rect width="24" height="24" rx="5" fill="#111"/><rect x="6.5" y="6.5" width="11" height="11" rx="2" fill="none" stroke="#fff" stroke-width="2"/><rect x="10" y="10" width="4" height="4" rx=".8" fill="#fff"/></svg> Card details are processed and collected securely by Square and are not stored by EPIC.</p>
                                 </div>
                                 <input type="hidden" name="square_token" value="" data-checkout-token>
                             </section>

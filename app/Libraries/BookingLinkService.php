@@ -193,7 +193,7 @@ final class BookingLinkService
         }
 
         return [
-            'label' => 'Set up my account',
+            'label' => 'Create Account',
             'url' => site_url('register?email=' . rawurlencode((string) $booking['customer_email'])),
             'hasAccount' => false,
         ];
