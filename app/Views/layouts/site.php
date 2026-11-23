@@ -72,7 +72,7 @@
                             </form>
                         </div>
                     <?php else: ?>
-                        <a class="nav-login nav-login-guest<?= $activePage === 'login' ? ' active' : '' ?>" href="<?= site_url('login') ?>"<?= $activePage === 'login' ? ' aria-current="page"' : '' ?>><span>Log in</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 5l7 7-7 7M20 12H4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                        <a class="nav-login nav-login-guest<?= $activePage === 'login' ? ' active' : '' ?>" href="<?= site_url('login') ?>"<?= $activePage === 'login' ? ' aria-current="page"' : '' ?>><span class="nav-portal-text"><strong>Customer Portal</strong><small>Sign in to view &amp; pay your order</small></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 5l7 7-7 7M20 12H4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
                     <?php endif ?>
                     <a class="btn btn-brand-primary" href="<?= site_url('services') ?>">Order Now</a>
                 </div>

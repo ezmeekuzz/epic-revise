@@ -61,6 +61,10 @@ body{background:var(--paper);}
 .nav2 .nav-login:hover{opacity:1;}
 .nav2 .nav-login-guest{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;border:1px solid rgba(255,255,255,.25);border-radius:999px;transition:background .2s,border-color .2s,color .2s;}
 .nav2 .nav-login-guest svg{width:15px;height:15px;}
+.nav2 .nav-login-guest{padding:8px 16px;border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);}
+.nav2 .nav-portal-text{display:flex;flex-direction:column;line-height:1.2;}
+.nav2 .nav-portal-text strong{font-size:.92rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;}
+.nav2 .nav-portal-text small{font-size:.7rem;font-weight:500;opacity:.85;}
 .nav2 .nav-login-guest:hover,.nav2 .nav-login-guest.active{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.5);color:#fff;}
 .nav2 .nav-account{display:flex;align-items:center;gap:14px;}
 .nav2 .nav-user{display:flex;align-items:center;gap:9px;color:#fff;text-decoration:none;border-radius:10px;padding:5px 8px 5px 5px;transition:background .2s;}

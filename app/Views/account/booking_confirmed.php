@@ -23,11 +23,10 @@
                     <h1 class="h3 mb-2">Booking saved</h1>
                     <p class="mb-1">Booking <strong><?= esc($booking['reference_code']) ?></strong> is saved. Amount due: <strong>$<?= number_format($balance, 2) ?></strong>.</p>
                 <?php endif ?>
-                <p class="text-muted-brand">We emailed your booking details to <strong><?= esc($maskedEmail) ?></strong>.</p>
-
-                <div class="notice-panel text-start mt-4">
-                    <strong class="d-block mb-1">Already have an EPIC account?</strong>
-                    <span>The email has a button to add this booking to it in one click. New to EPIC? Click Create Account at the bottom of the email to track this booking, pay balances and add items to your order.</span>
+                <div class="text-start mt-4">
+                    <p>Thank you for your order! You'll receive an email from our office with your invoice and instructions for setting up your account. If you don't see it in your inbox, please check your spam or junk folder.</p>
+                    <p>In the bottom of the email, click <strong>Create Account</strong> to complete your account setup. Once your account is complete, you can view your order, pay any outstanding balance, and add items to your order directly on our website.</p>
+                    <p class="mb-0">If you have any questions, please send an email to our office <a href="mailto:support@epicstoragehpu.com">support@epicstoragehpu.com</a> or call our office at <a href="tel:3365495216">336 549 5216</a>.</p>
                 </div>
 
                 <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">

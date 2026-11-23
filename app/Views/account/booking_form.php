@@ -148,7 +148,7 @@ $field = static function (string $name, string $label, array $errors, string $va
                             <section class="portal-card mb-4" aria-labelledby="detailsHeading">
                                 <div class="portal-section-heading">
                                     <span class="booking-step">3</span>
-                                    <div><h2 class="h4 mb-1" id="detailsHeading">Your details</h2><p class="text-muted-brand mb-0"><?= $guest ? 'We email your receipt and booking details to this address.' : 'Saved to your profile, so you only enter them once.' ?></p></div>
+                                    <div><h2 class="h4 mb-1" id="detailsHeading">Your details</h2><p class="text-muted-brand mb-0"><?= $guest ? 'We will email your receipt and booking details to this address.' : 'Saved to your profile, so you only enter them once.' ?></p></div>
                                 </div>
                                 <div class="row g-3 mt-2">
                                     <?php if ($guest): ?>
