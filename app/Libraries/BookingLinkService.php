@@ -60,13 +60,65 @@ final class BookingLinkService
                 throw new \RuntimeException('Booking link transaction failed.');
             }
             $db->transCommit();
-
-            return $linked;
         } catch (Throwable $exception) {
             $db->transRollback();
             log_message('error', 'Linking bookings to customer {user} failed: {type}', ['user' => $userId, 'type' => $exception::class]);
 
             return 0;
+        }
+
+        if ($linked > 0) {
+            $this->fillProfileFromBookings($userId, $bookingIds);
+        }
+
+        return $linked;
+    }
+
+    /**
+     * Sign-up only asks for name, email and password, so the details a customer already gave on a
+     * booking (phone, student ID, parent contacts, dorm, room) are copied to their profile.
+     * Only empty profile fields are filled; anything the customer saved themselves is kept.
+     *
+     * @param list<int> $bookingIds
+     */
+    private function fillProfileFromBookings(int $userId, array $bookingIds): void
+    {
+        try {
+            $users = new UserModel();
+            $user  = $users->find($userId);
+            if ($user === null) {
+                return;
+            }
+
+            $bookings = (new BookingModel())->whereIn('id', $bookingIds)->orderBy('id', 'DESC')->findAll();
+            $map = [
+                'student_id'           => 'student_id',
+                'phone_number'         => 'customer_phone',
+                'parent_phone_number'  => 'parent_phone_number',
+                'parent_email_address' => 'parent_email_address',
+                'dorm_id'              => 'dorm_id',
+                'dorm_room_number'     => 'room_number',
+            ];
+
+            $fill = [];
+            foreach ($map as $userField => $bookingField) {
+                if (trim((string) ($user[$userField] ?? '')) !== '') {
+                    continue;
+                }
+                foreach ($bookings as $booking) {
+                    $value = trim((string) ($booking[$bookingField] ?? ''));
+                    if ($value !== '') {
+                        $fill[$userField] = $userField === 'dorm_id' ? (int) $value : $value;
+                        break;
+                    }
+                }
+            }
+
+            if ($fill !== []) {
+                $users->update($userId, $fill);
+            }
+        } catch (Throwable $exception) {
+            log_message('error', 'Copying booking details to customer {user} failed: {type}', ['user' => $userId, 'type' => $exception::class]);
         }
     }
 

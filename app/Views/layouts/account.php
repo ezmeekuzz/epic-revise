@@ -45,15 +45,15 @@ $activeProfile      = $currentPath === 'account/profile';
                 <a class="<?= $activeDashboard ? 'active' : '' ?>" href="<?= site_url('account') ?>"><span class="nav-icon" aria-hidden="true">&#8962;</span><span>Dashboard</span></a>
 
                 <span class="admin-nav-label">Bookings</span>
-                <a class="<?= $activeMyBookings ? 'active' : '' ?>" href="<?= site_url('account/bookings') ?>"><span class="nav-icon" aria-hidden="true">&#9635;</span><span>My Bookings</span></a>
+                <a class="<?= $activeMyBookings ? 'active' : '' ?>" href="<?= site_url('account/bookings') ?>"><span class="nav-icon" aria-hidden="true">&#9635;</span><span>My Orders</span></a>
                 <a class="<?= $activeNewBooking ? 'active' : '' ?>" href="<?= site_url('account/bookings/new') ?>"><span class="nav-icon" aria-hidden="true">&#8853;</span><span>Request a service</span></a>
-                <a class="<?= $isAddItems ? 'active' : '' ?>" href="<?= site_url('account/additional-items') ?>"><span class="nav-icon" aria-hidden="true">&#43;</span><span>Additional Item</span></a>
-                <a class="<?= $activePayments ? 'active' : '' ?>" href="<?= site_url('account/payments') ?>"><span class="nav-icon" aria-hidden="true">$</span><span>Online Payments</span></a>
+                <a class="<?= $isAddItems ? 'active' : '' ?>" href="<?= site_url('account/additional-items') ?>"><span class="nav-icon" aria-hidden="true">&#43;</span><span>Add To Your Order</span></a>
+                <a class="<?= $activePayments ? 'active' : '' ?>" href="<?= site_url('account/payments') ?>"><span class="nav-icon" aria-hidden="true">$</span><span>Online Payment</span></a>
 
                 <span class="admin-nav-label">Manage dates &amp; balance</span>
                 <a class="<?= $activePickupDates ? 'active' : '' ?>" href="<?= site_url('account/pickup-dates') ?>"><span class="nav-icon" aria-hidden="true">&#9783;</span><span>Leaving Campus</span></a>
-                <a class="<?= $activeDropoffDates ? 'active' : '' ?>" href="<?= site_url('account/dropoff-dates') ?>"><span class="nav-icon" aria-hidden="true">&#8596;</span><span>Manage Returning to Campus Dates</span></a>
-                <a class="<?= $activePayHistory ? 'active' : '' ?>" href="<?= site_url('account/payment-history') ?>"><span class="nav-icon" aria-hidden="true">&#8644;</span><span>Payment History Logs</span></a>
+                <a class="<?= $activeDropoffDates ? 'active' : '' ?>" href="<?= site_url('account/dropoff-dates') ?>"><span class="nav-icon" aria-hidden="true">&#8596;</span><span>Returning to Campus</span></a>
+                <a class="<?= $activePayHistory ? 'active' : '' ?>" href="<?= site_url('account/payment-history') ?>"><span class="nav-icon" aria-hidden="true">&#8644;</span><span>Payment History</span></a>
                 <a class="<?= $activeBalance ? 'active' : '' ?>" href="<?= site_url('account/balance') ?>"><span class="nav-icon" aria-hidden="true">&#9878;</span><span>Balance Management</span></a>
 
                 <span class="admin-nav-label">Account</span>

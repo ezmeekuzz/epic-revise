@@ -162,7 +162,7 @@ final class AccountController extends BaseController
         }
 
         return view('account/additional_items_list', [
-            ...$this->pageData('Additional Items | EPIC Storage Solutions', 'Choose a booking to add items to.', 'account'),
+            ...$this->pageData('Add To Your Order | EPIC Storage Solutions', 'Choose a booking to add items to.', 'account'),
             'bookings' => $open,
         ]);
     }
@@ -176,7 +176,7 @@ final class AccountController extends BaseController
         $token = bin2hex(random_bytes(32));
         session()->set('order_addition_' . $id, $token);
         return view('account/add_items', [
-            ...$this->pageData('Add Additional Items | EPIC Storage Solutions', 'Add items to your existing order.', 'account'),
+            ...$this->pageData('Add To Your Order | EPIC Storage Solutions', 'Add items to your existing order.', 'account'),
             'booking' => $booking, 'requestToken' => $token,
             'itemCatalog' => (new BookingPricingService())->catalog(),
         ]);
@@ -237,7 +237,7 @@ final class AccountController extends BaseController
     public function myBookings(): string
     {
         return view('account/bookings_list', [
-            ...$this->pageData('My Bookings | EPIC Storage Solutions', 'View every EPIC Storage booking you have made.', 'account'),
+            ...$this->pageData('My Orders | EPIC Storage Solutions', 'View every EPIC Storage booking you have made.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
             'bookingOpen' => (new SettingsService())->get('bookings_enabled', '0') === '1',
         ]);
@@ -246,7 +246,7 @@ final class AccountController extends BaseController
     public function payments(): string
     {
         return view('account/payments_list', [
-            ...$this->pageData('Online Payments | EPIC Storage Solutions', 'Pay securely for any EPIC Storage booking balance.', 'account'),
+            ...$this->pageData('Online Payment | EPIC Storage Solutions', 'Pay securely for any EPIC Storage booking balance.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
         ]);
     }
@@ -263,7 +263,7 @@ final class AccountController extends BaseController
     public function dropoffDates(): string
     {
         return view('account/dropoff_dates', [
-            ...$this->pageData('Manage Returning to Campus Dates | EPIC Storage Solutions', 'Review and manage the returning to campus for every booking.', 'account'),
+            ...$this->pageData('Returning to Campus | EPIC Storage Solutions', 'Review and manage the returning to campus for every booking.', 'account'),
             'bookings' => $this->bookingsWithFinancials(),
             'booking' => (new SettingsService())->displayGroup('booking'),
         ]);
@@ -272,7 +272,7 @@ final class AccountController extends BaseController
     public function paymentHistory(): string
     {
         return view('account/payment_history', [
-            ...$this->pageData('Payment History Logs | EPIC Storage Solutions', 'Every payment made toward your EPIC Storage bookings.', 'account'),
+            ...$this->pageData('Payment History | EPIC Storage Solutions', 'Every payment made toward your EPIC Storage bookings.', 'account'),
             'payments' => (new PaymentModel())
                 ->select('payments.*, bookings.reference_code AS booking_reference, bookings.service_name')
                 ->join('bookings', 'bookings.id = payments.booking_id')
