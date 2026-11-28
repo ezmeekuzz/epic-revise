@@ -45,8 +45,8 @@ final class CreateAdmin extends BaseCommand
         }
 
         $users = new UserModel();
-        if ($users->where('email', $email)->first() !== null) {
-            CLI::error('An account already exists for that email address.');
+        if ($users->emailTakenInRole($email, 'admin')) {
+            CLI::error('An administrator account already exists for that email address.');
 
             return;
         }

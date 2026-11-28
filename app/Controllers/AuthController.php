@@ -85,7 +85,15 @@ final class AuthController extends BaseController
         ];
         $rules = [
             'name'     => 'required|min_length[2]|max_length[100]',
-            'email'    => 'required|valid_email|max_length[254]|is_unique[users.email]',
+            'email'    => ['required', 'valid_email', 'max_length[254]', static function ($value, $data, &$error): bool {
+                if ((new UserModel())->emailTakenInRole((string) $value, 'customer')) {
+                    $error = 'An account already exists for this email address.';
+
+                    return false;
+                }
+
+                return true;
+            }],
             'password' => 'required|min_length[12]|max_length[72]',
             'terms'    => 'required|in_list[1]',
         ];

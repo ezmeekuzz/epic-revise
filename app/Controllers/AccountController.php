@@ -74,7 +74,15 @@ final class AccountController extends BaseController
         $data = [...$data, ...CustomerDetails::input($this->request)];
         $rules = [
             'name' => 'required|min_length[2]|max_length[100]',
-            'email' => 'required|valid_email|max_length[254]|is_unique[users.email,id,' . $user['id'] . ']',
+            'email' => ['required', 'valid_email', 'max_length[254]', static function ($value, $data, &$error): bool {
+                if ((new UserModel())->emailTakenInRole((string) $value, 'customer', (int) session()->get('customer_user_id'))) {
+                    $error = 'This email address is already in use.';
+
+                    return false;
+                }
+
+                return true;
+            }],
             'student_id' => 'permit_empty|max_length[50]', 'phone_number' => 'permit_empty|max_length[30]',
             'street_number' => 'permit_empty|max_length[30]', 'street_name' => 'permit_empty|max_length[160]',
             'dorm_id' => 'permit_empty|is_natural_no_zero', 'dorm_room_number' => 'permit_empty|max_length[120]',

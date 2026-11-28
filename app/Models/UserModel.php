@@ -59,6 +59,17 @@ final class UserModel extends Model
         return $data;
     }
 
+    /** Email is unique per role (matches the DB index), so an admin and a customer may share an address. */
+    public function emailTakenInRole(string $email, string $role, int $exceptId = 0): bool
+    {
+        $builder = (new self())->withDeleted()->where('email', mb_strtolower(trim($email)))->where('role', $role);
+        if ($exceptId > 0) {
+            $builder->where('id !=', $exceptId);
+        }
+
+        return $builder->first() !== null;
+    }
+
     public function activeAdminCount(): int
     {
         return $this->where('role', 'admin')->where('status', 'active')->countAllResults();

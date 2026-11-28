@@ -75,12 +75,17 @@ final class AccountController extends BaseController
 
         if (! $this->validateData($data, [
             'name'  => 'required|min_length[2]|max_length[100]',
-            'email' => 'required|valid_email|max_length[254]|is_unique[users.email,id,' . $id . ']',
+            'email' => 'required|valid_email|max_length[254]',
         ])) {
             return redirect()->back()->withInput()->with('profileErrors', $this->validator->getErrors());
         }
 
         $users = new UserModel();
+        // Unique among admins only: the same address may also belong to a customer account.
+        if ($users->emailTakenInRole($data['email'], 'admin', $id)) {
+            return redirect()->back()->withInput()->with('profileErrors', ['email' => 'Another administrator already uses this email address.']);
+        }
+
         try {
             $users->update($id, $data);
         } catch (DatabaseException) {

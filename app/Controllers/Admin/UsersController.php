@@ -165,7 +165,15 @@ final class UsersController extends BaseController
         return [
             ...CustomerDetails::rules(),
             'name'             => 'required|min_length[2]|max_length[100]',
-            'email'            => 'required|valid_email|max_length[254]|is_unique[users.email,id,' . $id . ']',
+            'email'            => ['required', 'valid_email', 'max_length[254]', static function ($value, $data, &$error) use ($id): bool {
+                if ((new UserModel())->emailTakenInRole((string) $value, 'customer', $id)) {
+                    $error = 'A customer with this email address already exists.';
+
+                    return false;
+                }
+
+                return true;
+            }],
             'password'         => $passwordRule,
             'password_confirm' => ($passwordRequired ? 'required' : 'permit_empty') . '|matches[password]',
             'role'             => 'required|in_list[customer]',
