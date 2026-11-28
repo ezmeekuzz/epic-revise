@@ -9,9 +9,6 @@ foreach ($paragraphs as $paragraph) {
     }
 }
 ?>
-<?php if (str_contains($currentTerms, 'LEGAL REVIEW NOTICE:')): ?>
-    <p class="alert alert-info">The supplied document is marked as a draft for legal review.</p>
-<?php endif ?>
 <?php if ($articles !== []): ?>
     <nav class="terms-article-nav mb-4" aria-label="Terms articles">
         <h2 class="h4">Browse the articles</h2>
